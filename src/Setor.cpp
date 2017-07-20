@@ -1,15 +1,19 @@
 #include "Setor.h"
 
-Setor::Setor():center(0,0), percent(0), radius1(0), radius2(0)
+Setor::Setor():center(0,0), percent(0), radius(0)
 {
     //ctor
 }
 
-Setor::Setor(Point center, double radius1, double radius2):percent(0)
+Setor::Setor(string termo, Point center, double radius):percent(0)
 {
+    this->termo = termo;
+    this->quantTermos = 1;
     this->center = center;
-    this->radius1 = radius1;
-    this->radius2 = radius2;
+    this->radius = radius;
+    setorWidth = SETOR_WIDTH;
+    setorDist = SETOR_DIST;
+
 }
 
 Setor::~Setor()
@@ -21,6 +25,11 @@ void Setor::Render(){
 }
 
 void Setor::Update(){
+    if(IsMouseInside()){
+        if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
+            cout << termo << endl;
+        }
+    }
 }
 
 void Setor::SetColor(SDL_Color color){
@@ -44,4 +53,13 @@ void Setor::SetPercent(double percent){
 void Setor::SetAng(double ang){
     this->angS = ang;
     this->angF = 2*PI*percent + angS;
+}
+
+bool Setor::IsMouseInside(){
+    if(center.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) <= radius + setorWidth + setorDist &&
+       center.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) >= radius + setorDist  &&
+       center.AngleTo(InputHandler::GetMouseX(), InputHandler::GetMouseY()) >= angS &&
+       center.AngleTo(InputHandler::GetMouseX(), InputHandler::GetMouseY()) <= angF) {
+            return true;
+    }else return false;
 }

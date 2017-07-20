@@ -23,6 +23,11 @@ int Window::Start(string nome, int w, int h, int x, int y)
     }
     screenSurface = SDL_GetWindowSurface(window);
     //verificação surface
+
+    if(!IMG_Init( IMG_INIT_PNG )){
+        cout << "IMG_Init() error: " << IMG_GetError() << endl;
+            return 4;
+    }
     return 0;
 }
 
@@ -39,6 +44,7 @@ void Window::Render(){
 }
 
 void Window::Finish(){
+    IMG_Quit();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

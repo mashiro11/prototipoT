@@ -13,8 +13,6 @@
 #include "Sprite.h"
 
 #define PI 3.1415
-#define SETOR_WIDTH 20
-#define SETOR_DIST 10
 
 using std::unordered_map;
 using std::string;
@@ -32,9 +30,9 @@ class Aglutinado : public ScreenObject
         void Update();
         void SetColor(int r, int g, int b, int a = 255);
         void AddTermo(string termo, SDL_Color cor);
+        void AddTermo(string termo, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
         bool IsMouseInside();
         bool IsMouseInsideSector();
-        bool IsMouseInsideSector(string termo);
     protected:
 
     private:
@@ -44,9 +42,7 @@ class Aglutinado : public ScreenObject
         int setorDist;
         SDL_Color color;
         bool colorChange;
-        unordered_map<string, pair<int, SDL_Color>> termos;
-        unordered_map<string, pair<double,double>> angles;
-        unordered_map<string, Sprite*> janelasTermo;
+        unordered_map<string, Setor*> setores;
 
         int totalTermos;
         void _changeSetorColor(SDL_Renderer *renderer, SDL_Color color);

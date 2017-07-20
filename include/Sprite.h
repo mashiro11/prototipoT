@@ -15,6 +15,7 @@ class Sprite
 {
     public:
         Sprite(string path, int x = 0, int y = 0);
+        Sprite();
         virtual ~Sprite();
         int GetWidth();
         int GetHeight();
@@ -23,14 +24,12 @@ class Sprite
         int GetY();
         void SetX(int x);
         void SetY(int y);
-        void Resize(int percentx, int percenty = 100);
+        void Resize(int w, int h);
         void Clip(int w, int h, int x = 0, int y = 0);
 
     protected:
 
     private:
-        static bool imgInitiated;
-        static int _Initiate();
         SDL_Texture* img;
         SDL_Surface* aux;
         void Open(string path);
