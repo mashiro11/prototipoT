@@ -34,22 +34,22 @@ Setor::~Setor()
 }
 
 void Setor::Render(){
-    for (double k = angS; k < angF + angS; k += 0.01){
-        sp.SetRotationAngle(k);
+    for (double k = angS; k < angF + angS; k += 0.1){
+        sp.SetRotationAngle(k*180/PI);
         sp.Render();
     }
 }
 
 void Setor::Draw(SDL_Renderer* renderer){
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    for (double k = angS; k < angF + angS; k += 0.01){
+    for (double k = angS; k < angF + angS; k += 0.001){
             SDL_RenderDrawLine(renderer, center.x+(radius+setorDist)*cos(k), center.y+(radius+setorDist)*sin(k),
                                center.x+(radius+setorDist+setorWidth)*cos(k), center.y+(radius+setorDist+setorWidth)*sin(k));
     }
 }
 
 void Setor::Update(){
-    angS += 0.01;
+    angS += 0.001;
     if(IsMouseInside()){
         if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
             cout << termo << endl;
