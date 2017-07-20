@@ -9,12 +9,6 @@ Setor::Setor(string termo, string file, Point center, double radius):
     percent(0),
     sp(file)
 {
-    SDL_Point pt;
-    pt.x = center.x;
-    pt.y = center.y;
-    sp.SetRotationPoint(pt);
-    sp.SetX(center.x);
-    sp.SetY(center.y - radius);
     this->termo = termo;
     this->quantTermos = 1;
     this->center = center;
@@ -22,6 +16,16 @@ Setor::Setor(string termo, string file, Point center, double radius):
     this->angS = 0;
     setorWidth = SETOR_WIDTH;
     setorDist = SETOR_DIST;
+
+    SDL_Point pt;
+    pt.x = 0;
+    pt.y = radius + setorDist;
+    //pt.x = center.x;
+    //pt.y = center.y;
+    sp.SetRotationPoint(pt);
+    sp.SetX(center.x);
+    sp.SetY(center.y - radius - setorDist);
+
 }
 
 Setor::~Setor()
