@@ -29,8 +29,8 @@ class Aglutinado : public ScreenObject
         void Render();
         void Update();
         void SetColor(int r, int g, int b, int a = 255);
-        void AddTermo(string termo, SDL_Color cor);
-        void AddTermo(string termo, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+        void AddTermo(string termo, string file, SDL_Color cor);
+        void AddTermo(string termo, string file, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
         bool IsMouseInside();
         bool IsMouseInsideSector();
     protected:

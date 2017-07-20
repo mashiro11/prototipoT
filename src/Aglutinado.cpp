@@ -18,7 +18,7 @@ Aglutinado::~Aglutinado()
 }
 
 void Aglutinado::Draw(SDL_Renderer *renderer){
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_MOD);
+    //SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_ADD);
     if(colorChange){
         SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
         colorChange = false;
@@ -28,24 +28,16 @@ void Aglutinado::Draw(SDL_Renderer *renderer){
     }
 
     //  Desenha os setores
-    double j = 0;
-    Setor* setor;
     for(auto it = setores.begin(); it != setores.end(); it++){
-        setor = it->second;
-        _changeSetorColor(renderer, setor->color );
-        setor->angS = j;
-
-        for (double k = 0; k < 2*PI* setor->quantTermos/totalTermos; j+=0.0001, k += 0.0001){
-            SDL_RenderDrawLine(renderer, center.x+(radius+setorDist)*cos(j), center.y+(radius+setorDist)*sin(j),
-                               center.x+(radius+setorDist+setorWidth)*cos(j), center.y+(radius+setorDist+setorWidth)*sin(j));
-        }
-        setor->angF = j;
+        it->second->Draw(renderer);
     }
     _resetDrawColor(renderer);
 }
 
 void Aglutinado::Render(){
-
+    for(auto it = setores.begin(); it != setores.end(); it++){
+        it->second->Render();
+    }
 }
 
 void Aglutinado::Update(){
@@ -67,20 +59,36 @@ void Aglutinado::SetColor(int r, int g, int b, int a){
     colorChange = true;
 }
 
-void Aglutinado::AddTermo(string termo, SDL_Color color){
+void Aglutinado::AddTermo(string termo, string file, SDL_Color color){
+    totalTermos++;
     //se NÃO for o primeiro desse termo adicionado
     if( setores.find(termo) != setores.end() ){
         setores[termo]->quantTermos++;
     }else{
-        setores[termo] = new Setor(termo, this->center, this->radius);
+        setores[termo] = new Setor(termo, file, this->center, this->radius);
         setores[termo]->color = color;
     }
-    totalTermos++;
+    double temp;
+    auto it = setores.begin();
+    it->second->angS = 0;
+    it->second->NewAngle(totalTermos);
+    temp = it->second->angF;
+    it++;
+    for(; it != setores.end(); it++){
+        it->second->angS = temp;
+        it->second->NewAngle(totalTermos);
+        temp += it->second->angF;
+    }
+
+    for(auto it = setores.begin(); it != setores.end(); it++){
+        cout << it->second->termo << " - angS: " << it->second->angS << "  angF: " << it->second->angF << endl;
+    }
+    cout << endl;
 }
 
-void Aglutinado::AddTermo(string termo, uint8_t r, uint8_t g, uint8_t b, uint8_t a){
+void Aglutinado::AddTermo(string termo, string file, uint8_t r, uint8_t g, uint8_t b, uint8_t a){
     SDL_Color cor = {r, g, b, a};
-    AddTermo(termo, cor);
+    AddTermo(termo, file, cor);
 }
 
 void Aglutinado::_changeSetorColor(SDL_Renderer *renderer, SDL_Color color){

@@ -20,10 +20,12 @@ using std::string;
 class Setor: public ScreenObject
 {
     public:
-        Setor();
-        Setor(string termo, Point center, double radius);
+        //Setor();
+        Setor(string termo, string file, Point center, double radius);
         void Render();
+        void Draw(SDL_Renderer* renderer);
         void Update();
+        void NewAngle(int totalTerms);
         virtual ~Setor();
         void SetColor(SDL_Color color);
         void SetColor(int r, int g, int b, int a);

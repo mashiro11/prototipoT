@@ -5,9 +5,7 @@ Sprite::Sprite(string path, int x, int y)
     imgRect.x = x;
     imgRect.y = y;
     Open(path);
-}
-
-Sprite::Sprite(){
+    angle = 0;
 }
 
 Sprite::~Sprite(){
@@ -57,9 +55,17 @@ void Sprite::Resize(int w, int h){
     imgRect.h = h;
 }
 
-void Sprite::Render(int x, int y){
+void Sprite::SetRotationPoint(SDL_Point pt){
+    this->pt = pt;
+}
+
+void Sprite::SetRotationAngle(double angle){
+    this->angle = angle;
+}
+
+void Sprite::Render(){
     //como vai aparecer na tela
-    if(SDL_RenderCopyEx(Window::GetRenderer(), img, &srcRect, &imgRect, 0, NULL, SDL_FLIP_NONE)){
-                cout << "SDL_RenderCopyEx() error: " << SDL_GetError() << endl;
-        }
+    if(SDL_RenderCopyEx(Window::GetRenderer(), img, &srcRect, &imgRect, angle, &pt, SDL_FLIP_NONE)){
+        cout << "SDL_RenderCopyEx() error: " << SDL_GetError() << endl;
+    }
 }
