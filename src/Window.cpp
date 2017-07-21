@@ -28,6 +28,10 @@ int Window::Start(string nome, int w, int h, int x, int y)
         cout << "IMG_Init() error: " << IMG_GetError() << endl;
             return 4;
     }
+
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     return 0;
 }
 

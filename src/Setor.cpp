@@ -43,7 +43,7 @@ Setor::~Setor()
 }
 
 void Setor::Render(){
-    for (double k = angS; k + sp.GetHeight() < angF + angS; k += 0.1){
+    for (double k = angS; k + sp.GetHeight() < angF + angS; k += 6){
         sp.SetRotationAngle(k);
         sp.Render();
     }
@@ -66,15 +66,11 @@ void Setor::Update(){
         if(angS >= 360) angS -= 360;
     }
     if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED && IsMouseInside()){
-        cout << "Fui clicado: " << termo << endl;
-        cout << "   meu endereco: " << this << endl;
-        cout << "   meu angS: " << angS << endl;
-        cout << "   meu angF: " << angF << endl;
-        cout << "   angulo do mouse calculado: " << (180/PI) * center.AngleTo(InputHandler::GetMouseX(), InputHandler::GetMouseY()) << endl << endl;
         *scopy = this;
         showPosts = true;
     }
     if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED && !IsMouseInside()){
+        posts.Clip(posts.GetWidth(), posts.GetHeight(), 0, 0);
         showPosts = false;
     }
     if(showPosts && posts.IsMouseInside()){

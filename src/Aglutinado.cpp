@@ -65,19 +65,13 @@ void Aglutinado::Update(){
     for(auto it = setores.begin(); it != setores.end(); it++){
         (it->second)->Update();
     }
+    //cout << "dentro de algum setor: " << IsMouseInsideSector() << endl;
     if(IsMouseInsideSector() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
+        cout << "Termo em clicked: " << clicked->termo << endl;
         showWindow = true;
         double med = clicked->angS + clicked->angF/2;
-//        cout << "clicado: " << clicked->termo << endl;
-//        cout << "   med: " << med << endl;
-//        cout << "   anS: " << clicked->angS << endl;
-//        cout << "   anF: " << clicked->angF << endl;
-
         if(med < STOP_ANGLE || med > STOP_ANGLE){
             animate = true;
-//            cout << "dentro " << med << endl;
-//            if(med >= STOP_ANGLE - 180) clockwise = true;
-//            else clockwise = false;
         }
     }
     if(!IsMouseInsideSector() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
@@ -119,11 +113,6 @@ void Aglutinado::AddTermo(string termo, string file, string posts, SDL_Color col
         it->second->NewAngle(totalTermos);
         temp += it->second->angF;
     }
-
-    for(auto it = setores.begin(); it != setores.end(); it++){
-        cout << it->second->termo << " - angS: " << it->second->angS << "  angF: " << it->second->angF << endl;
-    }
-    cout << endl;
 }
 
 void Aglutinado::AddTermo(string termo, string file, string posts, uint8_t r, uint8_t g, uint8_t b, uint8_t a){

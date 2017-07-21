@@ -12,6 +12,8 @@ Sprite::~Sprite(){
 }
 
 void Sprite::Open(string path){
+
+
     this->path = path;
     aux = IMG_Load(path.c_str());
     img = Resources::GetTexture(path);
@@ -65,6 +67,7 @@ void Sprite::SetRotationAngle(double angle){
 
 void Sprite::Render(){
     //como vai aparecer na tela
+    SDL_SetTextureBlendMode(img, SDL_BLENDMODE_BLEND );
     if(SDL_RenderCopyEx(Window::GetRenderer(), img, &srcRect, &imgRect, angle, &pt, SDL_FLIP_NONE)){
         cout << "SDL_RenderCopyEx() error: " << SDL_GetError() << endl;
     }

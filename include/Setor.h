@@ -12,7 +12,7 @@
 
 #define SETOR_WIDTH 20
 #define SETOR_DIST 10
-#define ANIMATION_SPEED 2
+#define ANIMATION_SPEED 0.5
 #define SCROLL_SPEED 3
 
 #define PI 3.1415

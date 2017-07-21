@@ -15,14 +15,16 @@ int main(int argc, char** argv)
         return winOp;
     }
 
-    Aglutinado bola(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, RAIO, "img/janela.png");
-    bola.SetColor(255, 0, 0);
-    bola.AddTermo("engarrafamento", "img/bl.png", "img/text.png", 0,0,255, 255);
-    bola.AddTermo("parque", "img/bl2.png", "img/text2.png", 0, 255, 0, 255);
-    bola.AddTermo("parque", "img/bl2.png", "img/text2.png", 0, 255, 0, 100);
-    bola.AddTermo("panqueca", "img/bl3.png", "img/text3.png", 0, 50, 50, 100);
+
     Sprite bg("img/bg.PNG");
     bg.Resize(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+    Aglutinado bola(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, RAIO, "img/janela.png");
+    bola.SetColor(255, 0, 0);
+    bola.AddTermo("engarrafamento", "img/termotriste.png", "img/text.png", 0, 0, 255, 255);
+    bola.AddTermo("parque", "img/termofeliz.png", "img/text2.png", 0, 255, 0, 255);
+    bola.AddTermo("parque", "img/termofeliz.png", "img/text2.png", 0, 255, 0, 100);
+    bola.AddTermo("panqueca", "img/hashtagfeliz.png", "img/text3.png", 0, 50, 50, 100);
 
     while(!InputHandler::QuitRequested()){
         InputHandler::Update();
