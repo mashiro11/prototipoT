@@ -5,6 +5,10 @@ SDL_KeyboardEvent* InputHandler::keyboardState = new SDL_KeyboardEvent();
 bool InputHandler::keydown = false;
 bool InputHandler::quitRequested = false;
 
+
+bool InputHandler::mouseScroll = false;
+SDL_MouseWheelEvent* InputHandler::mouseState = new SDL_MouseWheelEvent();
+
 void InputHandler::Update(){
         SDL_Event e;
         int events = SDL_PollEvent(&e);
@@ -14,6 +18,10 @@ void InputHandler::Update(){
             break;
         case SDL_MOUSEBUTTONUP:
             mouseLButton = MOUSE_LBUTTON_RELEASED;
+            break;
+        case SDL_MOUSEWHEEL:
+            mouseScroll = true;
+            *mouseState = e.wheel;
             break;
         case SDL_QUIT:
             quitRequested = true;
@@ -25,6 +33,9 @@ void InputHandler::Update(){
                 *keyboardState = e.key;
         }else{
             keydown = false;
+        }
+        if(e.type != SDL_MOUSEWHEEL){
+            mouseScroll = false;
         }
 }
 
@@ -50,6 +61,22 @@ int InputHandler::GetMouseY(){
     int x, y;
     SDL_GetMouseState(&x, &y);
     return y;
+}
+
+int InputHandler::GetMouseScrollY(){
+    if(mouseScroll){
+        return mouseState->y;
+    }else{
+        return 0;
+    }
+}
+
+int InputHandler::GetMouseScrollX(){
+    if(mouseScroll){
+        return mouseState->x;
+    }else{
+        return 0;
+    }
 }
 
 bool InputHandler::QuitRequested(){

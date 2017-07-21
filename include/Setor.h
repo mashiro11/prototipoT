@@ -12,6 +12,8 @@
 
 #define SETOR_WIDTH 20
 #define SETOR_DIST 10
+#define ANIMATION_SPEED 2
+#define SCROLL_SPEED 3
 
 #define PI 3.1415
 
@@ -21,7 +23,7 @@ class Setor: public ScreenObject
 {
     public:
         //Setor();
-        Setor(string termo, string file, Point center, double radius);
+        Setor(string termo, string file, string posts, Point center, double radius);
         void Render();
         void Draw(SDL_Renderer* renderer);
         void Update();
@@ -37,6 +39,9 @@ class Setor: public ScreenObject
         double angF;
         SDL_Color color;
         string termo;
+        static void SetCopyAddress(Setor** setor);
+        static void SetAnimateAddress(bool* address);
+        static void SetAnimationOrientation(bool* clockwise);
 
     protected:
 
@@ -48,6 +53,11 @@ class Setor: public ScreenObject
 
         double radius;
         Sprite sp;
+        Sprite posts;
+        static Setor** scopy;
+        static bool* animate;
+        static bool* clockwise;
+        bool showPosts;
 };
 
 #endif // SETOR_H

@@ -5,27 +5,36 @@
 //    //ctor
 //}
 
-Setor::Setor(string termo, string file, Point center, double radius):
+Setor** Setor::scopy = nullptr;
+bool* Setor::animate = nullptr;
+bool* Setor::clockwise = nullptr;
+
+Setor::Setor(string termo, string file, string posts, Point center, double radius):
     percent(0),
-    sp(file)
+    sp(file),
+    posts(posts)
 {
     this->termo = termo;
     this->quantTermos = 1;
     this->center = center;
     this->radius = radius;
     this->angS = 0;
-    setorWidth = SETOR_WIDTH;
     setorDist = SETOR_DIST;
+    setorWidth = SETOR_WIDTH;
 
     SDL_Point pt;
-    pt.x = 0;
-    pt.y = radius + setorDist;
-    //pt.x = center.x;
-    //pt.y = center.y;
+    pt.x = - radius - setorDist;
+    pt.y = 0;
     sp.SetRotationPoint(pt);
-    sp.SetX(center.x);
-    sp.SetY(center.y - radius - setorDist);
+    sp.SetX(center.x + radius + setorDist);
+    sp.SetY(center.y);
+    sp.Transform(-1, 11);
 
+    showPosts = false;
+    this->posts.SetX(center.x + radius + setorDist + sp.GetWidth() + 40);
+    this->posts.SetY(center.y - radius - setorDist - sp.GetWidth() + 40);
+    this->posts.Transform(104 + this->posts.GetWidth(), -1);
+    this->posts.Clip(this->posts.GetWidth(), 185 - 40); //185 da box e 40 para compensar oq desceu
 }
 
 Setor::~Setor()
@@ -34,9 +43,12 @@ Setor::~Setor()
 }
 
 void Setor::Render(){
-    for (double k = angS; k < angF + angS; k += 0.1){
-        sp.SetRotationAngle(k*180/PI);
+    for (double k = angS; k + sp.GetHeight() < angF + angS; k += 0.1){
+        sp.SetRotationAngle(k);
         sp.Render();
+    }
+    if(showPosts){
+        posts.Render();
     }
 }
 
@@ -49,11 +61,23 @@ void Setor::Draw(SDL_Renderer* renderer){
 }
 
 void Setor::Update(){
-    angS += 0.001;
-    if(IsMouseInside()){
-        if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
-            cout << termo << endl;
-        }
+    if(*animate){
+        angS += ANIMATION_SPEED;
+//        if(*clockwise) angS += 1;
+//        else angS -= 1;
+
+        if(angS >= 360) angS -= 360;
+//        else if(angS <= 0) angS += 360;
+    }
+    if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED && IsMouseInside()){
+        *scopy = this;
+        showPosts = true;
+    }
+    if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED && !IsMouseInside()){
+        showPosts = false;
+    }
+    if(showPosts && posts.IsMouseInside()){
+        posts.SlideClip(0, InputHandler::GetMouseScrollY()*SCROLL_SPEED);
     }
 }
 
@@ -77,18 +101,30 @@ void Setor::SetPercent(double percent){
 
 void Setor::SetAng(double ang){
     this->angS = ang;
-    this->angF = 2*PI*percent + angS;
+    this->angF = 360*percent + angS;
 }
 
 bool Setor::IsMouseInside(){
     if(center.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) <= radius + setorWidth + setorDist &&
        center.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) >= radius + setorDist  &&
-       center.AngleTo(InputHandler::GetMouseX(), InputHandler::GetMouseY()) >= angS &&
-       center.AngleTo(InputHandler::GetMouseX(), InputHandler::GetMouseY()) <= angF + angS) {
+       center.AngleTo(InputHandler::GetMouseX(), InputHandler::GetMouseY())*180/PI >= angS &&
+       center.AngleTo(InputHandler::GetMouseX(), InputHandler::GetMouseY())*180/PI <= angF + angS) {
             return true;
     }else return false;
 }
 
 void Setor::NewAngle(int totalTermos){
-    angF = 2*PI* quantTermos/totalTermos;
+    angF = 360* quantTermos/totalTermos;
+}
+
+void Setor::SetCopyAddress(Setor** setor){
+    scopy = setor;
+}
+
+void Setor::SetAnimateAddress(bool* address){
+    animate = address;
+}
+
+void Setor::SetAnimationOrientation(bool* clockwise){
+    Setor::clockwise = clockwise;
 }

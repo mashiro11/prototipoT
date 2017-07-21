@@ -69,3 +69,41 @@ void Sprite::Render(){
         cout << "SDL_RenderCopyEx() error: " << SDL_GetError() << endl;
     }
 }
+
+void Sprite::Transform(int w, int h){
+    if(w != -1) imgRect.w = w;
+    if(h != -1) imgRect.h = h;
+}
+
+bool Sprite::IsMouseInside(){
+    if(InputHandler::GetMouseX() >= imgRect.x && InputHandler::GetMouseX() <= imgRect.x + imgRect.w &&
+       InputHandler::GetMouseY() >= imgRect.y && InputHandler::GetMouseY() <= imgRect.y + imgRect.h  ){
+        return true;
+    }else return false;
+}
+
+void Sprite::SlideClip(int amountX, int amountY){
+    if(amountX != 0){
+       if(srcRect.x + amountX > 0){
+           if(srcRect.x + amountY < aux->w - imgRect.w ){
+               srcRect.x += amountY;
+            }else{
+                srcRect.x = aux->w - imgRect.w;
+            }
+        }else{
+            srcRect.x = 0;
+        }
+    }
+
+    if(amountY != 0){
+       if(srcRect.y + amountY > 0){
+           if(srcRect.y + amountY < aux->h - imgRect.h ){
+               srcRect.y += amountY;
+            }else{
+                srcRect.y = aux->h - imgRect.h;
+            }
+        }else{
+            srcRect.y = 0;
+        }
+    }
+}

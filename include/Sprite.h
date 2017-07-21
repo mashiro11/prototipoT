@@ -7,6 +7,7 @@
 
 #include "Window.h"
 #include "Resources.h"
+#include "InputHandler.h"
 
 using std::string;
 using std::cout;
@@ -27,6 +28,9 @@ class Sprite
         void Clip(int w, int h, int x = 0, int y = 0);
         void SetRotationAngle(double angle);
         void SetRotationPoint(SDL_Point pt);
+        void Transform(int w, int h);
+        bool IsMouseInside();
+        void SlideClip(int amountX, int amountY);
 
     protected:
 

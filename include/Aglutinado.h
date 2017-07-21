@@ -13,6 +13,7 @@
 #include "Sprite.h"
 
 #define PI 3.1415
+#define STOP_ANGLE 315
 
 using std::unordered_map;
 using std::string;
@@ -23,14 +24,14 @@ using std::pair;
 class Aglutinado : public ScreenObject
 {
     public:
-        Aglutinado(int x, int y, int radius);
+        Aglutinado(int x, int y, int radius, string file = "");
         ~Aglutinado();
         void Draw(SDL_Renderer* renderer);
         void Render();
         void Update();
         void SetColor(int r, int g, int b, int a = 255);
-        void AddTermo(string termo, string file, SDL_Color cor);
-        void AddTermo(string termo, string file, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+        void AddTermo(string termo, string file, string posts, SDL_Color cor);
+        void AddTermo(string termo, string file, string posts, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
         bool IsMouseInside();
         bool IsMouseInsideSector();
     protected:
@@ -43,6 +44,11 @@ class Aglutinado : public ScreenObject
         SDL_Color color;
         bool colorChange;
         unordered_map<string, Setor*> setores;
+        Setor *clicked;
+        bool animate;
+        bool clockwise;
+        Sprite sp;
+        bool showWindow;
 
         int totalTermos;
         void _changeSetorColor(SDL_Renderer *renderer, SDL_Color color);
