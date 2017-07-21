@@ -63,13 +63,14 @@ void Setor::Draw(SDL_Renderer* renderer){
 void Setor::Update(){
     if(*animate){
         angS += ANIMATION_SPEED;
-//        if(*clockwise) angS += 1;
-//        else angS -= 1;
-
         if(angS >= 360) angS -= 360;
-//        else if(angS <= 0) angS += 360;
     }
     if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED && IsMouseInside()){
+        cout << "Fui clicado: " << termo << endl;
+        cout << "   meu endereco: " << this << endl;
+        cout << "   meu angS: " << angS << endl;
+        cout << "   meu angF: " << angF << endl;
+        cout << "   angulo do mouse calculado: " << (180/PI) * center.AngleTo(InputHandler::GetMouseX(), InputHandler::GetMouseY()) << endl << endl;
         *scopy = this;
         showPosts = true;
     }
@@ -105,11 +106,15 @@ void Setor::SetAng(double ang){
 }
 
 bool Setor::IsMouseInside(){
-    if(center.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) <= radius + setorWidth + setorDist &&
-       center.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) >= radius + setorDist  &&
-       center.AngleTo(InputHandler::GetMouseX(), InputHandler::GetMouseY())*180/PI >= angS &&
-       center.AngleTo(InputHandler::GetMouseX(), InputHandler::GetMouseY())*180/PI <= angF + angS) {
-            return true;
+    double dist = center.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY());
+    //angulo em graus
+    double angle = (180/PI) * center.AngleTo(InputHandler::GetMouseX(), InputHandler::GetMouseY());
+    if(dist <= radius + setorWidth + setorDist &&
+       dist >= radius + setorDist){
+           if(( angS <= angle && angle <= angS + angF) ||
+              ( angS <= (angle + 360) && (angle + 360) <= angS + angF)){
+                   return true;
+            } else return false;
     }else return false;
 }
 
