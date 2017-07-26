@@ -24,6 +24,7 @@ class Sprite
         int GetY();
         void SetX(int x);
         void SetY(int y);
+        void SetPosition(int x, int y);
         void Resize(int w, int h);
         void Clip(int w, int h, int x = 0, int y = 0);
         void SetRotationAngle(double angle);
@@ -31,6 +32,7 @@ class Sprite
         void Transform(int w, int h);
         bool IsMouseInside();
         void SlideClip(int amountX, int amountY);
+        string GetPath();
 
     protected:
 

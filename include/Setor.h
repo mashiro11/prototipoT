@@ -13,7 +13,7 @@
 #define SETOR_WIDTH 20
 #define SETOR_DIST 10
 #define ANIMATION_SPEED 0.5
-#define SCROLL_SPEED 3
+
 
 #define PI 3.1415
 
@@ -34,14 +34,18 @@ class Setor: public ScreenObject
         void SetPercent(double percent);
         void SetAng(double ang);
         bool IsMouseInside();
+        string GetPostPath();
         int quantTermos;
         double angS;
         double angF;
         SDL_Color color;
         string termo;
+
+
         static void SetCopyAddress(Setor** setor);
         static void SetAnimateAddress(bool* address);
         static void SetAnimationOrientation(bool* clockwise);
+
 
     protected:
 
@@ -53,7 +57,7 @@ class Setor: public ScreenObject
 
         double radius;
         Sprite sp;
-        Sprite posts;
+        string posts;
         static Setor** scopy;
         static bool* animate;
         static bool* clockwise;

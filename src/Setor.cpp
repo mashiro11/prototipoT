@@ -31,10 +31,6 @@ Setor::Setor(string termo, string file, string posts, Point center, double radiu
     sp.Transform(-1, 11);
 
     showPosts = false;
-    this->posts.SetX(center.x + radius + setorDist + sp.GetWidth() + 40);
-    this->posts.SetY(center.y - radius - setorDist - sp.GetWidth() + 40);
-    this->posts.Transform(104 + this->posts.GetWidth(), -1);
-    this->posts.Clip(this->posts.GetWidth(), 185 - 40); //185 da box e 40 para compensar oq desceu
 }
 
 Setor::~Setor()
@@ -46,9 +42,6 @@ void Setor::Render(){
     for (double k = angS; k + sp.GetHeight() < angF + angS; k += 6){
         sp.SetRotationAngle(k);
         sp.Render();
-    }
-    if(showPosts){
-        posts.Render();
     }
 }
 
@@ -65,16 +58,9 @@ void Setor::Update(){
         angS += ANIMATION_SPEED;
         if(angS >= 360) angS -= 360;
     }
-    if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED && IsMouseInside()){
-        *scopy = this;
-        showPosts = true;
-    }
-    if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED && !IsMouseInside()){
-        posts.Clip(posts.GetWidth(), posts.GetHeight(), 0, 0);
-        showPosts = false;
-    }
-    if(showPosts && posts.IsMouseInside()){
-        posts.SlideClip(0, InputHandler::GetMouseScrollY()*SCROLL_SPEED);
+    if(IsMouseInside()){//InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED && IsMouseInside()){
+        //se não estiver rolando animação, pode colocar a si mesmo no scopy
+        if( !(*animate) )*scopy = this;
     }
 }
 
@@ -128,4 +114,8 @@ void Setor::SetAnimateAddress(bool* address){
 
 void Setor::SetAnimationOrientation(bool* clockwise){
     Setor::clockwise = clockwise;
+}
+
+string Setor::GetPostPath(){
+    return posts;
 }

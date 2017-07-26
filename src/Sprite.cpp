@@ -38,6 +38,11 @@ int Sprite::GetY(){
     return imgRect.y;
 }
 
+void Sprite::SetPosition(int x, int y){
+    imgRect.x = x;
+    imgRect.y = y;
+}
+
 void Sprite::SetX(int x){
     imgRect.x = x;
 }
@@ -109,4 +114,8 @@ void Sprite::SlideClip(int amountX, int amountY){
             srcRect.y = 0;
         }
     }
+}
+
+string Sprite::GetPath(){
+    return path;
 }
