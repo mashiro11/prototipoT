@@ -4,6 +4,9 @@
 #include "Sprite.h"
 #include "Text.h"
 
+#define BUTTON_BACK_PATH "img/Botoes/Topogramas_Botao_Recuar_1.png"
+#define BUTTON_NEXT_PATH "img/Botoes/Topogramas_Botao_Avancar_1.png"
+
 #define SCROLL_SPEED 3
 
 class DialogBox
@@ -18,11 +21,21 @@ class DialogBox
         void SetPost(string post, int x = 0, int y = 0);
         void RemovePost();
         int GetWidth();
+        void CentralizeText(Text text);
+        bool IsMouseInside();
+
+        bool showDBox;
+        bool keepDBox;
+        bool showPosts;
+        string termoTemp;
+        string termoSelected;
 
     protected:
 
     private:
         Sprite body;
+        Sprite buttonBack;
+        Sprite buttonNext;
         Text termo;
         Text verPosts;
         Sprite* post;

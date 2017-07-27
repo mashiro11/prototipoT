@@ -51,6 +51,10 @@ void Sprite::SetY(int y){
     imgRect.y = y;
 }
 
+void Sprite::SetHeight(int h){
+    imgRect.h = h;
+}
+
 void Sprite::Clip(int w, int h, int x, int y){
     imgRect.w = srcRect.w = w;
     imgRect.h = srcRect.h = h;

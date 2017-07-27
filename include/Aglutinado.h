@@ -48,12 +48,13 @@ class Aglutinado : public ScreenObject
         bool colorChange;
         unordered_map<string, Setor*> setores;
         Setor *clicked;
+        Setor *hover;
         bool animate;
         bool clockwise;
         //Sprite sp;
         DialogBox dBox;
-        bool showDBox;
-        bool keepDBox;
+        //bool showDBox;
+        //bool keepDBox;
 
         int totalTermos;
         void _changeSetorColor(SDL_Renderer *renderer, SDL_Color color);

@@ -5,7 +5,8 @@
 //    //ctor
 //}
 
-Setor** Setor::scopy = nullptr;
+Setor** Setor::hasClick = nullptr;
+Setor** Setor::hasHover = nullptr;
 bool* Setor::animate = nullptr;
 bool* Setor::clockwise = nullptr;
 
@@ -29,8 +30,6 @@ Setor::Setor(string termo, string file, string posts, Point center, double radiu
     sp.SetX(center.x + radius + setorDist);
     sp.SetY(center.y);
     sp.Transform(-1, 11);
-
-    showPosts = false;
 }
 
 Setor::~Setor()
@@ -60,7 +59,12 @@ void Setor::Update(){
     }
     if(IsMouseInside()){//InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED && IsMouseInside()){
         //se não estiver rolando animação, pode colocar a si mesmo no scopy
-        if( !(*animate) )*scopy = this;
+        if( !(*animate) ){
+            *hasHover = this;
+            if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
+                *hasClick = this;
+            }
+        }
     }
 }
 
@@ -104,8 +108,9 @@ void Setor::NewAngle(int totalTermos){
     angF = 360* quantTermos/totalTermos;
 }
 
-void Setor::SetCopyAddress(Setor** setor){
-    scopy = setor;
+void Setor::SetClickedHoverAddresses(Setor** setorClick, Setor** setorHover){
+    hasClick = setorClick;
+    hasHover = setorHover;
 }
 
 void Setor::SetAnimateAddress(bool* address){

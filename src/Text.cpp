@@ -11,19 +11,11 @@
 
 bool Text::Initialized = false;
 
-Text::Text(){
-    DEBUG_PRINT("EMPTY TEXT CONSTRUCTOR")
-    if(!Initialized){
-        Initialize();
-    }
-}
-
-Text::Text(std::string fontFile, int fontSize, TextStyle style, std::string text, SDL_Color color, int x, int y)
+Text::Text(std::string fontFile, int fontSize, TextStyle style, std::string text, int x, int y, SDL_Color color)
 {
     if(!Initialized){
         Initialize();
     }
-	DEBUG_PRINT("non empty text constructor")
 
 	this->box.x = x;
 	this->box.y = y;
@@ -101,6 +93,15 @@ void Text::SetPos(int x, int y, bool centerX, bool centerY){
 	RemakeTexture();
 }
 
+void Text::SetX(int x, bool centered){
+    if(centered)
+		this->box.x = x - this->box.w/2.0; // arrumar calculo do centro
+	else
+		this->box.x = x;
+
+    RemakeTexture();
+}
+
 void Text::SetColor(SDL_Color color){
 	this->color = color;
 	RemakeTexture();
@@ -151,19 +152,19 @@ void Text::RemakeTexture(){
 	SDL_FreeSurface(surface);
 }
 
-void Text::OpenText(std::string fontFile, int fontSize, TextStyle style, std::string text, SDL_Color color, int x, int y){
-    this->box.x = x;
-	this->box.y = y;
+int Text::GetWidth(){
+    return box.w;
+}
 
-	this->fontSize = fontSize;
-	this->style = style;
-	this->text = text;
-	this->color = color;
-	this->texture = nullptr;
-	this->font = Resources::GetFont(fontFile, fontSize);
-	this->fontFile = fontFile;
+int Text::GetX(){
+    return box.x;
+}
 
-	RemakeTexture();
+bool Text::IsMouseInside(){
+    if(box.x <= InputHandler::GetMouseX() && InputHandler::GetMouseX() <= box.x + box.w &&
+       box.y <= InputHandler::GetMouseY() && InputHandler::GetMouseY() <= box.y + box.h){
+        return true;
+    }else return false;
 }
 
 #ifdef DEBUG

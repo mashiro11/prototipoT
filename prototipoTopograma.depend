@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1501103263 source:c:\users\thiag\documents\githubrep\prototipotopogramas\main.cpp
+1501168783 source:c:\users\thiag\documents\githubrep\prototipotopogramas\main.cpp
 	<iostream>
 	<SDL.h>
 	"Window.h"
@@ -334,10 +334,10 @@
 1500667003 source:c:\users\thiag\documents\githubrep\prototipotopogramas\src\window.cpp
 	"../include/Window.h"
 
-1501103703 source:c:\users\thiag\documents\githubrep\prototipotopogramas\src\aglutinado.cpp
+1501173393 source:c:\users\thiag\documents\githubrep\prototipotopogramas\src\aglutinado.cpp
 	"Aglutinado.h"
 
-1501100744 c:\users\thiag\documents\githubrep\prototipotopogramas\include\aglutinado.h
+1501172878 c:\users\thiag\documents\githubrep\prototipotopogramas\include\aglutinado.h
 	<SDL.h>
 	<unordered_map>
 	<string>
@@ -378,10 +378,10 @@
 	"begin_code.h"
 	"close_code.h"
 
-1501098814 source:c:\users\thiag\documents\githubrep\prototipotopogramas\src\sprite.cpp
+1501179236 source:c:\users\thiag\documents\githubrep\prototipotopogramas\src\sprite.cpp
 	"Sprite.h"
 
-1501098795 c:\users\thiag\documents\githubrep\prototipotopogramas\include\sprite.h
+1501179197 c:\users\thiag\documents\githubrep\prototipotopogramas\include\sprite.h
 	<SDL_image.h>
 	<string>
 	<iostream>
@@ -389,7 +389,7 @@
 	"Resources.h"
 	"InputHandler.h"
 
-1501103488 c:\users\thiag\documents\githubrep\prototipotopogramas\include\setor.h
+1501173124 c:\users\thiag\documents\githubrep\prototipotopogramas\include\setor.h
 	<string>
 	"SDL.h"
 	"ScreenObject.h"
@@ -405,7 +405,7 @@
 1499795533 source:c:\users\thiag\documents\githubrep\prototipotopogramas\src\point.cpp
 	"Point.h"
 
-1501100769 source:c:\users\thiag\documents\githubrep\prototipotopogramas\src\setor.cpp
+1501173028 source:c:\users\thiag\documents\githubrep\prototipotopogramas\src\setor.cpp
 	"Setor.h"
 
 1499783951 c:\users\thiag\documents\githubrep\prototipotopogramas\include\reta.h
@@ -739,16 +739,17 @@
 	"begin_code.h"
 	"close_code.h"
 
-1501104084 c:\users\thiag\documents\githubrep\prototipotopogramas\include\dialogbox.h
+1501172130 c:\users\thiag\documents\githubrep\prototipotopogramas\include\dialogbox.h
 	"Sprite.h"
 	"Text.h"
 
-1501089286 c:\users\thiag\documents\githubrep\prototipotopogramas\include\text.h
+1501167281 c:\users\thiag\documents\githubrep\prototipotopogramas\include\text.h
 	<iostream>
 	<string>
 	<SDL_ttf.h>
 	<SDL.h>
 	"Window.h"
+	"InputHandler.h"
 	"Resources.h"
 
 1454362933 c:\sdl2\sdl2_ttf-2.0.14\i686-w64-mingw32\include\sdl2\sdl_ttf.h
@@ -756,10 +757,10 @@
 	"begin_code.h"
 	"close_code.h"
 
-1501103753 source:c:\users\thiag\documents\githubrep\prototipotopogramas\src\dialogbox.cpp
+1501179947 source:c:\users\thiag\documents\githubrep\prototipotopogramas\src\dialogbox.cpp
 	"DialogBox.h"
 
-1501089233 source:c:\users\thiag\documents\githubrep\prototipotopogramas\src\text.cpp
+1501167458 source:c:\users\thiag\documents\githubrep\prototipotopogramas\src\text.cpp
 	"Text.h"
 
 1454362947 c:\sdl2\sdl2_ttf-2.0.14\x86_64-w64-mingw32\include\sdl2\sdl_ttf.h

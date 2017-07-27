@@ -42,7 +42,7 @@ class Setor: public ScreenObject
         string termo;
 
 
-        static void SetCopyAddress(Setor** setor);
+        static void SetClickedHoverAddresses(Setor** setorClicked, Setor** setorHover);
         static void SetAnimateAddress(bool* address);
         static void SetAnimationOrientation(bool* clockwise);
 
@@ -58,10 +58,10 @@ class Setor: public ScreenObject
         double radius;
         Sprite sp;
         string posts;
-        static Setor** scopy;
+        static Setor** hasHover;
+        static Setor** hasClick;
         static bool* animate;
         static bool* clockwise;
-        bool showPosts;
 };
 
 #endif // SETOR_H

@@ -8,6 +8,7 @@
 #include <SDL.h>
 
 #include "Window.h"
+#include "InputHandler.h"
 #include "Resources.h"
 
 
@@ -28,8 +29,7 @@ enum TextStyle{
 
 class Text {
 public:
-	Text();
-	Text(std::string fontFile, int fontSize, TextStyle style, std::string text, SDL_Color color, int x= 0, int y=0);
+	Text(std::string fontFile, int fontSize, TextStyle style, std::string text, int x, int y, SDL_Color color);
 	Text(std::string fontFile, int fontSize, TextStyle style, std::string text, int x= 0, int y=0, int r = 0, int g = 0, int b = 0, int a = 0);
 	~Text();
 
@@ -37,12 +37,15 @@ public:
 
 	void Render();
 	void SetPos(int x, int y, bool centerX = false, bool centerY = false);
+	void SetX(int x, bool centered = false);
 	void SetColor(SDL_Color color);
 	void SetColor(int r, int g, int b, int a);
 	void SetStyle(TextStyle style);
 	void SetFontSize(int fontSize);
 	void SetText(std::string text);
-    void OpenText(std::string fontFile, int fontSize, TextStyle style, std::string text, SDL_Color color, int x= 0, int y=0);
+    int GetWidth();
+    int GetX();
+    bool IsMouseInside();
 
 private:
 	void RemakeTexture();

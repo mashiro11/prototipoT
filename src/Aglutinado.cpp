@@ -10,7 +10,9 @@
 #endif //DEBUG
 
 Aglutinado::Aglutinado(int x, int y, int radius, string bgFile, string fontFile, int fontSize, TextStyle style):
-    dBox(x + radius + 20 + 10 + 10, y - radius - 20 - 10, bgFile, fontFile, fontSize, style)
+    dBox(x + radius + 20 + 10 + 10, y - radius - 20 - 10, bgFile, fontFile, fontSize, style),
+    clicked(nullptr),
+    hover(nullptr)
 {
     center.x = x;
     center.y = y;
@@ -22,13 +24,11 @@ Aglutinado::Aglutinado(int x, int y, int radius, string bgFile, string fontFile,
     totalTermos = 0;
     animate = false;
     clockwise = false;
-    Setor::SetCopyAddress(&clicked);
+    Setor::SetClickedHoverAddresses(&clicked, &hover);
     Setor::SetAnimateAddress(&animate);
     Setor::SetAnimationOrientation(&clockwise);
-    Setor::SetAnimationOrientation(&showDBox);
+    //Setor::SetAnimationOrientation(&showDBox);
 
-    showDBox = false;
-    keepDBox = false;
     //sp.SetX(center.x + radius + setorDist + setorWidth);
     //sp.SetY(center.y - radius - setorDist - setorWidth);
 }
@@ -57,9 +57,8 @@ void Aglutinado::Draw(SDL_Renderer *renderer){
 
 void Aglutinado::Render(){
     //DEBUG_PRINT("Aglutinado::Render() - inicio");
-    if(showDBox){
-        dBox.Render();
-    }
+
+    dBox.Render();
     for(auto it = setores.begin(); it != setores.end(); it++){
         it->second->Render();
     }
@@ -84,14 +83,16 @@ void Aglutinado::Update(){
     if(IsMouseInsideSector()){
 
         //se não for pra manter a janela aberta, pode trocar as informações da janela
-        dBox.SetTermo(clicked->termo);
-        showDBox = true;
+        dBox.termoTemp = hover->termo;
+        dBox.SetTermo(hover->termo);
+        dBox.showDBox = true;
 
         //Hover + click
         //se for clicado,
         if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
             //a janela deve ser mantida aberta
-            keepDBox = true;
+            dBox.termoSelected = dBox.termoTemp;
+            dBox.keepDBox = true;
 
 
             //informa qual imagem de post deve ser renderizada
@@ -105,12 +106,16 @@ void Aglutinado::Update(){
         }
     }else{
         //Se o mouse não está dentro do setor
-        if(!keepDBox) showDBox = false;
+        if(clicked != nullptr){
+            dBox.termoTemp = clicked->termo;
+            dBox.SetTermo(clicked->termo);
+        }
+        if(!dBox.keepDBox) dBox.showDBox = false;
     }
 
-    //Se clicar fora dos setores fecha as janelas
-    if(!IsMouseInsideSector() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
-        keepDBox = showDBox = false;
+    //Se clicar fora dos setores e da janela fecha as janelas
+    if(!IsMouseInsideSector() && !dBox.IsMouseInside() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
+        dBox.keepDBox = dBox.showDBox = dBox.showPosts = false;
         dBox.RemovePost();
     }
 
