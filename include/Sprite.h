@@ -34,6 +34,7 @@ class Sprite
         bool IsMouseInside();
         void SlideClip(int amountX, int amountY);
         string GetPath();
+        void SetAlpha(int alpha);
 
     protected:
 
@@ -46,6 +47,7 @@ class Sprite
         string path;
         SDL_Point pt;
         double angle;
+        Uint32 alpha;
 };
 
 #endif // SPRITE_H

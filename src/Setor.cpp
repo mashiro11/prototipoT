@@ -1,19 +1,24 @@
 #include "Setor.h"
 
-//Setor::Setor():center(0,0), percent(0), radius(0)
-//{
-//    //ctor
-//}
+//#define DEBUG
+#ifdef DEBUG
+        //se estiver definido debug, imprime os trecos
+        #define DEBUG_PRINT(message) do{std::cout << message << std::endl;}while(0)
+#else
+        //caso contrario, recebe argumentos mas faz nada
+        #define DEBUG_PRINT(message)
+#endif //DEBUG
 
-Setor** Setor::hasClick = nullptr;
-Setor** Setor::hasHover = nullptr;
-bool* Setor::animate = nullptr;
-bool* Setor::clockwise = nullptr;
-
-Setor::Setor(string termo, string file, string posts, Point center, double radius):
+Setor::Setor(Aglutinado &agl, string termo, string file, string posts, Point center, double radius):
+    agl(agl),
+    termBox("img/termbox.png", center.x, center.y),
+    termSetor("fonts/Roboto-Bold.ttf", 10, BLENDED, termo, center.x, center.y, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
+    showTermbox(false),
     percent(0),
     sp(file),
-    posts(posts)
+    posts(posts),
+    hadMouseHover(false),
+    baseAlpha(SDL_ALPHA_OPAQUE*0.5)
 {
     this->termo = termo;
     this->quantTermos = 1;
@@ -30,6 +35,8 @@ Setor::Setor(string termo, string file, string posts, Point center, double radiu
     sp.SetX(center.x + radius + setorDist);
     sp.SetY(center.y);
     sp.Transform(-1, 11);
+
+    sp.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
 }
 
 Setor::~Setor()
@@ -38,9 +45,34 @@ Setor::~Setor()
 }
 
 void Setor::Render(){
-    for (double k = angS; k + sp.GetHeight() < angF + angS; k += 6){
+
+    for (double k = angS; k + sp.GetHeight() < angF + angS; k += 10){
         sp.SetRotationAngle(k);
         sp.Render();
+    }
+
+    if(showTermbox){
+        termBox.Render();
+        termSetor.Render();
+
+        double mediana = angS+angF/2;
+        if (0 <= mediana && mediana <= 90){
+            SDL_RenderDrawLine(Window::GetRenderer(),
+                               termBox.GetX(), termBox.GetY(),
+                               center.x, center.y);
+        }else if(90 < mediana && mediana <= 180 ){
+            SDL_RenderDrawLine(Window::GetRenderer(),
+                               termBox.GetX() + termBox.GetWidth(), termBox.GetY(),
+                               center.x, center.y);
+        }else if(180 < mediana && mediana < 270){
+            SDL_RenderDrawLine(Window::GetRenderer(),
+                               termBox.GetX() + termBox.GetWidth(), termBox.GetY() + termBox.GetHeight(),
+                               center.x, center.y);
+        }else if(270 <= mediana && mediana <= 360){//primeiro ou quarto quadrantes
+            SDL_RenderDrawLine(Window::GetRenderer(), termBox.GetX(),
+                               termBox.GetY() + termBox.GetHeight(),
+                               center.x, center.y);
+        }
     }
 }
 
@@ -53,18 +85,76 @@ void Setor::Draw(SDL_Renderer* renderer){
 }
 
 void Setor::Update(){
-    if(*animate){
+    if(agl.animate){
         angS += ANIMATION_SPEED;
         if(angS >= 360) angS -= 360;
     }
-    if(IsMouseInside()){//InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED && IsMouseInside()){
-        //se não estiver rolando animação, pode colocar a si mesmo no scopy
-        if( !(*animate) ){
-            *hasHover = this;
-            if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
-                *hasClick = this;
+    double mediana = angS+angF/2;
+    if(0 < mediana && mediana <= 90){//primeiro quadrante
+        termBox.SetPosition(center.x+(radius+setorDist+sp.GetWidth())*cos( mediana *PI/180),
+                            center.y+(radius+setorDist+sp.GetWidth())*sin( mediana *PI/180));
+
+        termSetor.SetPos(center.x+(radius+setorDist+sp.GetWidth())*cos( mediana *PI/180),
+                         center.y+(radius+setorDist+sp.GetWidth())*sin( mediana *PI/180));
+
+    }else if(90 < mediana && mediana <= 180){//segundo quadrante
+        termBox.SetPosition(center.x - termBox.GetWidth() +(radius+setorDist+sp.GetWidth())*cos( mediana *PI/180),
+                            center.y +(radius+setorDist+sp.GetWidth())*sin( mediana *PI/180));
+
+        termSetor.SetPos(center.x - termBox.GetWidth() +(radius+setorDist+sp.GetWidth())*cos( mediana *PI/180),
+                         center.y +(radius+setorDist+sp.GetWidth())*sin( mediana *PI/180));
+    }else if(180 < mediana && mediana <= 270){
+        termBox.SetPosition(center.x - termBox.GetWidth() +(radius+setorDist+sp.GetWidth())*cos( mediana *PI/180),
+                            center.y - termBox.GetHeight() +(radius+setorDist+sp.GetWidth())*sin( mediana *PI/180));
+
+        termSetor.SetPos(center.x - termBox.GetWidth() +(radius+setorDist+sp.GetWidth())*cos( mediana *PI/180),
+                         center.y - termBox.GetHeight() +(radius+setorDist+sp.GetWidth())*sin( mediana *PI/180));
+
+    }else if(270 < mediana && mediana <= 360){
+        termBox.SetPosition(center.x +(radius+setorDist+sp.GetWidth())*cos( mediana *PI/180),
+                            center.y - termBox.GetHeight() +(radius+setorDist+sp.GetWidth())*sin( mediana *PI/180));
+
+        termSetor.SetPos(center.x +(radius+setorDist+sp.GetWidth())*cos( mediana *PI/180),
+                         center.y - termBox.GetHeight() +(radius+setorDist+sp.GetWidth())*sin( mediana *PI/180));
+
+    }
+    //Durante a animação as respostas ao mouse são desligadas
+    if( !(agl.animate) ){
+        if(IsMouseInside()){//MouseHover
+            if(hadMouseHover == false){//entrou
+                agl.hover = this;
+                hadMouseHover = true;
+                sp.SetAlpha(SDL_ALPHA_OPAQUE);
+
+                if(agl.clicked != this){//se não for esse o setor clicado
+                    showTermbox = true;
+                }
+            }
+        }else{//se não está em MouseHover
+            if(hadMouseHover == true){//se saiu do mouseHover
+                hadMouseHover = false;
+                showTermbox = false;
+                AdjustOpacity();
             }
         }
+        if(IsClicked()){
+            agl.clicked = this;
+            AdjustOpacity();
+        }
+        if(ClickedOut()){
+            //se alguém foi clicado e não foi esse
+            AdjustOpacity();
+        }
+    }
+}
+
+void Setor::AdjustOpacity(){
+    if(agl.clicked == nullptr){
+        sp.SetAlpha(baseAlpha);
+    }else if(agl.clicked != this){
+        sp.SetAlpha(SDL_ALPHA_OPAQUE*0.2);
+    }else if(agl.clicked == this){
+        sp.SetAlpha(SDL_ALPHA_OPAQUE);
     }
 }
 
@@ -104,23 +194,37 @@ bool Setor::IsMouseInside(){
     }else return false;
 }
 
+bool Setor::IsClicked(){
+    return (IsMouseInside() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED);
+}
+
+bool Setor::ClickedOut(){
+    return (!IsMouseInside() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED);
+}
+
 void Setor::NewAngle(int totalTermos){
     angF = 360* quantTermos/totalTermos;
-}
-
-void Setor::SetClickedHoverAddresses(Setor** setorClick, Setor** setorHover){
-    hasClick = setorClick;
-    hasHover = setorHover;
-}
-
-void Setor::SetAnimateAddress(bool* address){
-    animate = address;
-}
-
-void Setor::SetAnimationOrientation(bool* clockwise){
-    Setor::clockwise = clockwise;
 }
 
 string Setor::GetPostPath(){
     return posts;
 }
+
+void Setor::SetAlpha(int alpha){
+    sp.SetAlpha(alpha);
+}
+
+void Setor::Active(bool active){
+    if(active){
+        baseAlpha = SDL_ALPHA_OPAQUE*0.5;
+    }else{
+        baseAlpha = SDL_ALPHA_OPAQUE*0.2;
+    }
+    AdjustOpacity();
+}
+
+
+
+#ifdef DEBUG
+    #undef DEBUG
+#endif // DEBUG

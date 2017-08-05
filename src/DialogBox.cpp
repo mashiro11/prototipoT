@@ -104,6 +104,7 @@ void DialogBox::CentralizeText(Text text){
 bool DialogBox::IsMouseInside(){
     return body.IsMouseInside();
 }
+
 #ifdef DEBUG
     #undef DEBUG
 #endif // DEBUG

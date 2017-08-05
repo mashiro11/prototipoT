@@ -9,6 +9,9 @@
 #include "Reta.h"
 #include "Sprite.h"
 #include "InputHandler.h"
+#include "Text.h"
+#include "Window.h"
+#include "Aglutinado.h"
 
 #define SETOR_WIDTH 20
 #define SETOR_DIST 10
@@ -18,12 +21,12 @@
 #define PI 3.1415
 
 using std::string;
-
+class Aglutinado;
 class Setor: public ScreenObject
 {
     public:
         //Setor();
-        Setor(string termo, string file, string posts, Point center, double radius);
+        Setor(Aglutinado &agl, string termo, string file, string posts, Point center, double radius);
         void Render();
         void Draw(SDL_Renderer* renderer);
         void Update();
@@ -34,22 +37,26 @@ class Setor: public ScreenObject
         void SetPercent(double percent);
         void SetAng(double ang);
         bool IsMouseInside();
+        bool IsClicked();
+        bool ClickedOut();
         string GetPostPath();
         int quantTermos;
         double angS;
         double angF;
         SDL_Color color;
         string termo;
-
-
-        static void SetClickedHoverAddresses(Setor** setorClicked, Setor** setorHover);
-        static void SetAnimateAddress(bool* address);
-        static void SetAnimationOrientation(bool* clockwise);
-
+        void SetAlpha(int alpha);
+        void Active(bool active);
 
     protected:
 
     private:
+        Aglutinado &agl;
+        void AdjustOpacity();
+        Sprite termBox;
+        Text termSetor;
+        bool showTermbox;
+
         Point center;
         double percent;
         double setorWidth;
@@ -58,10 +65,13 @@ class Setor: public ScreenObject
         double radius;
         Sprite sp;
         string posts;
-        static Setor** hasHover;
-        static Setor** hasClick;
-        static bool* animate;
-        static bool* clockwise;
+        int baseAlpha;
+//        static Setor** hasHover;
+//        static Setor** hasClick;
+//        static bool* animate;
+//        static bool* clockwise;
+
+        bool hadMouseHover;
 };
 
 #endif // SETOR_H

@@ -1,6 +1,7 @@
 #include "Sprite.h"
 
-Sprite::Sprite(string path, int x, int y)
+Sprite::Sprite(string path, int x, int y):
+    alpha(SDL_ALPHA_OPAQUE)
 {
     imgRect.x = x;
     imgRect.y = y;
@@ -55,6 +56,10 @@ void Sprite::SetHeight(int h){
     imgRect.h = h;
 }
 
+void Sprite::SetAlpha(int alpha){
+    this->alpha = alpha;
+}
+
 void Sprite::Clip(int w, int h, int x, int y){
     imgRect.w = srcRect.w = w;
     imgRect.h = srcRect.h = h;
@@ -76,6 +81,11 @@ void Sprite::SetRotationAngle(double angle){
 
 void Sprite::Render(){
     //como vai aparecer na tela
+    if(alpha >= SDL_ALPHA_OPAQUE) alpha = SDL_ALPHA_OPAQUE;
+    if(alpha <= SDL_ALPHA_TRANSPARENT) alpha = SDL_ALPHA_TRANSPARENT;
+    if(SDL_SetTextureAlphaMod(this->img, alpha) < 0)
+        SDL_GetError();
+
     SDL_SetTextureBlendMode(img, SDL_BLENDMODE_BLEND );
     if(SDL_RenderCopyEx(Window::GetRenderer(), img, &srcRect, &imgRect, angle, &pt, SDL_FLIP_NONE)){
         cout << "SDL_RenderCopyEx() error: " << SDL_GetError() << endl;

@@ -9,13 +9,19 @@
         #define DEBUG_PRINT(message)
 #endif //DEBUG
 
+Aglutinado* Aglutinado::aglSelected = nullptr;
+
 Aglutinado::Aglutinado(int x, int y, int radius, string bgFile, string fontFile, int fontSize, TextStyle style):
     dBox(x + radius + 20 + 10 + 10, y - radius - 20 - 10, bgFile, fontFile, fontSize, style),
+    center(x,y),
     clicked(nullptr),
-    hover(nullptr)
+    hover(nullptr),
+    circle("img/Setores/circulo72.png"),
+    active(false)
 {
-    center.x = x;
-    center.y = y;
+    circle.Resize(circle.GetWidth()*1.15, circle.GetWidth()*1.15);
+    circle.SetPosition(center.x - circle.GetWidth()/2, center.y - circle.GetHeight()/2);
+
     this->radius = radius;
     colorChange = false;
 
@@ -24,13 +30,6 @@ Aglutinado::Aglutinado(int x, int y, int radius, string bgFile, string fontFile,
     totalTermos = 0;
     animate = false;
     clockwise = false;
-    Setor::SetClickedHoverAddresses(&clicked, &hover);
-    Setor::SetAnimateAddress(&animate);
-    Setor::SetAnimationOrientation(&clockwise);
-    //Setor::SetAnimationOrientation(&showDBox);
-
-    //sp.SetX(center.x + radius + setorDist + setorWidth);
-    //sp.SetY(center.y - radius - setorDist - setorWidth);
 }
 
 Aglutinado::~Aglutinado()
@@ -57,8 +56,9 @@ void Aglutinado::Draw(SDL_Renderer *renderer){
 
 void Aglutinado::Render(){
     //DEBUG_PRINT("Aglutinado::Render() - inicio");
-
+    circle.Render();
     dBox.Render();
+
     for(auto it = setores.begin(); it != setores.end(); it++){
         it->second->Render();
     }
@@ -67,6 +67,21 @@ void Aglutinado::Render(){
 
 void Aglutinado::Update(){
     //DEBUG_PRINT("Aglutinado::Update() - inicio");
+    //Se clicar fora dos setores e da janela fecha as janelas
+    if( IsSectorClicked() ) aglSelected = this;
+    if( aglSelected != nullptr){
+        Active( false );
+    }else{
+        Active( true );
+    }
+    if(!IsMouseInsideSector() && !dBox.IsMouseInside() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
+        aglSelected = nullptr;
+        active = false;
+        clicked = nullptr;
+        dBox.keepDBox = dBox.showDBox = dBox.showPosts = false;
+        dBox.RemovePost();
+    }
+
     if(IsMouseInside() && !IsMouseInsideSector()){
         if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
             cout << "Dentro do circulo, fora dos setores" << endl;
@@ -74,24 +89,26 @@ void Aglutinado::Update(){
     }
 
     //Atualiza cada um dos setores
-    for(auto it = setores.begin(); it != setores.end(); it++){
-        (it->second)->Update();
+    for(int i = 0; i < 2; i++){
+        for(auto it = setores.begin(); it != setores.end(); it++){
+            (it->second)->Update();
+        }
     }
 
     dBox.Update();
     //Hover no setor
     if(IsMouseInsideSector()){
-
-        //se não for pra manter a janela aberta, pode trocar as informações da janela
-        dBox.termoTemp = hover->termo;
-        dBox.SetTermo(hover->termo);
-        dBox.showDBox = true;
-
         //Hover + click
         //se for clicado,
         if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
+            aglSelected = this;
+            active = true;
             //a janela deve ser mantida aberta
+            dBox.termoTemp = hover->termo;
+            dBox.SetTermo(hover->termo);
+
             dBox.termoSelected = dBox.termoTemp;
+            dBox.showDBox = true;
             dBox.keepDBox = true;
 
 
@@ -111,12 +128,6 @@ void Aglutinado::Update(){
             dBox.SetTermo(clicked->termo);
         }
         if(!dBox.keepDBox) dBox.showDBox = false;
-    }
-
-    //Se clicar fora dos setores e da janela fecha as janelas
-    if(!IsMouseInsideSector() && !dBox.IsMouseInside() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
-        dBox.keepDBox = dBox.showDBox = dBox.showPosts = false;
-        dBox.RemovePost();
     }
 
     //realiza a animação
@@ -143,7 +154,7 @@ void Aglutinado::AddTermo(string termo, string file, string posts, SDL_Color col
     if( setores.find(termo) != setores.end() ){
         setores[termo]->quantTermos++;
     }else{
-        setores[termo] = new Setor(termo, file, posts, this->center, this->radius);
+        setores[termo] = new Setor(*this, termo, file, posts, this->center, this->radius);
         setores[termo]->color = color;
     }
     UpdateValues();
@@ -190,11 +201,28 @@ bool Aglutinado::IsMouseInside(){
     }else return false;
 }
 
+bool Aglutinado::IsSectorClicked(){
+    return( IsMouseInsideSector() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED );
+}
+
 bool Aglutinado::IsMouseInsideSector(){
     if(center.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) <= radius + setorWidth + setorDist &&
        center.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) >= radius + setorDist){
             return true;
     }else return false;
+}
+
+void Aglutinado::SetAlpha(int alpha){
+    for(auto it = setores.begin(); it != setores.end(); it++){
+        it->second->SetAlpha(alpha);
+    }
+    circle.SetAlpha(alpha);
+}
+
+void Aglutinado::Active(bool active){
+    for(auto it = setores.begin(); it != setores.end(); it++){
+        it->second->Active(active);
+    }
 }
 
 #ifdef DEBUG
