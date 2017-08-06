@@ -42,10 +42,8 @@ class Aglutinado : public ScreenObject
         void Active(bool active);
 
         static Aglutinado *aglSelected;
-        Setor *clicked;
-        Setor *hover;
         bool animate;
-        bool active;
+        bool selected;
 
     protected:
 
@@ -61,10 +59,7 @@ class Aglutinado : public ScreenObject
         bool colorChange;
         unordered_map<string, Setor*> setores;
         bool clockwise;
-        //Sprite sp;
         DialogBox dBox;
-        //bool showDBox;
-        //bool keepDBox;
 
         int totalTermos;
         void _changeSetorColor(SDL_Renderer *renderer, SDL_Color color);

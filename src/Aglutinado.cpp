@@ -14,10 +14,10 @@ Aglutinado* Aglutinado::aglSelected = nullptr;
 Aglutinado::Aglutinado(int x, int y, int radius, string bgFile, string fontFile, int fontSize, TextStyle style):
     dBox(x + radius + 20 + 10 + 10, y - radius - 20 - 10, bgFile, fontFile, fontSize, style),
     center(x,y),
-    clicked(nullptr),
-    hover(nullptr),
+    //clicked(nullptr),
+    //hover(nullptr),
     circle("img/Setores/circulo72.png"),
-    active(false)
+    selected(false)
 {
     circle.Resize(circle.GetWidth()*1.15, circle.GetWidth()*1.15);
     circle.SetPosition(center.x - circle.GetWidth()/2, center.y - circle.GetHeight()/2);
@@ -67,20 +67,19 @@ void Aglutinado::Render(){
 
 void Aglutinado::Update(){
     //DEBUG_PRINT("Aglutinado::Update() - inicio");
-    //Se clicar fora dos setores e da janela fecha as janelas
-    if( IsSectorClicked() ) aglSelected = this;
-    if( aglSelected != nullptr){
-        Active( false );
-    }else{
-        Active( true );
-    }
+    //Se clicou fora da dialogBox ou do aglomerado, esse aglomerado deixa de ser o selecionado
     if(!IsMouseInsideSector() && !dBox.IsMouseInside() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
-        aglSelected = nullptr;
-        active = false;
-        clicked = nullptr;
+        selected = false;
         dBox.keepDBox = dBox.showDBox = dBox.showPosts = false;
         dBox.RemovePost();
     }
+
+    //Indica para a classe qual é o aglomerado clicado
+    if( IsSectorClicked() ){
+        aglSelected = this;
+        selected = true;
+    }
+
 
     if(IsMouseInside() && !IsMouseInsideSector()){
         if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
@@ -102,37 +101,34 @@ void Aglutinado::Update(){
         //se for clicado,
         if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
             aglSelected = this;
-            active = true;
+            selected = true;
             //a janela deve ser mantida aberta
-            dBox.termoTemp = hover->termo;
-            dBox.SetTermo(hover->termo);
-
             dBox.termoSelected = dBox.termoTemp;
             dBox.showDBox = true;
             dBox.keepDBox = true;
 
 
             //informa qual imagem de post deve ser renderizada
-            dBox.SetPost(clicked->GetPostPath(), dBox.GetWidth());
+            dBox.SetPost(Setor::hasClick->GetPostPath(), dBox.GetWidth());
 
             //caso não esteja bem posicionado, ativar a animação
-            double med = clicked->angS + clicked->angF/2;
+            double med = Setor::hasClick->angS + Setor::hasClick->angF/2;
             if(med < STOP_ANGLE || med > STOP_ANGLE){
                 animate = true;
             }
         }
     }else{
         //Se o mouse não está dentro do setor
-        if(clicked != nullptr){
-            dBox.termoTemp = clicked->termo;
-            dBox.SetTermo(clicked->termo);
+        if(Setor::hasClick != nullptr){
+            dBox.termoTemp = Setor::hasClick->termo;
+            dBox.SetTermo(Setor::hasClick->termo);
         }
         if(!dBox.keepDBox) dBox.showDBox = false;
     }
 
     //realiza a animação
     if(animate){
-        double med = clicked->angS + clicked->angF/2;
+        double med = Setor::hasClick->angS + Setor::hasClick->angF/2;
         if(STOP_ANGLE - 2 <= med && med <= STOP_ANGLE + 2){
             animate = false;
         }

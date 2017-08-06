@@ -45,8 +45,14 @@ Mapa::~Mapa()
 }
 
 void Mapa::Update(){
+    bool aglClicked = false;
     for(auto it = aglutinados.begin(); it != aglutinados.end(); it++){
         (*it)->Update();
+        aglClicked |= (*it)->selected;
+    }
+    if(aglClicked == false){
+        Aglutinado::aglSelected = nullptr;
+        Setor::hasClick = nullptr;
     }
 }
 

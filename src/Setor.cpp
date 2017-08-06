@@ -9,6 +9,8 @@
         #define DEBUG_PRINT(message)
 #endif //DEBUG
 
+Setor* Setor::hasClick = nullptr;
+
 Setor::Setor(Aglutinado &agl, string termo, string file, string posts, Point center, double radius):
     agl(agl),
     termBox("img/termbox.png", center.x, center.y),
@@ -89,6 +91,33 @@ void Setor::Update(){
         angS += ANIMATION_SPEED;
         if(angS >= 360) angS -= 360;
     }
+    //Durante a animação as respostas ao mouse são desligadas
+    PositionTermbox();
+    AdjustOpacity();
+    if( !(agl.animate) ){
+        if(IsMouseInside()){//MouseHover
+            if(hadMouseHover == false){//entrou
+                //agl.hover = this;
+                hadMouseHover = true;
+                sp.SetAlpha(SDL_ALPHA_OPAQUE);
+
+                if(hasClick != this){//se não for esse o setor clicado
+                    showTermbox = true;
+                }
+            }
+        }else{//se não está em MouseHover
+            if(hadMouseHover == true){//se saiu do mouseHover
+                hadMouseHover = false;
+                showTermbox = false;
+            }
+        }
+        if(IsClicked()){
+            hasClick = this;
+        }
+    }
+}
+
+void Setor::PositionTermbox(){
     double mediana = angS+angF/2;
     if(0 < mediana && mediana <= 90){//primeiro quadrante
         termBox.SetPosition(center.x+(radius+setorDist+sp.GetWidth())*cos( mediana *PI/180),
@@ -116,44 +145,15 @@ void Setor::Update(){
 
         termSetor.SetPos(center.x +(radius+setorDist+sp.GetWidth())*cos( mediana *PI/180),
                          center.y - termBox.GetHeight() +(radius+setorDist+sp.GetWidth())*sin( mediana *PI/180));
-
-    }
-    //Durante a animação as respostas ao mouse são desligadas
-    if( !(agl.animate) ){
-        if(IsMouseInside()){//MouseHover
-            if(hadMouseHover == false){//entrou
-                agl.hover = this;
-                hadMouseHover = true;
-                sp.SetAlpha(SDL_ALPHA_OPAQUE);
-
-                if(agl.clicked != this){//se não for esse o setor clicado
-                    showTermbox = true;
-                }
-            }
-        }else{//se não está em MouseHover
-            if(hadMouseHover == true){//se saiu do mouseHover
-                hadMouseHover = false;
-                showTermbox = false;
-                AdjustOpacity();
-            }
-        }
-        if(IsClicked()){
-            agl.clicked = this;
-            AdjustOpacity();
-        }
-        if(ClickedOut()){
-            //se alguém foi clicado e não foi esse
-            AdjustOpacity();
-        }
     }
 }
 
 void Setor::AdjustOpacity(){
-    if(agl.clicked == nullptr){
-        sp.SetAlpha(baseAlpha);
-    }else if(agl.clicked != this){
+    if(hasClick == nullptr){
+        sp.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
+    }else if(hasClick != this){
         sp.SetAlpha(SDL_ALPHA_OPAQUE*0.2);
-    }else if(agl.clicked == this){
+    }else if(hasClick == this){
         sp.SetAlpha(SDL_ALPHA_OPAQUE);
     }
 }
@@ -215,11 +215,7 @@ void Setor::SetAlpha(int alpha){
 }
 
 void Setor::Active(bool active){
-    if(active){
-        baseAlpha = SDL_ALPHA_OPAQUE*0.5;
-    }else{
-        baseAlpha = SDL_ALPHA_OPAQUE*0.2;
-    }
+
     AdjustOpacity();
 }
 

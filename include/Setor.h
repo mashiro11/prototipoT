@@ -47,12 +47,14 @@ class Setor: public ScreenObject
         string termo;
         void SetAlpha(int alpha);
         void Active(bool active);
+        static Setor* hasClick;
 
     protected:
 
     private:
         Aglutinado &agl;
         void AdjustOpacity();
+        void PositionTermbox();
         Sprite termBox;
         Text termSetor;
         bool showTermbox;
@@ -66,10 +68,6 @@ class Setor: public ScreenObject
         Sprite sp;
         string posts;
         int baseAlpha;
-//        static Setor** hasHover;
-//        static Setor** hasClick;
-//        static bool* animate;
-//        static bool* clockwise;
 
         bool hadMouseHover;
 };
