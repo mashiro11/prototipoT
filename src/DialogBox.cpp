@@ -53,6 +53,12 @@ void DialogBox::Render(){
 
 void DialogBox::Update(){
     if(showDBox){
+        termo.SetX(termo.GetX() + Camera::position.x);
+        termo.SetY(termo.GetY() + Camera::position.y);
+
+        verPosts.SetX(verPosts.GetX() + Camera::position.x);
+        verPosts.SetY(verPosts.GetY() + Camera::position.y);
+
         if(body.GetHeight() == 35){
             body.SetHeight(165);
         }

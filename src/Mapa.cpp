@@ -54,6 +54,8 @@ void Mapa::Update(){
         Aglutinado::aglSelected = nullptr;
         Setor::hasClick = nullptr;
     }
+//    bg.SetX( bg.GetX() + Camera::position.x);
+//    bg.SetY( bg.GetY() + Camera::position.y);
 }
 
 void Mapa::Render(){

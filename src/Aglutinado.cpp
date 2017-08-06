@@ -14,13 +14,15 @@ Aglutinado* Aglutinado::aglSelected = nullptr;
 Aglutinado::Aglutinado(int x, int y, int radius, string bgFile, string fontFile, int fontSize, TextStyle style):
     dBox(x + radius + 20 + 10 + 10, y - radius - 20 - 10, bgFile, fontFile, fontSize, style),
     center(x,y),
+    centerRelative(x + Camera::position.x, y + Camera::position.y),
     //clicked(nullptr),
     //hover(nullptr),
     circle("img/Setores/circulo72.png"),
     selected(false)
 {
     circle.Resize(circle.GetWidth()*1.15, circle.GetWidth()*1.15);
-    circle.SetPosition(center.x - circle.GetWidth()/2, center.y - circle.GetHeight()/2);
+    circle.SetPosition(centerRelative.x - circle.GetWidth()/2,
+                       centerRelative.y - circle.GetHeight()/2);
 
     this->radius = radius;
     colorChange = false;
@@ -44,7 +46,9 @@ void Aglutinado::Draw(SDL_Renderer *renderer){
         colorChange = false;
     }
     for(double i = 0; i < 2*PI; i+=0.00005){
-        SDL_RenderDrawLine(renderer, center.x, center.y, center.x+radius*cos(i), center.y+radius*sin(i));
+        SDL_RenderDrawLine(renderer,
+                           centerRelative.x, centerRelative.y,
+                           centerRelative.x + radius*cos(i), centerRelative.y + radius*sin(i));
     }
 
     //  Desenha os setores
@@ -67,6 +71,8 @@ void Aglutinado::Render(){
 
 void Aglutinado::Update(){
     //DEBUG_PRINT("Aglutinado::Update() - inicio");
+    centerRelative.x = center.x + Camera::position.x;
+    centerRelative.y = center.y + Camera::position.y;
 
     //Atualiza cada um dos setores
     for(int i = 0; i < 2; i++){
@@ -142,7 +148,7 @@ void Aglutinado::AddTermo(string termo, string file, string posts, SDL_Color col
     if( setores.find(termo) != setores.end() ){
         setores[termo]->quantTermos++;
     }else{
-        setores[termo] = new Setor(*this, termo, file, posts, this->center, this->radius);
+        setores[termo] = new Setor(*this, termo, file, posts);
         setores[termo]->color = color;
     }
     UpdateValues();
@@ -184,7 +190,7 @@ void Aglutinado::_resetDrawColor(SDL_Renderer *renderer){
 }
 
 bool Aglutinado::IsMouseInside(){
-    if(center.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) <= radius + setorWidth + setorDist){
+    if(centerRelative.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) <= radius + setorWidth + setorDist){
             return true;
     }else return false;
 }
@@ -202,8 +208,8 @@ bool Aglutinado::IsClicked(){
 }
 
 bool Aglutinado::IsMouseInsideSector(){
-    if(center.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) <= radius + setorWidth + setorDist &&
-       center.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) >= radius + setorDist){
+    if(centerRelative.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) <= radius + setorWidth + setorDist &&
+       centerRelative.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) >= radius + setorDist){
             return true;
     }else return false;
 }
@@ -213,6 +219,14 @@ void Aglutinado::SetAlpha(int alpha){
         it->second->SetAlpha(alpha);
     }
     circle.SetAlpha(alpha);
+}
+
+Point& Aglutinado::GetCenter(){
+    return centerRelative;
+}
+
+int& Aglutinado::GetRadius(){
+    return radius;
 }
 
 #ifdef DEBUG

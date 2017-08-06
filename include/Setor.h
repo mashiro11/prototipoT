@@ -26,7 +26,7 @@ class Setor: public ScreenObject
 {
     public:
         //Setor();
-        Setor(Aglutinado &agl, string termo, string file, string posts, Point center, double radius);
+        Setor(Aglutinado &agl, string termo, string file, string posts);
         void Render();
         void Draw(SDL_Renderer* renderer);
         void Update();

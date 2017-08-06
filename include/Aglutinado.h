@@ -12,6 +12,7 @@
 #include "Point.h"
 //#include "Sprite.h"
 #include "DialogBox.h"
+#include "Camera.h"
 
 #define PI 3.1415
 #define STOP_ANGLE 315
@@ -41,6 +42,8 @@ class Aglutinado : public ScreenObject
         bool IsSectorClicked();
         bool IsMouseInsideSector();
         void SetAlpha(int alpha);
+        Point& GetCenter();
+        int& GetRadius();
 
         static Aglutinado *aglSelected;
         bool animate;
@@ -53,6 +56,7 @@ class Aglutinado : public ScreenObject
 
         Sprite circle;
         Point center;
+        Point centerRelative;
         int radius;
         int setorWidth;
         int setorDist;

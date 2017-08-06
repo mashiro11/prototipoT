@@ -11,10 +11,10 @@
 
 Setor* Setor::hasClick = nullptr;
 
-Setor::Setor(Aglutinado &agl, string termo, string file, string posts, Point center, double radius):
+Setor::Setor(Aglutinado &agl, string termo, string file, string posts):
     agl(agl),
-    termBox("img/termbox.png", center.x, center.y),
-    termSetor("fonts/Roboto-Bold.ttf", 10, BLENDED, termo, center.x, center.y, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
+    termBox("img/termbox.png", agl.GetCenter().x, agl.GetCenter().y),
+    termSetor("fonts/Roboto-Bold.ttf", 10, BLENDED, termo, agl.GetCenter().x, agl.GetCenter().y, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
     showTermbox(false),
     percent(0),
     sp(file),
@@ -24,18 +24,16 @@ Setor::Setor(Aglutinado &agl, string termo, string file, string posts, Point cen
 {
     this->termo = termo;
     this->quantTermos = 1;
-    this->center = center;
-    this->radius = radius;
     this->angS = 0;
     setorDist = SETOR_DIST;
     setorWidth = SETOR_WIDTH;
 
     SDL_Point pt;
-    pt.x = - radius - setorDist;
+    pt.x = - agl.GetRadius() - setorDist;
     pt.y = 0;
     sp.SetRotationPoint(pt);
-    sp.SetX(center.x + radius + setorDist);
-    sp.SetY(center.y);
+    sp.SetX(agl.GetCenter().x + agl.GetRadius() + setorDist);
+    sp.SetY(agl.GetCenter().y);
     sp.Transform(-1, 11);
 
     sp.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
@@ -61,19 +59,19 @@ void Setor::Render(){
         if (0 <= mediana && mediana <= 90){
             SDL_RenderDrawLine(Window::GetRenderer(),
                                termBox.GetX(), termBox.GetY(),
-                               center.x, center.y);
+                               agl.GetCenter().x, agl.GetCenter().y);
         }else if(90 < mediana && mediana <= 180 ){
             SDL_RenderDrawLine(Window::GetRenderer(),
                                termBox.GetX() + termBox.GetWidth(), termBox.GetY(),
-                               center.x, center.y);
+                               agl.GetCenter().x, agl.GetCenter().y);
         }else if(180 < mediana && mediana < 270){
             SDL_RenderDrawLine(Window::GetRenderer(),
                                termBox.GetX() + termBox.GetWidth(), termBox.GetY() + termBox.GetHeight(),
-                               center.x, center.y);
+                               agl.GetCenter().x, agl.GetCenter().y);
         }else if(270 <= mediana && mediana <= 360){//primeiro ou quarto quadrantes
             SDL_RenderDrawLine(Window::GetRenderer(), termBox.GetX(),
                                termBox.GetY() + termBox.GetHeight(),
-                               center.x, center.y);
+                               agl.GetCenter().x, agl.GetCenter().y);
         }
     }
 }
@@ -81,8 +79,8 @@ void Setor::Render(){
 void Setor::Draw(SDL_Renderer* renderer){
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     for (double k = angS; k < angF + angS; k += 0.001){
-            SDL_RenderDrawLine(renderer, center.x+(radius+setorDist)*cos(k), center.y+(radius+setorDist)*sin(k),
-                               center.x+(radius+setorDist+setorWidth)*cos(k), center.y+(radius+setorDist+setorWidth)*sin(k));
+            SDL_RenderDrawLine(renderer, agl.GetCenter().x+(agl.GetRadius()+setorDist)*cos(k), agl.GetCenter().y+(agl.GetRadius()+setorDist)*sin(k),
+                               agl.GetCenter().x+(agl.GetRadius()+setorDist+setorWidth)*cos(k), agl.GetCenter().y+(agl.GetRadius()+setorDist+setorWidth)*sin(k));
     }
 }
 
@@ -91,6 +89,8 @@ void Setor::Update(){
         angS += ANIMATION_SPEED;
         if(angS >= 360) angS -= 360;
     }
+    termSetor.SetX(termSetor.GetX() + agl.GetCenter().x);
+    termSetor.SetY(termSetor.GetY() + agl.GetCenter().y);
     //Durante a animação as respostas ao mouse são desligadas
     PositionTermbox();
     AdjustOpacity();
@@ -120,31 +120,31 @@ void Setor::Update(){
 void Setor::PositionTermbox(){
     double mediana = angS+angF/2;
     if(0 < mediana && mediana <= 90){//primeiro quadrante
-        termBox.SetPosition(center.x+(radius+setorDist+sp.GetWidth())*cos( mediana *PI/180),
-                            center.y+(radius+setorDist+sp.GetWidth())*sin( mediana *PI/180));
+        termBox.SetPosition(agl.GetCenter().x+(agl.GetRadius()+setorDist+sp.GetWidth())*cos( mediana *PI/180),
+                            agl.GetCenter().y+(agl.GetRadius()+setorDist+sp.GetWidth())*sin( mediana *PI/180));
 
-        termSetor.SetPos(center.x+(radius+setorDist+sp.GetWidth())*cos( mediana *PI/180),
-                         center.y+(radius+setorDist+sp.GetWidth())*sin( mediana *PI/180));
+        termSetor.SetPos(agl.GetCenter().x+(agl.GetRadius()+setorDist+sp.GetWidth())*cos( mediana *PI/180),
+                         agl.GetCenter().y+(agl.GetRadius()+setorDist+sp.GetWidth())*sin( mediana *PI/180));
 
     }else if(90 < mediana && mediana <= 180){//segundo quadrante
-        termBox.SetPosition(center.x - termBox.GetWidth() +(radius+setorDist+sp.GetWidth())*cos( mediana *PI/180),
-                            center.y +(radius+setorDist+sp.GetWidth())*sin( mediana *PI/180));
+        termBox.SetPosition(agl.GetCenter().x - termBox.GetWidth() +(agl.GetRadius()+setorDist+sp.GetWidth())*cos( mediana *PI/180),
+                            agl.GetCenter().y +(agl.GetRadius()+setorDist+sp.GetWidth())*sin( mediana *PI/180));
 
-        termSetor.SetPos(center.x - termBox.GetWidth() +(radius+setorDist+sp.GetWidth())*cos( mediana *PI/180),
-                         center.y +(radius+setorDist+sp.GetWidth())*sin( mediana *PI/180));
+        termSetor.SetPos(agl.GetCenter().x - termBox.GetWidth() +(agl.GetRadius()+setorDist+sp.GetWidth())*cos( mediana *PI/180),
+                         agl.GetCenter().y +(agl.GetRadius()+setorDist+sp.GetWidth())*sin( mediana *PI/180));
     }else if(180 < mediana && mediana <= 270){
-        termBox.SetPosition(center.x - termBox.GetWidth() +(radius+setorDist+sp.GetWidth())*cos( mediana *PI/180),
-                            center.y - termBox.GetHeight() +(radius+setorDist+sp.GetWidth())*sin( mediana *PI/180));
+        termBox.SetPosition(agl.GetCenter().x - termBox.GetWidth() +(agl.GetRadius()+setorDist+sp.GetWidth())*cos( mediana *PI/180),
+                            agl.GetCenter().y - termBox.GetHeight() +(agl.GetRadius()+setorDist+sp.GetWidth())*sin( mediana *PI/180));
 
-        termSetor.SetPos(center.x - termBox.GetWidth() +(radius+setorDist+sp.GetWidth())*cos( mediana *PI/180),
-                         center.y - termBox.GetHeight() +(radius+setorDist+sp.GetWidth())*sin( mediana *PI/180));
+        termSetor.SetPos(agl.GetCenter().x - termBox.GetWidth() +(agl.GetRadius()+setorDist+sp.GetWidth())*cos( mediana *PI/180),
+                         agl.GetCenter().y - termBox.GetHeight() +(agl.GetRadius()+setorDist+sp.GetWidth())*sin( mediana *PI/180));
 
     }else if(270 < mediana && mediana <= 360){
-        termBox.SetPosition(center.x +(radius+setorDist+sp.GetWidth())*cos( mediana *PI/180),
-                            center.y - termBox.GetHeight() +(radius+setorDist+sp.GetWidth())*sin( mediana *PI/180));
+        termBox.SetPosition(agl.GetCenter().x +(agl.GetRadius()+setorDist+sp.GetWidth())*cos( mediana *PI/180),
+                            agl.GetCenter().y - termBox.GetHeight() +(agl.GetRadius()+setorDist+sp.GetWidth())*sin( mediana *PI/180));
 
-        termSetor.SetPos(center.x +(radius+setorDist+sp.GetWidth())*cos( mediana *PI/180),
-                         center.y - termBox.GetHeight() +(radius+setorDist+sp.GetWidth())*sin( mediana *PI/180));
+        termSetor.SetPos(agl.GetCenter().x +(agl.GetRadius()+setorDist+sp.GetWidth())*cos( mediana *PI/180),
+                         agl.GetCenter().y - termBox.GetHeight() +(agl.GetRadius()+setorDist+sp.GetWidth())*sin( mediana *PI/180));
     }
 }
 
@@ -182,11 +182,11 @@ void Setor::SetAng(double ang){
 }
 
 bool Setor::IsMouseInside(){
-    double dist = center.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY());
+    double dist = agl.GetCenter().DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY());
     //angulo em graus
-    double angle = (180/PI) * center.AngleTo(InputHandler::GetMouseX(), InputHandler::GetMouseY());
-    if(dist <= radius + setorWidth + setorDist &&
-       dist >= radius + setorDist){
+    double angle = (180/PI) * agl.GetCenter().AngleTo(InputHandler::GetMouseX(), InputHandler::GetMouseY());
+    if(dist <= agl.GetRadius() + setorWidth + setorDist &&
+       dist >= agl.GetRadius() + setorDist){
            if(( angS <= angle && angle <= angS + angF) ||
               ( angS <= (angle + 360) && (angle + 360) <= angS + angF)){
                    return true;

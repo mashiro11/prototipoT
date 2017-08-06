@@ -87,7 +87,11 @@ void Sprite::Render(){
         SDL_GetError();
 
     SDL_SetTextureBlendMode(img, SDL_BLENDMODE_BLEND );
-    if(SDL_RenderCopyEx(Window::GetRenderer(), img, &srcRect, &imgRect, angle, &pt, SDL_FLIP_NONE)){
+
+    SDL_Rect temp = {imgRect.x + Camera::position.x,
+                     imgRect.y + Camera::position.y,
+                     imgRect.w, imgRect.h};
+    if(SDL_RenderCopyEx(Window::GetRenderer(), img, &srcRect, &temp, angle, &pt, SDL_FLIP_NONE)){
         cout << "SDL_RenderCopyEx() error: " << SDL_GetError() << endl;
     }
 }

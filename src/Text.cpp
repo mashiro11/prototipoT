@@ -102,6 +102,15 @@ void Text::SetX(int x, bool centered){
     RemakeTexture();
 }
 
+void Text::SetY(int y, bool centered){
+    if(centered)
+		this->box.y = y - this->box.h/2.0; // arrumar calculo do centro
+	else
+		this->box.y = y;
+
+    RemakeTexture();
+}
+
 void Text::SetColor(SDL_Color color){
 	this->color = color;
 	RemakeTexture();
@@ -159,6 +168,11 @@ int Text::GetWidth(){
 int Text::GetX(){
     return box.x;
 }
+
+int Text::GetY(){
+    return box.y;
+}
+
 
 bool Text::IsMouseInside(){
     if(box.x <= InputHandler::GetMouseX() && InputHandler::GetMouseX() <= box.x + box.w &&

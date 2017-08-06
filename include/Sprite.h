@@ -8,6 +8,7 @@
 #include "Window.h"
 #include "Resources.h"
 #include "InputHandler.h"
+#include "Camera.h"
 
 using std::string;
 using std::cout;

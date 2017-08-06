@@ -38,6 +38,7 @@ public:
 	void Render();
 	void SetPos(int x, int y, bool centerX = false, bool centerY = false);
 	void SetX(int x, bool centered = false);
+	void SetY(int y, bool centered = false);
 	void SetColor(SDL_Color color);
 	void SetColor(int r, int g, int b, int a);
 	void SetStyle(TextStyle style);
@@ -45,6 +46,7 @@ public:
 	void SetText(std::string text);
     int GetWidth();
     int GetX();
+    int GetY();
     bool IsMouseInside();
 
 private:

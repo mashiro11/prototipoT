@@ -5,6 +5,7 @@
 #include "Window.h"
 #include "Mapa.h"
 #include "InputHandler.h"
+#include "Camera.h"
 
 #define TITULO "Topograma"
 
@@ -19,6 +20,8 @@ int main(int argc, char** argv)
     Mapa mapa;
     while(!InputHandler::QuitRequested()){
         InputHandler::Update();
+        Camera::Update();
+
         mapa.Update();
 
         mapa.Render();
