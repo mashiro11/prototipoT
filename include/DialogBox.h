@@ -3,16 +3,17 @@
 
 #include "Sprite.h"
 #include "Text.h"
+#include "Aglutinado.h"
 
 #define BUTTON_BACK_PATH "img/Botoes/Topogramas_Botao_Recuar_1.png"
 #define BUTTON_NEXT_PATH "img/Botoes/Topogramas_Botao_Avancar_1.png"
 
 #define SCROLL_SPEED 3
-
+class Aglutinado;
 class DialogBox
 {
     public:
-        DialogBox(int x, int y, string bgFile, string fontFile, int fontSize, TextStyle style);
+        DialogBox(Aglutinado& agl, int x, int y, string bgFile, string fontFile, int fontSize, TextStyle style);
         virtual ~DialogBox();
 
         void Render();
@@ -32,6 +33,8 @@ class DialogBox
     protected:
 
     private:
+        Aglutinado& agl;
+        Point posRel;
         Sprite body;
         Sprite buttonBack;
         Sprite buttonNext;

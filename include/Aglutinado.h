@@ -24,12 +24,13 @@ using std::endl;
 using std::pair;
 
 class Setor;
+class DialogBox;
+
 class Aglutinado : public ScreenObject
 {
     public:
         Aglutinado(int x, int y, int radius, string bgFile, string fontFile, int fontSize, TextStyle style);
         ~Aglutinado();
-        void Draw(SDL_Renderer* renderer);
         void Render();
         void Update();
         void SetColor(int r, int g, int b, int a = 255);
@@ -64,7 +65,7 @@ class Aglutinado : public ScreenObject
         bool colorChange;
         unordered_map<string, Setor*> setores;
         bool clockwise;
-        DialogBox dBox;
+        DialogBox* dBox;
 
         int totalTermos;
         void _changeSetorColor(SDL_Renderer *renderer, SDL_Color color);

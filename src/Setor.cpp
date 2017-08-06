@@ -33,7 +33,7 @@ Setor::Setor(Aglutinado &agl, string termo, string file, string posts):
     pt.y = 0;
     sp.SetRotationPoint(pt);
     sp.SetX(agl.GetCenter().x + agl.GetRadius() + setorDist);
-    sp.SetY(agl.GetCenter().y);
+    sp.SetY(agl.GetCenter().y - radius);
     sp.Transform(-1, 11);
 
     sp.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
@@ -89,10 +89,15 @@ void Setor::Update(){
         angS += ANIMATION_SPEED;
         if(angS >= 360) angS -= 360;
     }
+
+    sp.SetX(agl.GetCenter().x + agl.GetRadius() + setorDist);
+    sp.SetY(agl.GetCenter().y);
+
     termSetor.SetX(termSetor.GetX() + agl.GetCenter().x);
     termSetor.SetY(termSetor.GetY() + agl.GetCenter().y);
     //Durante a animação as respostas ao mouse são desligadas
     PositionTermbox();
+
     AdjustOpacity();
     if( !(agl.animate) ){
         if(IsMouseInside()){//MouseHover
@@ -132,6 +137,7 @@ void Setor::PositionTermbox(){
 
         termSetor.SetPos(agl.GetCenter().x - termBox.GetWidth() +(agl.GetRadius()+setorDist+sp.GetWidth())*cos( mediana *PI/180),
                          agl.GetCenter().y +(agl.GetRadius()+setorDist+sp.GetWidth())*sin( mediana *PI/180));
+
     }else if(180 < mediana && mediana <= 270){
         termBox.SetPosition(agl.GetCenter().x - termBox.GetWidth() +(agl.GetRadius()+setorDist+sp.GetWidth())*cos( mediana *PI/180),
                             agl.GetCenter().y - termBox.GetHeight() +(agl.GetRadius()+setorDist+sp.GetWidth())*sin( mediana *PI/180));

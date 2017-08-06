@@ -12,20 +12,19 @@
 Aglutinado* Aglutinado::aglSelected = nullptr;
 
 Aglutinado::Aglutinado(int x, int y, int radius, string bgFile, string fontFile, int fontSize, TextStyle style):
-    dBox(x + radius + 20 + 10 + 10, y - radius - 20 - 10, bgFile, fontFile, fontSize, style),
     center(x,y),
     centerRelative(x + Camera::position.x, y + Camera::position.y),
-    //clicked(nullptr),
-    //hover(nullptr),
     circle("img/Setores/circulo72.png"),
     selected(false)
 {
+    dBox = new DialogBox(*this, radius + 20 + 10 + 10,- radius - 20 - 10, bgFile, fontFile, fontSize, style);
+
+    circle.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
     circle.Resize(circle.GetWidth()*1.15, circle.GetWidth()*1.15);
     circle.SetPosition(centerRelative.x - circle.GetWidth()/2,
                        centerRelative.y - circle.GetHeight()/2);
 
     this->radius = radius;
-    colorChange = false;
 
     setorWidth = SETOR_WIDTH;
     setorDist = SETOR_DIST;
@@ -39,29 +38,10 @@ Aglutinado::~Aglutinado()
     //dtor
 }
 
-void Aglutinado::Draw(SDL_Renderer *renderer){
-    //SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_ADD);
-    if(colorChange){
-        SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-        colorChange = false;
-    }
-    for(double i = 0; i < 2*PI; i+=0.00005){
-        SDL_RenderDrawLine(renderer,
-                           centerRelative.x, centerRelative.y,
-                           centerRelative.x + radius*cos(i), centerRelative.y + radius*sin(i));
-    }
-
-    //  Desenha os setores
-    for(auto it = setores.begin(); it != setores.end(); it++){
-        it->second->Draw(renderer);
-    }
-    _resetDrawColor(renderer);
-}
-
 void Aglutinado::Render(){
     //DEBUG_PRINT("Aglutinado::Render() - inicio");
     circle.Render();
-    dBox.Render();
+    dBox->Render();
 
     for(auto it = setores.begin(); it != setores.end(); it++){
         it->second->Render();
@@ -73,6 +53,9 @@ void Aglutinado::Update(){
     //DEBUG_PRINT("Aglutinado::Update() - inicio");
     centerRelative.x = center.x + Camera::position.x;
     centerRelative.y = center.y + Camera::position.y;
+
+    circle.SetX(centerRelative.x - circle.GetWidth()/2);
+    circle.SetY(centerRelative.y - circle.GetHeight()/2);
 
     //Atualiza cada um dos setores
     for(int i = 0; i < 2; i++){
@@ -91,22 +74,22 @@ void Aglutinado::Update(){
             aglSelected = this;
             selected = true;
         }else if(!IsMouseInside() && //Se clicou fora da dialogBox ou do aglomerado, esse aglomerado deixa de ser o selecionado
-                 !dBox.IsMouseInside()){
+                 !dBox->IsMouseInside()){
             selected = false;
-            dBox.showDBox = dBox.showPosts = false;
-            dBox.RemovePost();
+            dBox->showDBox = dBox->showPosts = false;
+            dBox->RemovePost();
         }
 
         if(IsMouseInsideSector()){//se setor for clicado,
                 //a janela deve ser mantida aberta
-                dBox.termoSelected = dBox.termoTemp;
-                dBox.showDBox = true;
+                dBox->termoSelected = dBox->termoTemp;
+                dBox->showDBox = true;
 
-                dBox.termoTemp = Setor::hasClick->termo;
-                dBox.SetTermo(Setor::hasClick->termo);
+                dBox->termoTemp = Setor::hasClick->termo;
+                dBox->SetTermo(Setor::hasClick->termo);
 
                 //informa qual imagem de post deve ser renderizada
-                dBox.SetPost(Setor::hasClick->GetPostPath(), dBox.GetWidth());
+                dBox->SetPost(Setor::hasClick->GetPostPath());
 
                 //caso não esteja bem posicionado, ativar a animação
                 double med = Setor::hasClick->angS + Setor::hasClick->angF/2;
@@ -116,7 +99,7 @@ void Aglutinado::Update(){
         }
     }
 
-    dBox.Update();
+    dBox->Update();
 
     if(IsMouseInside() && !IsMouseInsideSector()){
         if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){

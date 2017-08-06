@@ -9,13 +9,15 @@
         #define DEBUG_PRINT(message)
 #endif //DEBUG
 
-DialogBox::DialogBox(int x, int y, string bgFile, string fontFile, int fontSize, TextStyle style):
+DialogBox::DialogBox(Aglutinado& agl, int x, int y, string bgFile, string fontFile, int fontSize, TextStyle style):
+    agl(agl),
+    posRel(x,y),
     showDBox(false),
-    body(bgFile, x, y),
-    buttonBack(BUTTON_BACK_PATH, x + body.GetWidth()/2, y + body.GetHeight()/2),
-    buttonNext(BUTTON_NEXT_PATH, x + body.GetWidth()/2, y + body.GetHeight()/2),
-    termo(fontFile, fontSize, style, " ", x, y + 10, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
-    verPosts(fontFile, 10, style, "ver publicações", x + body.GetWidth()/2 , y + body.GetHeight() - 20, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE ),
+    body(bgFile, agl.GetCenter().x + posRel.x, agl.GetCenter().y + posRel.y),
+    buttonBack(BUTTON_BACK_PATH, body.GetX() + body.GetWidth()/2, body.GetY() + body.GetHeight()/2),
+    buttonNext(BUTTON_NEXT_PATH, body.GetX() + body.GetWidth()/2, body.GetY() + body.GetHeight()/2),
+    termo(fontFile, fontSize, style, " ", body.GetX(), body.GetY() + 10, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
+    verPosts(fontFile, 10, style, "ver publicações", body.GetX() + body.GetWidth()/2 , body.GetY() + body.GetHeight() - 20, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE ),
     post(nullptr),
     showPosts(false)
 {
@@ -53,11 +55,23 @@ void DialogBox::Render(){
 
 void DialogBox::Update(){
     if(showDBox){
-        termo.SetX(termo.GetX() + Camera::position.x);
-        termo.SetY(termo.GetY() + Camera::position.y);
+        body.SetX(posRel.x + agl.GetCenter().x);
+        body.SetY(posRel.y + agl.GetCenter().y);
 
-        verPosts.SetX(verPosts.GetX() + Camera::position.x);
-        verPosts.SetY(verPosts.GetY() + Camera::position.y);
+        termo.SetX(body.GetX());
+        termo.SetY(body.GetY() + 10);
+
+        verPosts.SetX(body.GetX() + body.GetWidth()/2 );
+        verPosts.SetY(body.GetY() + body.GetHeight() - 20);
+
+        buttonBack.SetPosition(body.GetX() + body.GetWidth()/2 - buttonBack.GetWidth(),
+                               body.GetY() + body.GetHeight()/2);
+        buttonNext.SetPosition(body.GetX() + body.GetWidth()/2,
+                               body.GetY() + body.GetHeight()/2);
+
+        if(post != nullptr){
+            post->SetPosition(body.GetX() + body.GetWidth(), body.GetY());
+        }
 
         if(body.GetHeight() == 35){
             body.SetHeight(165);
@@ -80,7 +94,7 @@ void DialogBox::SetTermo(string termo){
 
 void DialogBox::SetPost(string post, int x, int y){
     if(this->post != nullptr) delete this->post;
-    this->post = new Sprite(post, body.GetX() + x , body.GetY() + y );
+    this->post = new Sprite(post, body.GetX() + body.GetWidth() + x , body.GetY() + y );
     this->post->Clip(this->post->GetWidth(), 500);
     this->post->Resize(this->post->GetWidth(), 500);
 }
