@@ -11,7 +11,6 @@
 
 DialogBox::DialogBox(int x, int y, string bgFile, string fontFile, int fontSize, TextStyle style):
     showDBox(false),
-    keepDBox(false),
     body(bgFile, x, y),
     buttonBack(BUTTON_BACK_PATH, x + body.GetWidth()/2, y + body.GetHeight()/2),
     buttonNext(BUTTON_NEXT_PATH, x + body.GetWidth()/2, y + body.GetHeight()/2),
@@ -42,11 +41,9 @@ void DialogBox::Render(){
     if(showDBox){
         body.Render();
         termo.Render();
-        if(keepDBox){
-            verPosts.Render();
-            buttonBack.Render();
-            buttonNext.Render();
-        }
+        verPosts.Render();
+        buttonBack.Render();
+        buttonNext.Render();
         if(post != nullptr && showPosts){
             post->Render();
         }
@@ -56,20 +53,14 @@ void DialogBox::Render(){
 
 void DialogBox::Update(){
     if(showDBox){
-        if(keepDBox){
-            if(body.GetHeight() == 35){
-                body.SetHeight(165);
-            }
-            if(verPosts.IsMouseInside() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
-                showPosts = true;
-            }
-            if(post != nullptr && post->IsMouseInside()){
-                post->SlideClip(0, InputHandler::GetMouseScrollY()*SCROLL_SPEED);
-            }
-        }else{
-            if(body.GetHeight() == 165){
-                body.SetHeight(35);
-            }
+        if(body.GetHeight() == 35){
+            body.SetHeight(165);
+        }
+        if(verPosts.IsMouseInside() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
+            showPosts = true;
+        }
+        if(post != nullptr && post->IsMouseInside()){
+            post->SlideClip(0, InputHandler::GetMouseScrollY()*SCROLL_SPEED);
         }
     }
 }

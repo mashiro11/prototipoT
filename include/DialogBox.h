@@ -25,7 +25,6 @@ class DialogBox
         bool IsMouseInside();
 
         bool showDBox;
-        bool keepDBox;
         bool showPosts;
         string termoTemp;
         string termoSelected;

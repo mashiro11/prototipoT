@@ -214,11 +214,6 @@ void Setor::SetAlpha(int alpha){
     sp.SetAlpha(alpha);
 }
 
-void Setor::Active(bool active){
-
-    AdjustOpacity();
-}
-
 
 
 #ifdef DEBUG

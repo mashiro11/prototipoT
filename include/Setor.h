@@ -46,7 +46,6 @@ class Setor: public ScreenObject
         SDL_Color color;
         string termo;
         void SetAlpha(int alpha);
-        void Active(bool active);
         static Setor* hasClick;
 
     protected:

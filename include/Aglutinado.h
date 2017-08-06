@@ -36,10 +36,11 @@ class Aglutinado : public ScreenObject
         void AddTermo(string termo, string file, string posts, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
         void AddTermo(string termo, int quant);
         bool IsMouseInside();
+        bool IsClicked();
+        bool IsAglClicked();
         bool IsSectorClicked();
         bool IsMouseInsideSector();
         void SetAlpha(int alpha);
-        void Active(bool active);
 
         static Aglutinado *aglSelected;
         bool animate;

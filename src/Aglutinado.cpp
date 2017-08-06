@@ -67,25 +67,6 @@ void Aglutinado::Render(){
 
 void Aglutinado::Update(){
     //DEBUG_PRINT("Aglutinado::Update() - inicio");
-    //Se clicou fora da dialogBox ou do aglomerado, esse aglomerado deixa de ser o selecionado
-    if(!IsMouseInsideSector() && !dBox.IsMouseInside() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
-        selected = false;
-        dBox.keepDBox = dBox.showDBox = dBox.showPosts = false;
-        dBox.RemovePost();
-    }
-
-    //Indica para a classe qual é o aglomerado clicado
-    if( IsSectorClicked() ){
-        aglSelected = this;
-        selected = true;
-    }
-
-
-    if(IsMouseInside() && !IsMouseInsideSector()){
-        if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
-            cout << "Dentro do circulo, fora dos setores" << endl;
-        }
-    }
 
     //Atualiza cada um dos setores
     for(int i = 0; i < 2; i++){
@@ -94,36 +75,47 @@ void Aglutinado::Update(){
         }
     }
 
-    dBox.Update();
-    //Hover no setor
-    if(IsMouseInsideSector()){
-        //Hover + click
-        //se for clicado,
-        if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
+    //Responde ao click
+    if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
+        if( IsMouseInside() ){
+            //Indica para a classe qual é o aglomerado clicado.
+            //Quando clicado, informa que o foi.
+            //selected é utilizado para verificar se nenhum aglutinado foi clicado,
+            //uma vez que eles só podem informar SE FORAM clicados
             aglSelected = this;
             selected = true;
-            //a janela deve ser mantida aberta
-            dBox.termoSelected = dBox.termoTemp;
-            dBox.showDBox = true;
-            dBox.keepDBox = true;
-
-
-            //informa qual imagem de post deve ser renderizada
-            dBox.SetPost(Setor::hasClick->GetPostPath(), dBox.GetWidth());
-
-            //caso não esteja bem posicionado, ativar a animação
-            double med = Setor::hasClick->angS + Setor::hasClick->angF/2;
-            if(med < STOP_ANGLE || med > STOP_ANGLE){
-                animate = true;
-            }
+        }else if(!IsMouseInside() && //Se clicou fora da dialogBox ou do aglomerado, esse aglomerado deixa de ser o selecionado
+                 !dBox.IsMouseInside()){
+            selected = false;
+            dBox.showDBox = dBox.showPosts = false;
+            dBox.RemovePost();
         }
-    }else{
-        //Se o mouse não está dentro do setor
-        if(Setor::hasClick != nullptr){
-            dBox.termoTemp = Setor::hasClick->termo;
-            dBox.SetTermo(Setor::hasClick->termo);
+
+        if(IsMouseInsideSector()){//se setor for clicado,
+                //a janela deve ser mantida aberta
+                dBox.termoSelected = dBox.termoTemp;
+                dBox.showDBox = true;
+
+                dBox.termoTemp = Setor::hasClick->termo;
+                dBox.SetTermo(Setor::hasClick->termo);
+
+                //informa qual imagem de post deve ser renderizada
+                dBox.SetPost(Setor::hasClick->GetPostPath(), dBox.GetWidth());
+
+                //caso não esteja bem posicionado, ativar a animação
+                double med = Setor::hasClick->angS + Setor::hasClick->angF/2;
+                if(med < STOP_ANGLE || med > STOP_ANGLE){
+                    animate = true;
+                }
         }
-        if(!dBox.keepDBox) dBox.showDBox = false;
+    }
+
+    dBox.Update();
+
+    if(IsMouseInside() && !IsMouseInsideSector()){
+        if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
+            cout << "Dentro do circulo, fora dos setores" << endl;
+        }
     }
 
     //realiza a animação
@@ -201,6 +193,14 @@ bool Aglutinado::IsSectorClicked(){
     return( IsMouseInsideSector() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED );
 }
 
+bool Aglutinado::IsAglClicked(){
+    return (IsMouseInside() && !IsMouseInsideSector() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED);
+}
+
+bool Aglutinado::IsClicked(){
+    return (IsMouseInside() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED);
+}
+
 bool Aglutinado::IsMouseInsideSector(){
     if(center.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) <= radius + setorWidth + setorDist &&
        center.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) >= radius + setorDist){
@@ -213,12 +213,6 @@ void Aglutinado::SetAlpha(int alpha){
         it->second->SetAlpha(alpha);
     }
     circle.SetAlpha(alpha);
-}
-
-void Aglutinado::Active(bool active){
-    for(auto it = setores.begin(); it != setores.end(); it++){
-        it->second->Active(active);
-    }
 }
 
 #ifdef DEBUG
