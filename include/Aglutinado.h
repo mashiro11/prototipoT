@@ -37,8 +37,7 @@ class Aglutinado : public ScreenObject
         void Render();
         void Update(float dt);
         void SetColor(int r, int g, int b, int a = 255);
-        void AddTermo(string termo, string file, string posts, SDL_Color cor);
-        void AddTermo(string termo, string file, string posts, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+        void AddTermo(string termo, string file, string posts);
         void AddTermo(string termo, int quant);
         void Relaciona(Aglutinado* agl);
         bool IsRelatedTo(Aglutinado* agl);

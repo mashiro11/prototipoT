@@ -3,14 +3,13 @@
 
 
 #define GRID_W_H 32
-#define WINDOW_WIDTH 1024
-#define WINDOW_HEIGHT 600
-
 
 #include <iostream>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <string>
+
+#include "WindowSize.h"
 
 using std::string;
 using std::cout;

@@ -18,10 +18,10 @@ Mapa::Mapa():
     //Primeiro
     Aglutinado *ag1 = new Aglutinado(WINDOW_WIDTH/4, WINDOW_HEIGHT/4, RAIO, "img/janela.png", "fonts/Roboto-Bold.ttf", 20, BLENDED);
     aglutinados.push_back(ag1);
-    aglutinados.back()->AddTermo("#fogo", "img/Setores/hashtagfeliz300.png", "img/Posts/HashtagsFelizes/Fogo1/#Fogo-Facebook1.png", 0, 0, 255, 255);
-    aglutinados.back()->AddTermo("chuva", "img/Setores/termofeliz300.png", "img/Posts/Termos Felizes/Chuva 1/Chuva_Twitter_11.png", 0, 255, 0, 255);
-    aglutinados.back()->AddTermo("engarrafamento", "img/Setores/termotriste300.png", "img/Posts/Termos Tristes/Engarrafamento 1/Engarrafamento_Twitter_11.png", 0, 255, 0, 100);
-    aglutinados.back()->AddTermo("correr", "img/Setores/termofeliz300.png", "img/Posts/Termos Felizes/Correr 1/Correr_Twitter_11.png", 0, 50, 50, 100);
+    aglutinados.back()->AddTermo("#fogo", "hashtagfeliz", "#Fogo-Facebook1");
+    aglutinados.back()->AddTermo("chuva", "termofeliz", "Chuva_Twitter_11");
+    aglutinados.back()->AddTermo("engarrafamento", "termotriste", "Engarrafamento_Twitter_11");
+    aglutinados.back()->AddTermo("correr", "termofeliz", "Correr_Twitter_11");
 
     aglutinados.back()->AddTermo("chuva", 10);
     aglutinados.back()->AddTermo("#fogo", 5);
@@ -31,10 +31,10 @@ Mapa::Mapa():
     //Segundo
     //Aglutinado *ag1 = ;
     aglutinados.push_back(new Aglutinado(WINDOW_WIDTH* 3/4.0, WINDOW_HEIGHT* 3/4.0, RAIO, "img/janela.png", "fonts/Roboto-Bold.ttf", 20, BLENDED));
-    aglutinados.back()->AddTermo("#fogo", "img/Setores/hashtagfeliz300.png", "img/Posts/HashtagsFelizes/Fogo1/#Fogo-Facebook1.png", 0, 0, 255, 255);
-    aglutinados.back()->AddTermo("chuva", "img/Setores/termofeliz300.png", "img/Posts/Termos Felizes/Chuva 1/Chuva_Twitter_11.png", 0, 255, 0, 255);
-    aglutinados.back()->AddTermo("engarrafamento", "img/Setores/termotriste300.png", "img/Posts/Termos Tristes/Engarrafamento 1/Engarrafamento_Twitter_11.png", 0, 255, 0, 100);
-    aglutinados.back()->AddTermo("correr", "img/Setores/termofeliz300.png", "img/Posts/Termos Felizes/Correr 1/Correr_Twitter_11.png", 0, 50, 50, 100);
+    aglutinados.back()->AddTermo("#fogo", "hashtagfeliz", "#Fogo-Facebook1");
+    aglutinados.back()->AddTermo("chuva", "termofeliz", "Chuva_Twitter_11");
+    aglutinados.back()->AddTermo("engarrafamento", "termotriste", "Engarrafamento_Twitter_11");
+    aglutinados.back()->AddTermo("correr", "termofeliz", "Correr_Twitter_11");
 
     aglutinados.back()->AddTermo("chuva", 3);
     aglutinados.back()->AddTermo("#fogo", 8);
@@ -44,11 +44,11 @@ Mapa::Mapa():
 
     //Terceiro
     aglutinados.push_back(new Aglutinado(WINDOW_WIDTH* 1/4.0, WINDOW_HEIGHT* 3/4.0, RAIO, "img/janela.png", "fonts/Roboto-Bold.ttf", 20, BLENDED));
-    aglutinados.back()->AddTermo("#fogo", "img/Setores/hashtagfeliz300.png", "img/Posts/HashtagsFelizes/Fogo1/#Fogo-Facebook1.png", 0, 0, 255, 255);
-    aglutinados.back()->AddTermo("chuva", "img/Setores/termofeliz300.png", "img/Posts/Termos Felizes/Chuva 1/Chuva_Twitter_11.png", 0, 255, 0, 255);
-    aglutinados.back()->AddTermo("engarrafamento", "img/Setores/termotriste300.png", "img/Posts/Termos Tristes/Engarrafamento 1/Engarrafamento_Twitter_11.png", 0, 255, 0, 100);
-    aglutinados.back()->AddTermo("correr", "img/Setores/termofeliz300.png", "img/Posts/Termos Felizes/Correr 1/Correr_Twitter_11.png", 0, 50, 50, 100);
-    aglutinados.back()->AddTermo("netflix", "img/Setores/termofeliz300.png", "img/Posts/Termos Felizes/Correr 1/Correr_Twitter_11.png", 0, 50, 50, 100);
+    aglutinados.back()->AddTermo("#fogo", "hashtagfeliz", "#Fogo-Facebook1");
+    aglutinados.back()->AddTermo("chuva", "termofeliz", "Chuva_Twitter_11");
+    aglutinados.back()->AddTermo("engarrafamento", "termotriste", "Engarrafamento_Twitter_11");
+    aglutinados.back()->AddTermo("correr", "termofeliz", "Correr_Twitter_11");
+    aglutinados.back()->AddTermo("netflix", "termofeliz", "Correr_Twitter_11");
 
     aglutinados.back()->AddTermo("chuva", 2);
     aglutinados.back()->AddTermo("#fogo", 8);

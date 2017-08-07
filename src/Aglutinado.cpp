@@ -15,15 +15,19 @@ Aglutinado* Aglutinado::aglSelected = nullptr;
 Aglutinado::Aglutinado(int x, int y, int radius, string bgFile, string fontFile, int fontSize, TextStyle style):
     center(x,y),
     centerRelative(x + Camera::position.x, y + Camera::position.y),
-    circle("img/Setores/circulo72.png"),
+    circle("img/Setores/circulo300.png"),
     circleCenter("img/Setores/circuloCentro.png"),
     selected(false),
     showRelations(false)
 {
     dBox = new DialogBox(*this, radius + 20 + 10 + 10,- radius - 20 - 10, bgFile, fontFile, fontSize, style);
 
+    setorWidth = SETOR_WIDTH;
+    setorDist = SETOR_DIST;
+
     circle.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
-    circle.Resize(circle.GetWidth()*1.15, circle.GetWidth()*1.15);
+    circle.Resize(radius*2 + setorDist*2 + setorWidth*2 + 20,
+                  radius*2 + setorDist*2 + setorWidth*2 + 20);
     circle.SetPosition(centerRelative.x - circle.GetWidth()/2,
                        centerRelative.y - circle.GetHeight()/2);
 
@@ -34,8 +38,6 @@ Aglutinado::Aglutinado(int x, int y, int radius, string bgFile, string fontFile,
 
     this->radius = radius;
 
-    setorWidth = SETOR_WIDTH;
-    setorDist = SETOR_DIST;
     totalTermos = 0;
     animate = false;
     clockwise = false;
@@ -77,11 +79,14 @@ void Aglutinado::Render(){
 
 void Aglutinado::Update(float dt){
     //DEBUG_PRINT("Aglutinado::Update() - inicio");
-    centerRelative.x = center.x + Camera::position.x;
-    centerRelative.y = center.y + Camera::position.y;
+    centerRelative.x = center.x - Camera::position.x;
+    centerRelative.y = center.y - Camera::position.y;
 
     circle.SetX(centerRelative.x - circle.GetWidth()/2);
     circle.SetY(centerRelative.y - circle.GetHeight()/2);
+
+    circleCenter.SetX(centerRelative.x - circleCenter.GetWidth()/2);
+    circleCenter.SetY(centerRelative.y - circleCenter.GetHeight()/2);
 
     //Atualiza cada um dos setores
     for(int i = 0; i < 2; i++){
@@ -100,9 +105,9 @@ void Aglutinado::Update(float dt){
             aglSelected = this;
             selected = true;
         }else if(!IsMouseInside()){//Se clicou fora da dialogBox ou do aglomerado, esse aglomerado deixa de ser o selecionado
+            showRelations = false;
             if(!dBox->showDBox){
                 selected = false;
-                showRelations = false;
             }else if(dBox->showDBox && !dBox->IsMouseInside() ){
                 selected = false;
                 dBox->showDBox = dBox->showPosts = false;
@@ -128,9 +133,7 @@ void Aglutinado::Update(float dt){
                 }
         }else if(IsMouseInsideRadius()){
             showRelations = true;
-            if(!relacoes.empty()){
-
-            }
+            Camera::Follow( center );
         }
     }
 
@@ -160,21 +163,15 @@ void Aglutinado::SetColor(int r, int g, int b, int a){
     colorChange = true;
 }
 
-void Aglutinado::AddTermo(string termo, string file, string posts, SDL_Color color){
+void Aglutinado::AddTermo(string termo, string file, string posts){
     totalTermos++;
     //se NÃO for o primeiro desse termo adicionado
     if( setores.find(termo) != setores.end() ){
         setores[termo]->quantTermos++;
     }else{
         setores[termo] = new Setor(*this, termo, file, posts);
-        setores[termo]->color = color;
     }
     UpdateValues();
-}
-
-void Aglutinado::AddTermo(string termo, string file, string posts, uint8_t r, uint8_t g, uint8_t b, uint8_t a){
-    SDL_Color cor = {r, g, b, a};
-    AddTermo(termo, file, posts, cor);
 }
 
 void Aglutinado::AddTermo(string termo, int quant){

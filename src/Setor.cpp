@@ -11,14 +11,14 @@
 
 Setor* Setor::hasClick = nullptr;
 
-Setor::Setor(Aglutinado &agl, string termo, string file, string posts):
+Setor::Setor(Aglutinado &agl, string termo, string tipo, string posts):
     agl(agl),
     termBox("img/termbox.png", agl.GetCenter().x, agl.GetCenter().y),
     termSetor("fonts/Roboto-Bold.ttf", 10, BLENDED, termo, agl.GetCenter().x, agl.GetCenter().y, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
     showTermbox(false),
     percent(0),
-    sp(file),
-    posts(posts),
+    sp("img/Setores/"+tipo+".png"),
+    posts("img/Posts/"+ tipo + "/" + posts + ".png"),
     hadMouseHover(false),
     baseAlpha(SDL_ALPHA_OPAQUE*0.5)
 {

@@ -80,7 +80,10 @@ void DialogBox::Update(float dt){
             showPosts = true;
         }
         if(post != nullptr && post->IsMouseInside()){
+            Camera::cameraScroll = false;
             post->SlideClip(0, InputHandler::GetMouseScrollY()*SCROLL_SPEED);
+        }else if(post != nullptr && !post->IsMouseInside()){
+            Camera::cameraScroll = true;
         }
     }
 }
