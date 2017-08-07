@@ -17,7 +17,8 @@ Aglutinado::Aglutinado(int x, int y, int radius, string bgFile, string fontFile,
     centerRelative(x + Camera::position.x, y + Camera::position.y),
     circle("img/Setores/circulo72.png"),
     circleCenter("img/Setores/circuloCentro.png"),
-    selected(false)
+    selected(false),
+    showRelations(false)
 {
     dBox = new DialogBox(*this, radius + 20 + 10 + 10,- radius - 20 - 10, bgFile, fontFile, fontSize, style);
 
@@ -53,16 +54,21 @@ void Aglutinado::Render(){
     for(auto it = setores.begin(); it != setores.end(); it++){
         it->second->Render();
     }
-    if(selected){
+    if(showRelations){
         circleCenter.Render();
         if(!relacoes.empty()){
             for(auto it = relacoes.begin(); it != relacoes.end(); it++){
                 SDL_SetRenderDrawColor(Window::GetRenderer(), 255, 255, 255, 255);
+                float cosThisOther = cos(centerRelative.AngleTo((*it)->GetCenter()));
+                float sinThisOther = sin(centerRelative.AngleTo((*it)->GetCenter()));
+
+                float cosOtherThis = cos((*it)->GetCenter().AngleTo(centerRelative));
+                float sinOtherThis = sin((*it)->GetCenter().AngleTo(centerRelative));
                 SDL_RenderDrawLine(Window::GetRenderer(),
-                                   centerRelative.x + (radius+setorDist+setorWidth)*cos(center.AngleTo((*it)->GetCenter())),
-                                   centerRelative.y + (radius+setorDist+setorWidth)*sin(center.AngleTo((*it)->GetCenter())),
-                                   (*it)->GetCenter().x + (radius+setorDist+setorWidth)*cos((*it)->GetCenter().AngleTo(centerRelative)),
-                                   (*it)->GetCenter().y + (radius+setorDist+setorWidth)*sin((*it)->GetCenter().AngleTo(centerRelative)));
+                                   centerRelative.x + (radius+setorDist+setorWidth)*cosThisOther,
+                                   centerRelative.y + (radius+setorDist+setorWidth)*sinThisOther,
+                                   (*it)->GetCenter().x + (radius+setorDist+setorWidth)*cosOtherThis,
+                                   (*it)->GetCenter().y + (radius+setorDist+setorWidth)*sinOtherThis);
             }
         }
     }
@@ -93,11 +99,15 @@ void Aglutinado::Update(float dt){
             //uma vez que eles só podem informar SE FORAM clicados
             aglSelected = this;
             selected = true;
-        }else if(!IsMouseInside() && //Se clicou fora da dialogBox ou do aglomerado, esse aglomerado deixa de ser o selecionado
-                 !dBox->IsMouseInside()){
-            selected = false;
-            dBox->showDBox = dBox->showPosts = false;
-            dBox->RemovePost();
+        }else if(!IsMouseInside()){//Se clicou fora da dialogBox ou do aglomerado, esse aglomerado deixa de ser o selecionado
+            if(!dBox->showDBox){
+                selected = false;
+                showRelations = false;
+            }else if(dBox->showDBox && !dBox->IsMouseInside() ){
+                selected = false;
+                dBox->showDBox = dBox->showPosts = false;
+                dBox->RemovePost();
+            }
         }
 
         if(IsMouseInsideSector()){//se setor for clicado,
@@ -117,6 +127,7 @@ void Aglutinado::Update(float dt){
                     animate = true;
                 }
         }else if(IsMouseInsideRadius()){
+            showRelations = true;
             if(!relacoes.empty()){
 
             }

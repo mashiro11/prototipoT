@@ -73,6 +73,7 @@ class Aglutinado : public ScreenObject
         int setorDist;
         SDL_Color color;
         bool colorChange;
+        bool showRelations;
         unordered_map<string, Setor*> setores;
         bool clockwise;
         DialogBox* dBox;

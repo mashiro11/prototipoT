@@ -1,5 +1,14 @@
 #include "Point.h"
 
+#define DEBUG
+#ifdef DEBUG
+        //se estiver definido debug, imprime os trecos
+        #define DEBUG_PRINT(message) do{std::cout << message << std::endl;}while(0)
+#else
+        //caso contrario, recebe argumentos mas faz nada
+        #define DEBUG_PRINT(message)
+#endif //DEBUG
+
 Point::Point()
 {
     //ctor
@@ -45,8 +54,11 @@ double Point::AngleTo(double x1, double y1){
 }
 
 double Point::AngleTo(Point& pt){
+    //valor do angulo no primeiro quadrante
+    if(pt.x == x && pt.y == y) return 0;
     double firstQ = asin( abs(y - pt.y) / DistTo(pt.x,pt.y) );
-    if(pt.y >= y && pt.x > x){//primeiro quadrante
+
+    if(pt.y >= y && pt.x >= x){//primeiro quadrante
         return firstQ;
     }else if(pt.y >= y && pt.x < x){//segundo quadrante
         return PI - firstQ;
@@ -56,3 +68,7 @@ double Point::AngleTo(Point& pt){
         return 2*PI - firstQ;
     }
 }
+
+#ifdef DEBUG
+    #undef DEBUG
+#endif // DEBUG
