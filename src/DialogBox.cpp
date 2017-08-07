@@ -53,7 +53,7 @@ void DialogBox::Render(){
     //DEBUG_PRINT("DialogBox::Render - fim");
 }
 
-void DialogBox::Update(){
+void DialogBox::Update(float dt){
     if(showDBox){
         body.SetX(posRel.x + agl.GetCenter().x);
         body.SetY(posRel.y + agl.GetCenter().y);

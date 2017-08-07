@@ -1,4 +1,5 @@
 #include "Aglutinado.h"
+#include "Window.h"
 
 #define DEBUG
 #ifdef DEBUG
@@ -15,6 +16,7 @@ Aglutinado::Aglutinado(int x, int y, int radius, string bgFile, string fontFile,
     center(x,y),
     centerRelative(x + Camera::position.x, y + Camera::position.y),
     circle("img/Setores/circulo72.png"),
+    circleCenter("img/Setores/circuloCentro.png"),
     selected(false)
 {
     dBox = new DialogBox(*this, radius + 20 + 10 + 10,- radius - 20 - 10, bgFile, fontFile, fontSize, style);
@@ -23,6 +25,11 @@ Aglutinado::Aglutinado(int x, int y, int radius, string bgFile, string fontFile,
     circle.Resize(circle.GetWidth()*1.15, circle.GetWidth()*1.15);
     circle.SetPosition(centerRelative.x - circle.GetWidth()/2,
                        centerRelative.y - circle.GetHeight()/2);
+
+    circleCenter.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
+    circleCenter.Resize(radius*2, radius*2);
+    circleCenter.SetPosition(centerRelative.x - circleCenter.GetWidth()/2,
+                             centerRelative.y - circleCenter.GetHeight()/2);
 
     this->radius = radius;
 
@@ -46,10 +53,23 @@ void Aglutinado::Render(){
     for(auto it = setores.begin(); it != setores.end(); it++){
         it->second->Render();
     }
+    if(selected){
+        circleCenter.Render();
+        if(!relacoes.empty()){
+            for(auto it = relacoes.begin(); it != relacoes.end(); it++){
+                SDL_SetRenderDrawColor(Window::GetRenderer(), 255, 255, 255, 255);
+                SDL_RenderDrawLine(Window::GetRenderer(),
+                                   centerRelative.x + (radius+setorDist+setorWidth)*cos(center.AngleTo((*it)->GetCenter())),
+                                   centerRelative.y + (radius+setorDist+setorWidth)*sin(center.AngleTo((*it)->GetCenter())),
+                                   (*it)->GetCenter().x + (radius+setorDist+setorWidth)*cos((*it)->GetCenter().AngleTo(centerRelative)),
+                                   (*it)->GetCenter().y + (radius+setorDist+setorWidth)*sin((*it)->GetCenter().AngleTo(centerRelative)));
+            }
+        }
+    }
     //DEBUG_PRINT("Aglutinado::Render() - fim");
 }
 
-void Aglutinado::Update(){
+void Aglutinado::Update(float dt){
     //DEBUG_PRINT("Aglutinado::Update() - inicio");
     centerRelative.x = center.x + Camera::position.x;
     centerRelative.y = center.y + Camera::position.y;
@@ -60,7 +80,7 @@ void Aglutinado::Update(){
     //Atualiza cada um dos setores
     for(int i = 0; i < 2; i++){
         for(auto it = setores.begin(); it != setores.end(); it++){
-            (it->second)->Update();
+            (it->second)->Update(dt);
         }
     }
 
@@ -96,10 +116,14 @@ void Aglutinado::Update(){
                 if(med < STOP_ANGLE || med > STOP_ANGLE){
                     animate = true;
                 }
+        }else if(IsMouseInsideRadius()){
+            if(!relacoes.empty()){
+
+            }
         }
     }
 
-    dBox->Update();
+    dBox->Update(dt);
 
     if(IsMouseInside() && !IsMouseInsideSector()){
         if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
@@ -178,6 +202,12 @@ bool Aglutinado::IsMouseInside(){
     }else return false;
 }
 
+bool Aglutinado::IsMouseInsideRadius(){
+    if(centerRelative.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) <= radius + setorWidth){
+            return true;
+    }else return false;
+}
+
 bool Aglutinado::IsSectorClicked(){
     return( IsMouseInsideSector() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED );
 }
@@ -210,6 +240,18 @@ Point& Aglutinado::GetCenter(){
 
 int& Aglutinado::GetRadius(){
     return radius;
+}
+bool Aglutinado::IsRelatedTo(Aglutinado* agl){
+    return (relacoes.find(agl) != relacoes.end());
+}
+
+void Aglutinado::Relaciona(Aglutinado* agl){
+    if(relacoes.find(agl) == relacoes.end()){
+        relacoes.emplace(agl);
+    }
+    if(!agl->IsRelatedTo(this)){
+        agl->Relaciona(this);
+    }
 }
 
 #ifdef DEBUG

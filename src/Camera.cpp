@@ -7,7 +7,7 @@ Camera::~Camera()
     //dtor
 }
 
-void Camera::Update(){
+void Camera::Update(float dt){
     if(InputHandler::GetKey() == SDLK_LEFT){
         position.x += 1;
     }

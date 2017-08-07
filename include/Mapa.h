@@ -18,7 +18,7 @@ class Mapa
         Mapa();
         virtual ~Mapa();
 
-        void Update();
+        void Update(float dt);
         void Render();
 
     protected:

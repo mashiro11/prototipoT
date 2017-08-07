@@ -10,6 +10,10 @@
 #define TITULO "Topograma"
 
 using std::vector;
+using std::cin;
+using std::cout;
+using std::endl;
+
 int main(int argc, char** argv)
 {
     int winOp = Window::Start(TITULO);
@@ -18,11 +22,16 @@ int main(int argc, char** argv)
         return winOp;
     }
     Mapa mapa;
+    float time = SDL_GetTicks();
     while(!InputHandler::QuitRequested()){
-        InputHandler::Update();
-        Camera::Update();
+        float pastFrameStart = time;
+        time = SDL_GetTicks();
+        float dt = (time - pastFrameStart)/1000;
 
-        mapa.Update();
+        InputHandler::Update(dt);
+        Camera::Update(dt);
+
+        mapa.Update(dt);
 
         mapa.Render();
         Window::Render();

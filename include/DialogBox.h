@@ -17,7 +17,7 @@ class DialogBox
         virtual ~DialogBox();
 
         void Render();
-        void Update();
+        void Update(float dt);
         void SetTermo(string termo);
         void SetPost(string post, int x = 0, int y = 0);
         void RemovePost();

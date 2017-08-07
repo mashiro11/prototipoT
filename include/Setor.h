@@ -12,6 +12,7 @@
 #include "Text.h"
 #include "Window.h"
 #include "Aglutinado.h"
+#include "Timer.h"
 
 #define SETOR_WIDTH 20
 #define SETOR_DIST 10
@@ -29,7 +30,7 @@ class Setor: public ScreenObject
         Setor(Aglutinado &agl, string termo, string file, string posts);
         void Render();
         void Draw(SDL_Renderer* renderer);
-        void Update();
+        void Update(float dt);
         void NewAngle(int totalTerms);
         virtual ~Setor();
         void SetColor(SDL_Color color);
@@ -69,6 +70,7 @@ class Setor: public ScreenObject
         int baseAlpha;
 
         bool hadMouseHover;
+        Timer timer;
 };
 
 #endif // SETOR_H

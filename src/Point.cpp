@@ -43,3 +43,16 @@ double Point::AngleTo(double x1, double y1){
         return 2*PI - firstQ;
     }
 }
+
+double Point::AngleTo(Point& pt){
+    double firstQ = asin( abs(y - pt.y) / DistTo(pt.x,pt.y) );
+    if(pt.y >= y && pt.x > x){//primeiro quadrante
+        return firstQ;
+    }else if(pt.y >= y && pt.x < x){//segundo quadrante
+        return PI - firstQ;
+    }else if(pt.y <= y && pt.x < x){//terceiro quadrante
+        return firstQ + PI;
+    }else{// quarto quadrante
+        return 2*PI - firstQ;
+    }
+}

@@ -9,7 +9,7 @@ bool InputHandler::quitRequested = false;
 bool InputHandler::mouseScroll = false;
 SDL_MouseWheelEvent* InputHandler::mouseState = new SDL_MouseWheelEvent();
 
-void InputHandler::Update(){
+void InputHandler::Update(float dt){
         SDL_Event e;
         int events = SDL_PollEvent(&e);
         switch(e.type){

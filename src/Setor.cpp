@@ -1,6 +1,6 @@
 #include "Setor.h"
 
-//#define DEBUG
+#define DEBUG
 #ifdef DEBUG
         //se estiver definido debug, imprime os trecos
         #define DEBUG_PRINT(message) do{std::cout << message << std::endl;}while(0)
@@ -22,6 +22,7 @@ Setor::Setor(Aglutinado &agl, string termo, string file, string posts):
     hadMouseHover(false),
     baseAlpha(SDL_ALPHA_OPAQUE*0.5)
 {
+    sp.Resize(20, 5);
     this->termo = termo;
     this->quantTermos = 1;
     this->angS = 0;
@@ -37,6 +38,7 @@ Setor::Setor(Aglutinado &agl, string termo, string file, string posts):
     sp.Transform(-1, 11);
 
     sp.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
+    timer.Set(3000);
 }
 
 Setor::~Setor()
@@ -54,7 +56,7 @@ void Setor::Render(){
     if(showTermbox){
         termBox.Render();
         termSetor.Render();
-
+        SDL_SetRenderDrawColor(Window::GetRenderer(), 0,0,0,SDL_ALPHA_OPAQUE);
         double mediana = angS+angF/2;
         if (0 <= mediana && mediana <= 90){
             SDL_RenderDrawLine(Window::GetRenderer(),
@@ -84,10 +86,15 @@ void Setor::Draw(SDL_Renderer* renderer){
     }
 }
 
-void Setor::Update(){
+void Setor::Update(float dt){
     if(agl.animate){
         angS += ANIMATION_SPEED;
         if(angS >= 360) angS -= 360;
+    }
+
+    //Quando for suavisar o tempo de aparecer cada um
+    if(hasClick != nullptr){
+        timer.Update(dt);
     }
 
     sp.SetX(agl.GetCenter().x + agl.GetRadius() + setorDist);
@@ -99,10 +106,10 @@ void Setor::Update(){
     PositionTermbox();
 
     AdjustOpacity();
+
     if( !(agl.animate) ){
         if(IsMouseInside()){//MouseHover
             if(hadMouseHover == false){//entrou
-                //agl.hover = this;
                 hadMouseHover = true;
                 sp.SetAlpha(SDL_ALPHA_OPAQUE);
 
@@ -118,6 +125,8 @@ void Setor::Update(){
         }
         if(IsClicked()){
             hasClick = this;
+
+            timer.Restart();
         }
     }
 }
@@ -158,7 +167,12 @@ void Setor::AdjustOpacity(){
     if(hasClick == nullptr){
         sp.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
     }else if(hasClick != this){
-        sp.SetAlpha(SDL_ALPHA_OPAQUE*0.2);
+        if(termo == hasClick->termo){// && timer.TimeUp()){
+            timer.Restart();
+            sp.SetAlpha(SDL_ALPHA_OPAQUE);
+        }else{
+            sp.SetAlpha(SDL_ALPHA_OPAQUE*0.2);
+        }
     }else if(hasClick == this){
         sp.SetAlpha(SDL_ALPHA_OPAQUE);
     }

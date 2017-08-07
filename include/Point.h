@@ -18,6 +18,7 @@ class Point
         double DistTo(Point point);
         double DistTo(double x, double y);
         double AngleTo(double x, double y);
+        double AngleTo(Point& pt);
     protected:
 
     private:

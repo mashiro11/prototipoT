@@ -8,7 +8,7 @@ class Camera
 {
     public:
         virtual ~Camera();
-        static void Update();
+        static void Update(float dt);
 
         static Point position;
         static bool moved;

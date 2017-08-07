@@ -21,7 +21,7 @@ class InputHandler
         static int GetMouseY();
         static int GetKey();
         static bool QuitRequested();
-        static void Update();
+        static void Update(float dt);
         static int GetMouseScrollX();
         static int GetMouseScrollY();
 
