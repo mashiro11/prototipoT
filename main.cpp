@@ -26,7 +26,7 @@ int main(int argc, char** argv)
     while(!InputHandler::QuitRequested()){
         float pastFrameStart = time;
         time = SDL_GetTicks();
-        float dt = (time - pastFrameStart)/1000;
+        float dt = (time - pastFrameStart)/10;
 
         InputHandler::Update(dt);
         Camera::Update(dt);

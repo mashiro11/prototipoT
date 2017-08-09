@@ -75,7 +75,7 @@ void Sprite::SetRotationPoint(SDL_Point pt){
     this->pt = pt;
 }
 
-void Sprite::SetRotationAngle(double angle){
+void Sprite::SetRotationAngle(int angle){
     this->angle = angle;
 }
 
@@ -91,7 +91,7 @@ void Sprite::Render(){
 //    SDL_Rect temp = {imgRect.x + Camera::position.x,
 //                     imgRect.y + Camera::position.y,
 //                     imgRect.w, imgRect.h};
-    if(SDL_RenderCopyEx(Window::GetRenderer(), img, &srcRect, &imgRect, angle, &pt, SDL_FLIP_NONE)){
+    if(SDL_RenderCopyEx(Window::GetRenderer(), img, &srcRect, &imgRect, (double)angle, &pt, SDL_FLIP_NONE)){
         cout << "SDL_RenderCopyEx() error: " << SDL_GetError() << endl;
     }
 }

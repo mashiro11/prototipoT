@@ -15,10 +15,12 @@ Aglutinado* Aglutinado::aglSelected = nullptr;
 Aglutinado::Aglutinado(int x, int y, int radius, string bgFile, string fontFile, int fontSize, TextStyle style):
     center(x,y),
     centerRelative(x + Camera::position.x, y + Camera::position.y),
-    circle("img/Setores/circulo300.png"),
+    circle("img/Setores/circulo.png"),
     circleCenter("img/Setores/circuloCentro.png"),
     selected(false),
-    showRelations(false)
+    showRelations(false),
+    showCircleCenter(false),
+    showLine(false)
 {
     dBox = new DialogBox(*this, radius + 20 + 10 + 10,- radius - 20 - 10, bgFile, fontFile, fontSize, style);
 
@@ -39,7 +41,6 @@ Aglutinado::Aglutinado(int x, int y, int radius, string bgFile, string fontFile,
     this->radius = radius;
 
     totalTermos = 0;
-    animate = false;
     clockwise = false;
 }
 
@@ -56,8 +57,10 @@ void Aglutinado::Render(){
     for(auto it = setores.begin(); it != setores.end(); it++){
         it->second->Render();
     }
-    if(showRelations){
+    if(showCircleCenter){
         circleCenter.Render();
+    }
+    if(showRelations){
         if(!relacoes.empty()){
             for(auto it = relacoes.begin(); it != relacoes.end(); it++){
                 SDL_SetRenderDrawColor(Window::GetRenderer(), 255, 255, 255, 255);
@@ -74,6 +77,12 @@ void Aglutinado::Render(){
             }
         }
     }
+    //DEBUG
+    if(showLine){
+        SDL_RenderDrawLine(Window::GetRenderer(), centerRelative.x, centerRelative.y,
+                           InputHandler::GetMouseX(), InputHandler::GetMouseY());
+
+    }
     //DEBUG_PRINT("Aglutinado::Render() - fim");
 }
 
@@ -88,11 +97,16 @@ void Aglutinado::Update(float dt){
     circleCenter.SetX(centerRelative.x - circleCenter.GetWidth()/2);
     circleCenter.SetY(centerRelative.y - circleCenter.GetHeight()/2);
 
-    //Atualiza cada um dos setores
-    for(int i = 0; i < 2; i++){
+    //Atualiza primeiro o setor que foi clicado
+    if(Setor::hasClick != nullptr){
         for(auto it = setores.begin(); it != setores.end(); it++){
-            (it->second)->Update(dt);
+            if(it->second == Setor::hasClick) it->second->Update(dt);
         }
+    }
+    //Atualiza todos, exceto o que foi clicado
+    for(auto it = setores.begin(); it != setores.end(); it++){
+        if(it->second == Setor::hasClick) continue;
+        (it->second)->Update(dt);
     }
 
     //Responde ao click
@@ -115,43 +129,33 @@ void Aglutinado::Update(float dt){
             }
         }
 
-        if(IsMouseInsideSector()){//se setor for clicado,
-                //a janela deve ser mantida aberta
-                dBox->termoSelected = dBox->termoTemp;
-                dBox->showDBox = true;
+        if(IsMouseInsideSector()){//se setor for clicado, ativar a animação
+            dBox->showDBox = true;
+            dBox->termoTemp = Setor::hasClick->termo;
+            dBox->SetTermo(Setor::hasClick->termo);
+            //informa qual imagem de post deve ser renderizada
+            dBox->SetPost(Setor::hasClick->GetPostPath());
 
-                dBox->termoTemp = Setor::hasClick->termo;
-                dBox->SetTermo(Setor::hasClick->termo);
-
-                //informa qual imagem de post deve ser renderizada
-                dBox->SetPost(Setor::hasClick->GetPostPath());
-
-                //caso não esteja bem posicionado, ativar a animação
-                double med = Setor::hasClick->angS + Setor::hasClick->angF/2;
-                if(med < STOP_ANGLE || med > STOP_ANGLE){
-                    animate = true;
-                }
         }else if(IsMouseInsideRadius()){
             showRelations = true;
-            Camera::Follow( center );
+            //Camera::Follow( center );
         }
     }
 
     dBox->Update(dt);
 
-    if(IsMouseInside() && !IsMouseInsideSector()){
-        if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
-            cout << "Dentro do circulo, fora dos setores" << endl;
-        }
+    //MouseHover
+    if(IsMouseInside()){
+        showCircleCenter = true;
+    }else{
+        if(!showRelations) showCircleCenter = false;
     }
 
-    //realiza a animação
-    if(animate){
-        double med = Setor::hasClick->angS + Setor::hasClick->angF/2;
-        if(STOP_ANGLE - 2 <= med && med <= STOP_ANGLE + 2){
-            animate = false;
-        }
+    //DEBUG
+    if(InputHandler::GetKey() == SDLK_0){
+        showLine = !showLine;
     }
+
     //DEBUG_PRINT("Aglutinado::Update() - fim");
 }
 
@@ -246,6 +250,10 @@ Point& Aglutinado::GetCenter(){
     return centerRelative;
 }
 
+Point& Aglutinado::GetFixedCenter(){
+    return center;
+}
+
 int& Aglutinado::GetRadius(){
     return radius;
 }
@@ -259,6 +267,18 @@ void Aglutinado::Relaciona(Aglutinado* agl){
     }
     if(!agl->IsRelatedTo(this)){
         agl->Relaciona(this);
+    }
+}
+
+void Aglutinado::Shrink(float percent){
+    radius *= percent;
+    setorDist *= percent;
+    setorWidth *= percent;
+
+    circle.Resize(circle.GetWidth()*percent, circle.GetHeight()*percent);
+    circleCenter.Resize(circleCenter.GetWidth()*percent, circleCenter.GetHeight()*percent);
+    for(auto it = setores.begin(); it != setores.end(); it++){
+        it->second->Shrink(percent);
     }
 }
 

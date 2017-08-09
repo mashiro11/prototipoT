@@ -7,6 +7,7 @@
 #include <string>
 #include <set>
 #include <math.h>
+#include <algorithm>
 
 #include "ScreenObject.h"
 #include "InputHandler.h"
@@ -17,7 +18,6 @@
 #include "Camera.h"
 
 #define PI 3.1415
-#define STOP_ANGLE 315
 
 using std::unordered_map;
 using std::string;
@@ -25,6 +25,8 @@ using std::cout;
 using std::endl;
 using std::pair;
 using std::set;
+using std::iter_swap;
+
 
 class Setor;
 class DialogBox;
@@ -41,6 +43,7 @@ class Aglutinado : public ScreenObject
         void AddTermo(string termo, int quant);
         void Relaciona(Aglutinado* agl);
         bool IsRelatedTo(Aglutinado* agl);
+        void Shrink(float percent);
 
         bool IsMouseInside();
         bool IsMouseInsideRadius();
@@ -51,11 +54,13 @@ class Aglutinado : public ScreenObject
         bool IsSectorClicked();
         void SetAlpha(int alpha);
         Point& GetCenter();
+        Point& GetFixedCenter();
         int& GetRadius();
 
         static Aglutinado *aglSelected;
-        bool animate;
         bool selected;
+        int setorDist;
+
         set<Aglutinado*> relacoes;
 
     protected:
@@ -69,10 +74,10 @@ class Aglutinado : public ScreenObject
         Point centerRelative;
         int radius;
         int setorWidth;
-        int setorDist;
         SDL_Color color;
         bool colorChange;
         bool showRelations;
+        bool showCircleCenter;
         unordered_map<string, Setor*> setores;
         bool clockwise;
         DialogBox* dBox;
@@ -80,6 +85,7 @@ class Aglutinado : public ScreenObject
         int totalTermos;
         void _changeSetorColor(SDL_Renderer *renderer, SDL_Color color);
         void _resetDrawColor(SDL_Renderer *renderer);
+        bool showLine;
 };
 
 #endif // AGLUTINADO_H

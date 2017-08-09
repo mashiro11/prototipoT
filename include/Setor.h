@@ -2,6 +2,8 @@
 #define SETOR_H
 
 #include <string>
+#include <set>
+
 #include "SDL.h"
 #include "ScreenObject.h"
 
@@ -16,12 +18,15 @@
 
 #define SETOR_WIDTH 20
 #define SETOR_DIST 10
-#define ANIMATION_SPEED 0.5
+#define STOP_ANGLE 315
 
+#define ANIMATION_SPEED 7
 
 #define PI 3.1415
 
 using std::string;
+using std::set;
+
 class Aglutinado;
 class Setor: public ScreenObject
 {
@@ -42,12 +47,16 @@ class Setor: public ScreenObject
         bool ClickedOut();
         string GetPostPath();
         int quantTermos;
-        double angS;
-        double angF;
+        int angS;
+        int angF;
         SDL_Color color;
         string termo;
         void SetAlpha(int alpha);
         static Setor* hasClick;
+        void Shrink(float percent);
+        static set<Setor*>& GetSetorSet();
+        static int setorIncrement;
+        void ShowLines();
 
     protected:
 
@@ -58,19 +67,22 @@ class Setor: public ScreenObject
         Sprite termBox;
         Text termSetor;
         bool showTermbox;
+        static bool animate;
+        static float diff;
 
         Point center;
         double percent;
-        double setorWidth;
-        double setorDist;
 
-        double radius;
         Sprite sp;
         string posts;
         int baseAlpha;
 
         bool hadMouseHover;
         Timer timer;
+
+        static set<Setor*> setoresTermo;
+
+        static bool showLines;
 };
 
 #endif // SETOR_H

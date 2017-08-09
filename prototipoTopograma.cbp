@@ -51,6 +51,7 @@
 			<Add directory="../../../../../SDL2/SDL2_image-2.0.1/x86_64-w64-mingw32/lib" />
 		</Linker>
 		<Unit filename="include/Aglutinado.h" />
+		<Unit filename="include/Camera.h" />
 		<Unit filename="include/DialogBox.h" />
 		<Unit filename="include/InputHandler.h" />
 		<Unit filename="include/Mapa.h" />
@@ -61,9 +62,12 @@
 		<Unit filename="include/Setor.h" />
 		<Unit filename="include/Sprite.h" />
 		<Unit filename="include/Text.h" />
+		<Unit filename="include/Timer.h" />
 		<Unit filename="include/Window.h" />
+		<Unit filename="include/WindowSize.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/Aglutinado.cpp" />
+		<Unit filename="src/Camera.cpp" />
 		<Unit filename="src/DialogBox.cpp" />
 		<Unit filename="src/InputHandler.cpp" />
 		<Unit filename="src/Mapa.cpp" />
@@ -74,6 +78,7 @@
 		<Unit filename="src/Setor.cpp" />
 		<Unit filename="src/Sprite.cpp" />
 		<Unit filename="src/Text.cpp" />
+		<Unit filename="src/Timer.cpp" />
 		<Unit filename="src/Window.cpp" />
 		<Extensions>
 			<code_completion />

@@ -2,14 +2,17 @@
 #define MAPA_H
 
 #include <vector>
+#include <string>
 
 #include "Aglutinado.h"
 #include "WindowSize.h"
+#include "Text.h"
 
 #define RAIO 20
 
 
 using std::vector;
+using std::to_string;
 
 class Mapa
 {
@@ -24,8 +27,10 @@ class Mapa
 
     private:
         Sprite bg;
+        Text mousePosition;
         vector<Aglutinado*> aglutinados;
         bool reUpdate;
+        bool showMousePosition;
 
 };
 

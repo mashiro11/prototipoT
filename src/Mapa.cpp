@@ -11,7 +11,9 @@
 
 Mapa::Mapa():
     bg("img/Mapa/Topogramas_Mapa1.png"),
-    reUpdate(false)
+    reUpdate(false),
+    mousePosition("fonts/Roboto-Bold.ttf", 10, BLENDED, "x", 0, 0, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
+    showMousePosition(false)
 {
     bg.Resize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -40,7 +42,7 @@ Mapa::Mapa():
     aglutinados.back()->AddTermo("#fogo", 8);
     aglutinados.back()->AddTermo("correr", 5);
     aglutinados.back()->AddTermo("engarrafamento", 11 );
-    aglutinados.back()->Relaciona( ag1 );
+    aglutinados.back()->Relaciona(ag1);
 
     //Terceiro
     aglutinados.push_back(new Aglutinado(WINDOW_WIDTH* 1/4.0, WINDOW_HEIGHT* 3/4.0, RAIO, "img/janela.png", "fonts/Roboto-Bold.ttf", 20, BLENDED));
@@ -57,6 +59,8 @@ Mapa::Mapa():
     aglutinados.back()->AddTermo("netflix", 5 );
     aglutinados.back()->Relaciona(ag1);
 
+    aglutinados.back()->Shrink(0.5);
+
 }
 
 Mapa::~Mapa()
@@ -66,6 +70,7 @@ Mapa::~Mapa()
 
 void Mapa::Update(float dt){
     bool aglClicked = false;
+    bg.SetPosition(Camera::position.x, Camera::position.y);
     for(auto it = aglutinados.begin(); it != aglutinados.end(); it++){
         (*it)->Update(dt);
         aglClicked |= (*it)->selected;
@@ -74,14 +79,25 @@ void Mapa::Update(float dt){
         Aglutinado::aglSelected = nullptr;
         Setor::hasClick = nullptr;
     }
-//    bg.SetX( bg.GetX() + Camera::position.x);
-//    bg.SetY( bg.GetY() + Camera::position.y);
+
+    //DEBUG
+    if(InputHandler::GetKey() == SDLK_0){
+        showMousePosition = !showMousePosition;
+    }
+
+    if(showMousePosition){
+        mousePosition.SetText(to_string(InputHandler::GetMouseX())+"x"+to_string(InputHandler::GetMouseY()));
+    }
 }
 
 void Mapa::Render(){
     bg.Render();
     for(auto it = aglutinados.begin(); it != aglutinados.end(); it++){
         (*it)->Render();
+    }
+    //DEBUG
+    if(showMousePosition){
+        mousePosition.Render();
     }
 }
 

@@ -85,6 +85,26 @@ void DialogBox::Update(float dt){
         }else if(post != nullptr && !post->IsMouseInside()){
             Camera::cameraScroll = true;
         }
+        if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
+            if(buttonBack.IsMouseInside()){
+                //se for o primeiro, vai para o ultimo
+                if( Setor::GetSetorSet().find(Setor::hasClick) != Setor::GetSetorSet().begin() ){
+                    Setor::hasClick = (*(--(Setor::GetSetorSet().find(Setor::hasClick))));
+                }else{
+                    Setor::hasClick = (*(--(Setor::GetSetorSet().end())));
+                }
+            }else if(buttonNext.IsMouseInside()){
+                //se for o ultimo, vai para o primeiro
+                if( Setor::GetSetorSet().find(Setor::hasClick) != --(Setor::GetSetorSet().end())){
+                    Setor::hasClick = (*(++(Setor::GetSetorSet().find(Setor::hasClick))));
+                }else{
+                    Setor::hasClick = *(Setor::GetSetorSet().begin());
+                }
+            }
+            if(buttonBack.IsMouseInside() || buttonNext.IsMouseInside()){
+                Camera::Follow(Aglutinado::aglSelected->GetFixedCenter());
+            }
+        }
     }
 }
 

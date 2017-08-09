@@ -48,23 +48,23 @@ void Camera::Update(float dt){
     }
 
     //Movimentação com mouse nas bordas
-    upperBound.x = position.x + BOUNDARY;
-    upperBound.y = position.y + BOUNDARY;
-
-    lowerBound.x = position.x + WINDOW_WIDTH - BOUNDARY;
-    lowerBound.y = position.y + windowHeight - BOUNDARY;
-
-    if(InputHandler::GetMouseX() + position.x < upperBound.x ){
-        position.x -= speed;
-    }else if(InputHandler::GetMouseX() + position.x > lowerBound.x ){
-        position.x += speed;
-    }
-
-    if(InputHandler::GetMouseY() + position.y < upperBound.y ){
-        position.y -= speed;
-    }else if(InputHandler::GetMouseY() + position.y > lowerBound.y ){
-        position.y += speed;
-    }
+//    upperBound.x = position.x + BOUNDARY;
+//    upperBound.y = position.y + BOUNDARY;
+//
+//    lowerBound.x = position.x + WINDOW_WIDTH - BOUNDARY;
+//    lowerBound.y = position.y + windowHeight - BOUNDARY;
+//
+//    if(InputHandler::GetMouseX() + position.x < upperBound.x ){
+//        position.x -= speed;
+//    }else if(InputHandler::GetMouseX() + position.x > lowerBound.x ){
+//        position.x += speed;
+//    }
+//
+//    if(InputHandler::GetMouseY() + position.y < upperBound.y ){
+//        position.y -= speed;
+//    }else if(InputHandler::GetMouseY() + position.y > lowerBound.y ){
+//        position.y += speed;
+//    }
 
     //Movimentação por follow
     if(following){
