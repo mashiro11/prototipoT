@@ -41,12 +41,13 @@ double Point::DistTo(double x, double y){
 }
 
 double Point::AngleTo(double x1, double y1){
+    if(x1 == x && y1 == y) return 0;
     double firstQ = asin( abs(y - y1) / DistTo(x1,y1) );
-    if(y1 >= y && x1 > x){//primeiro quadrante
+    if(y1 >= y && x1 >= x){//primeiro quadrante
         return firstQ;
-    }else if(y1 >= y && x1 < x){//segundo quadrante
+    }else if(y1 >= y && x1 <= x){//segundo quadrante
         return PI - firstQ;
-    }else if(y1 <= y && x1 < x){//terceiro quadrante
+    }else if(y1 <= y && x1 <= x){//terceiro quadrante
         return firstQ + PI;
     }else{// quarto quadrante
         return 2*PI - firstQ;
@@ -60,9 +61,9 @@ double Point::AngleTo(Point& pt){
 
     if(pt.y >= y && pt.x >= x){//primeiro quadrante
         return firstQ;
-    }else if(pt.y >= y && pt.x < x){//segundo quadrante
+    }else if(pt.y >= y && pt.x <= x){//segundo quadrante
         return PI - firstQ;
-    }else if(pt.y <= y && pt.x < x){//terceiro quadrante
+    }else if(pt.y <= y && pt.x <= x){//terceiro quadrante
         return firstQ + PI;
     }else{// quarto quadrante
         return 2*PI - firstQ;

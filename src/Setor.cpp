@@ -64,7 +64,6 @@ void Setor::Render(){
         if(showLines){
             ShowLines();
         }
-        //
     }
 }
 
