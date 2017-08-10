@@ -56,6 +56,7 @@ class Aglutinado : public ScreenObject
         Point& GetCenter();
         Point& GetFixedCenter();
         int& GetRadius();
+        int GetRadiusExternal();
 
         static Aglutinado *aglSelected;
         bool selected;

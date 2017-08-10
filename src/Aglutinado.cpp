@@ -70,10 +70,10 @@ void Aglutinado::Render(){
                 float cosOtherThis = cos((*it)->GetCenter().AngleTo(centerRelative));
                 float sinOtherThis = sin((*it)->GetCenter().AngleTo(centerRelative));
                 SDL_RenderDrawLine(Window::GetRenderer(),
-                                   centerRelative.x + (radius+setorDist+setorWidth)*cosThisOther,
-                                   centerRelative.y + (radius+setorDist+setorWidth)*sinThisOther,
-                                   (*it)->GetCenter().x + (radius+setorDist+setorWidth)*cosOtherThis,
-                                   (*it)->GetCenter().y + (radius+setorDist+setorWidth)*sinOtherThis);
+                                   centerRelative.x + (circle.GetWidth()/2)*cosThisOther,
+                                   centerRelative.y + (circle.GetWidth()/2)*sinThisOther,
+                                   (*it)->GetCenter().x + ((*it)->GetRadiusExternal()/2)*cosOtherThis,
+                                   (*it)->GetCenter().y + ((*it)->GetRadiusExternal()/2)*sinOtherThis);
             }
         }
     }
@@ -280,6 +280,10 @@ void Aglutinado::Shrink(float percent){
     for(auto it = setores.begin(); it != setores.end(); it++){
         it->second->Shrink(percent);
     }
+}
+
+int Aglutinado::GetRadiusExternal(){
+    return circle.GetWidth();
 }
 
 #ifdef DEBUG
