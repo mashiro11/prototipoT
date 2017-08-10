@@ -52,16 +52,19 @@ class Setor: public ScreenObject
         SDL_Color color;
         string termo;
         void SetAlpha(int alpha);
-        static Setor* hasClick;
         void Shrink(float percent);
         static set<Setor*>& GetSetorSet();
         static int setorIncrement;
         void ShowLines();
+        void SelectSetor();
+
+        static Setor* hasClick;
+        static set<Setor*> setoresTermo;
+        Aglutinado &agl;
 
     protected:
 
     private:
-        Aglutinado &agl;
         void AdjustOpacity();
         void PositionTermbox();
         Sprite termBox;
@@ -79,8 +82,6 @@ class Setor: public ScreenObject
 
         bool hadMouseHover;
         Timer timer;
-
-        static set<Setor*> setoresTermo;
 
         static bool showLines;
 };

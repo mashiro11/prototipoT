@@ -108,6 +108,11 @@ void Aglutinado::Update(float dt){
         if(it->second == Setor::hasClick) continue;
         (it->second)->Update(dt);
     }
+    if(InputHandler::GetKey() == SDLK_0){
+        for(auto it = Setor::setoresTermo.begin(); it != Setor::setoresTermo.end(); it++){
+            DEBUG_PRINT("setor: " << (*it));
+        }
+    }
 
     //Responde ao click
     if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
@@ -129,7 +134,7 @@ void Aglutinado::Update(float dt){
             }
         }
 
-        if(IsMouseInsideSector()){//se setor for clicado, ativar a animação
+        if(IsMouseInsideSector()){
             dBox->showDBox = true;
             dBox->termoTemp = Setor::hasClick->termo;
             dBox->SetTermo(Setor::hasClick->termo);
@@ -141,6 +146,7 @@ void Aglutinado::Update(float dt){
             //Camera::Follow( center );
         }
     }
+    AdjustOpacity();
 
     dBox->Update(dt);
 
@@ -157,6 +163,38 @@ void Aglutinado::Update(float dt){
     }
 
     //DEBUG_PRINT("Aglutinado::Update() - fim");
+}
+
+void Aglutinado::AdjustOpacity(){
+    if(IsMouseInsideExternalRadius()){
+        circle.SetAlpha(SDL_ALPHA_OPAQUE);
+    }else{
+        circle.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
+    }
+}
+
+void Aglutinado::SelectAglutinado(float dt){
+    aglSelected = this;
+    selected = true;
+
+    dBox->showDBox = true;
+    dBox->termoTemp = Setor::hasClick->termo;
+    dBox->SetTermo(Setor::hasClick->termo);
+
+    dBox->SetPost(Setor::hasClick->GetPostPath());
+
+    //dBox->Update(dt);
+}
+
+void Aglutinado::UnselectAglutinado(){
+    showRelations = false;
+    if(!dBox->showDBox){
+        selected = false;
+    }else if(dBox->showDBox && !dBox->IsMouseInside() ){
+        selected = false;
+        dBox->showDBox = dBox->showPosts = false;
+        dBox->RemovePost();
+    }
 }
 
 void Aglutinado::SetColor(int r, int g, int b, int a){
@@ -216,6 +254,12 @@ bool Aglutinado::IsMouseInside(){
 
 bool Aglutinado::IsMouseInsideRadius(){
     if(centerRelative.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) <= radius + setorWidth){
+            return true;
+    }else return false;
+}
+
+bool Aglutinado::IsMouseInsideExternalRadius(){
+    if(centerRelative.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) <= circle.GetWidth()/2){
             return true;
     }else return false;
 }

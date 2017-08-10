@@ -162,6 +162,16 @@ void Setor::Update(float dt){
     }
 }
 
+void Setor::SelectSetor(){
+    DEBUG_PRINT("hasClick resultante:" << Setor::hasClick);
+    hasClick = this;
+    DEBUG_PRINT("hasClick resultante:" << Setor::hasClick);
+    double med = Setor::hasClick->angS + Setor::hasClick->angF/2;
+    if(med < STOP_ANGLE || STOP_ANGLE < med){
+        animate = true;
+    }
+}
+
 void Setor::PositionTermbox(){
     double mediana = angS+angF/2;
     if(0 < mediana && mediana <= 90){//primeiro quadrante

@@ -15,7 +15,8 @@ Mapa::Mapa():
     mousePosition("fonts/Roboto-Bold.ttf", 10, BLENDED, "x", 0, 0, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
     showMousePosition(false)
 {
-    bg.Resize(WINDOW_WIDTH, WINDOW_HEIGHT);
+    bg.Resize(WINDOW_WIDTH*3, WINDOW_HEIGHT*3);
+    bg.SetPosition(-WINDOW_WIDTH, -WINDOW_HEIGHT);
 
     //Primeiro
     Aglutinado *ag1 = new Aglutinado(WINDOW_WIDTH/4, WINDOW_HEIGHT/4, RAIO, "img/janela.png", "fonts/Roboto-Bold.ttf", 20, BLENDED);
@@ -70,7 +71,7 @@ Mapa::~Mapa()
 
 void Mapa::Update(float dt){
     bool aglClicked = false;
-    bg.SetPosition(Camera::position.x, Camera::position.y);
+    bg.SetPosition(-WINDOW_WIDTH-Camera::position.x, -WINDOW_HEIGHT-Camera::position.y);
     for(auto it = aglutinados.begin(); it != aglutinados.end(); it++){
         (*it)->Update(dt);
         aglClicked |= (*it)->selected;

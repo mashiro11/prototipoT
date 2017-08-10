@@ -47,6 +47,7 @@ class Aglutinado : public ScreenObject
 
         bool IsMouseInside();
         bool IsMouseInsideRadius();
+        bool IsMouseInsideExternalRadius();
         bool IsMouseInsideSector();
 
         bool IsClicked();
@@ -57,6 +58,11 @@ class Aglutinado : public ScreenObject
         Point& GetFixedCenter();
         int& GetRadius();
         int GetRadiusExternal();
+
+        void SelectAglutinado(float dt);
+        void UnselectAglutinado();
+
+        void AdjustOpacity();
 
         static Aglutinado *aglSelected;
         bool selected;
