@@ -33,40 +33,45 @@ class Setor: public ScreenObject
     public:
         //Setor();
         Setor(Aglutinado &agl, string termo, string file, string posts);
-        void Render();
-        void Draw(SDL_Renderer* renderer);
-        void Update(float dt);
-        void NewAngle(int totalTerms);
         virtual ~Setor();
-        void SetColor(SDL_Color color);
-        void SetColor(int r, int g, int b, int a);
-        void SetPercent(double percent);
+
+        void Render();
+        void Update(float dt);
+        void UpdatePosition(float dt);
+        void Animate(float dt);
+        void NewAngle(int totalTerms);
         void SetAng(double ang);
+        void AdjustOpacity();
+
+        Aglutinado& GetAgl();
+
+        void OnClick();
+        void OnHover();
+
+
+        void SelectSetor();
+        void UnselectSetor();
+
+        void SetPercent(double percent);
         bool IsMouseInside();
-        bool IsClicked();
-        bool ClickedOut();
         string GetPostPath();
         int quantTermos;
         int angS;
         int angF;
-        SDL_Color color;
         string termo;
         void SetAlpha(int alpha);
         void Shrink(float percent);
-        static set<Setor*>& GetSetorSet();
-        static int setorIncrement;
         void ShowLines();
-        void SelectSetor();
 
         static Setor* hasClick;
         static set<Setor*> setoresTermo;
-        Aglutinado &agl;
+        static set<Setor*>& GetSetorSet();
+        static int setorIncrement;
 
     protected:
 
     private:
-        void AdjustOpacity();
-        void PositionTermbox();
+        Aglutinado &agl;
         Sprite termBox;
         Text termSetor;
         bool showTermbox;

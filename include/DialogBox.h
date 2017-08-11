@@ -20,6 +20,13 @@ class DialogBox
 
         void Render();
         void Update(float dt);
+        void UpdatePosition(float dt);
+
+        void OnClick();
+        void OnHover();
+
+        void Open();
+        void Close();
         void SetTermo(string termo);
         void SetPost(string post, int x = 0, int y = 0);
         void RemovePost();

@@ -70,8 +70,15 @@ Mapa::~Mapa()
 }
 
 void Mapa::Update(float dt){
-    bool aglClicked = false;
     bg.SetPosition(-WINDOW_WIDTH-Camera::position.x, -WINDOW_HEIGHT-Camera::position.y);
+
+    //Aqui verifica-se se algum Aglutinado foi clicado.
+    //Caso negativo, aglSelected, que contem o endereço do aglutinado clicado
+    //recebe nullpointer.
+    //Se nenhum aglutinado está selecionado, significa que nenhum setor está selecionado.
+    //O aglutinado não pode colocar o hasClick do setor em nullpointer uma vez que o aglutinado
+    //conhece apenas os seus proprios setores.
+    bool aglClicked = false;
     for(auto it = aglutinados.begin(); it != aglutinados.end(); it++){
         (*it)->Update(dt);
         aglClicked |= (*it)->selected;

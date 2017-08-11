@@ -38,37 +38,44 @@ class Aglutinado : public ScreenObject
         ~Aglutinado();
         void Render();
         void Update(float dt);
-        void SetColor(int r, int g, int b, int a = 255);
+        void UpdatePositions(float dt);
+        void UpdateSectors(float dt);
+
         void AddTermo(string termo, string file, string posts);
         void AddTermo(string termo, int quant);
+
         void Relaciona(Aglutinado* agl);
         bool IsRelatedTo(Aglutinado* agl);
+
         void Shrink(float percent);
 
-        bool IsMouseInside();
-        bool IsMouseInsideRadius();
+        bool IsMouseInsideInternalRadius();
         bool IsMouseInsideExternalRadius();
         bool IsMouseInsideSector();
 
-        bool IsClicked();
-        bool IsAglClicked();
+        bool IsOutside();
+
+        void OnClick();
+        void OnHover();
+
         bool IsSectorClicked();
         void SetAlpha(int alpha);
         Point& GetCenter();
         Point& GetFixedCenter();
         int& GetRadius();
         int GetRadiusExternal();
+        DialogBox* GetDialogBox();
 
-        void SelectAglutinado(float dt);
+        void SelectAglutinado();
         void UnselectAglutinado();
-
-        void AdjustOpacity();
 
         static Aglutinado *aglSelected;
         bool selected;
+        bool hasSectorSelected;
         int setorDist;
 
         set<Aglutinado*> relacoes;
+        Point enquadramento;
 
     protected:
 
@@ -90,9 +97,12 @@ class Aglutinado : public ScreenObject
         DialogBox* dBox;
 
         int totalTermos;
-        void _changeSetorColor(SDL_Renderer *renderer, SDL_Color color);
-        void _resetDrawColor(SDL_Renderer *renderer);
+
+        //DEBUG
         bool showLine;
+        void ShowDebugLines();
+
+
 };
 
 #endif // AGLUTINADO_H

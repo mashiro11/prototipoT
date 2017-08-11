@@ -67,36 +67,9 @@ void Setor::Render(){
     }
 }
 
-void Setor::Draw(SDL_Renderer* renderer){
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    for (double k = angS; k < angF + angS; k += 0.001){
-            SDL_RenderDrawLine(renderer, agl.GetCenter().x+(agl.GetRadius()+agl.setorDist)*cos(k), agl.GetCenter().y+(agl.GetRadius()+agl.setorDist)*sin(k),
-                               agl.GetCenter().x+(agl.GetRadius()+agl.setorDist+sp.GetWidth())*cos(k), agl.GetCenter().y+(agl.GetRadius()+agl.setorDist+sp.GetWidth())*sin(k));
-    }
-}
-
 void Setor::Update(float dt){
-    //quando a animação está ligada e o aglomerado selecionado é o dono deste setor
-    //Ao invés de cada setor calcular quando deve andar, será feito apenas um calculo
-    //e todos serão atualizados a mesma quantidade fixa.
-    if(animate && &agl == agl.aglSelected ){
-        //se não é o setor selecionado
-        if(hasClick != this){
-            angS += diff;
-        }else{//se for o setor selecionado
-            double med = angS + angF/2;
-            if(diff + med > STOP_ANGLE && //quando deve parar
-            !(diff + med > STOP_ANGLE + 25) ){//tolerancia
-                animate = false;
-                diff = 0;
-            }else{
-                diff = ANIMATION_SPEED*dt;
-                angS += diff;
-            }
-        }
-        if(angS >= 360) angS -= 360;
-    }
-
+    UpdatePosition(dt);
+    AdjustOpacity();
     //Quando for montar a lista de quais os setores com mesmo termo
     if(hasClick != nullptr){
         if(!setoresTermo.empty()){
@@ -107,53 +80,11 @@ void Setor::Update(float dt){
         }
     }
 
-    sp.SetX(agl.GetCenter().x + agl.GetRadius() + agl.setorDist);
-    sp.SetY(agl.GetCenter().y);
-
-    termSetor.SetX(termSetor.GetX() + agl.GetCenter().x);
-    termSetor.SetY(termSetor.GetY() + agl.GetCenter().y);
-    //Durante a animação as respostas ao mouse são desligadas
-    PositionTermbox();
-    AdjustOpacity();
-
     if(animate){
         showTermbox = false;
     }else{
-        if(IsMouseInside()){//MouseHover
-            if(hadMouseHover == false){//entrou
-                hadMouseHover = true;
-                if(hasClick != this){//se não for esse o setor clicado
-                    showTermbox = true;
-                }
-            }
-        }else{//se não está em MouseHover
-            if(hadMouseHover == true){//se saiu do mouseHover
-                hadMouseHover = false;
-                showTermbox = false;
-            }
-        }
-        if(IsClicked()){
-            hasClick = this;
-
-            double med = Setor::hasClick->angS + Setor::hasClick->angF/2;
-            if(med < STOP_ANGLE || STOP_ANGLE < med){
-                animate = true;
-            }
-
-            setoresTermo.emplace(this);
-            if(Aglutinado::aglSelected != nullptr){
-                //Camera::Follow(Aglutinado::aglSelected->GetCenter());
-            }
-            timer.Restart();
-        }
-        if(hasClick == nullptr && !setoresTermo.empty()){
-            auto it = setoresTermo.begin();
-            while(true){
-                setoresTermo.erase(it);
-                if(setoresTermo.empty()) break;
-                it = setoresTermo.begin();
-            }
-        }
+        OnClick();
+        OnHover();
     }
 
     //DEBUG
@@ -162,17 +93,109 @@ void Setor::Update(float dt){
     }
 }
 
+void Setor::Animate(float dt){
+    //se não é o setor selecionado
+    if(hasClick != this){
+        angS += diff;
+    }else{//se for o setor selecionado
+        double med = angS + angF/2;
+        if(diff + med > STOP_ANGLE && //quando deve parar
+        !(diff + med > STOP_ANGLE + 25) ){//tolerancia
+            animate = false;
+            diff = 0;
+        }else{
+            diff = ANIMATION_SPEED*dt;
+            angS += diff;
+        }
+    }
+    if(angS >= 360) angS -= 360;
+}
+
+void Setor::OnClick(){
+    if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
+        if(IsMouseInside()){
+            SelectSetor();
+        }
+        if(!IsMouseInside()){
+            UnselectSetor();
+        }
+    }
+}
+
+void Setor::OnHover(){
+    if(IsMouseInside()){//MouseHover
+        if(hadMouseHover == false){//entrou
+            hadMouseHover = true;
+            if(hasClick != this){//se não for esse o setor clicado
+                showTermbox = true;
+            }
+        }
+    }else{//se não está em MouseHover
+        if(hadMouseHover == true){//se saiu do mouseHover
+            hadMouseHover = false;
+            showTermbox = false;
+        }
+    }
+}
+
 void Setor::SelectSetor(){
-    DEBUG_PRINT("hasClick resultante:" << Setor::hasClick);
     hasClick = this;
-    DEBUG_PRINT("hasClick resultante:" << Setor::hasClick);
+    agl.SelectAglutinado();
+    agl.hasSectorSelected = true;
+
+    sp.SetAlpha(SDL_ALPHA_OPAQUE);
+
     double med = Setor::hasClick->angS + Setor::hasClick->angF/2;
     if(med < STOP_ANGLE || STOP_ANGLE < med){
         animate = true;
     }
+
+    //Ao ser selecionado, o setor verifica se é
+    //necessario limpar a lista de setores de mesmo termo
+    if(!setoresTermo.empty() && (*setoresTermo.begin())->termo != termo){
+        auto it = setoresTermo.begin();
+        while(true){
+            setoresTermo.erase(it);
+            if(setoresTermo.empty()) break;
+            it = setoresTermo.begin();
+        }
+    }
+    if(setoresTermo.empty()) setoresTermo.emplace(this);
+    Camera::Follow(agl.enquadramento);
 }
 
-void Setor::PositionTermbox(){
+void Setor::UnselectSetor(){
+    agl.UnselectAglutinado();
+    agl.hasSectorSelected = false;
+}
+
+void Setor::AdjustOpacity(){
+    if(hasClick == nullptr){
+        sp.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
+    }else if(hasClick != this){
+        if(setoresTermo.find(this) == setoresTermo.end()){
+            sp.SetAlpha(SDL_ALPHA_OPAQUE*0.2);
+        }else{
+            sp.SetAlpha(SDL_ALPHA_OPAQUE);
+        }
+    }
+}
+
+void Setor::UpdatePosition(float dt){
+    //quando a animação está ligada e o aglomerado selecionado é o dono deste setor
+    //Ao invés de cada setor calcular quando deve andar, será feito apenas um calculo
+    //e todos serão atualizados a mesma quantidade fixa.
+    if(animate && &agl == agl.aglSelected ){
+        Animate(dt);
+    }
+    sp.SetX(agl.GetCenter().x + agl.GetRadius() + agl.setorDist);
+    sp.SetY(agl.GetCenter().y);
+
+    termSetor.SetX(termSetor.GetX() + agl.GetCenter().x);
+    termSetor.SetY(termSetor.GetY() + agl.GetCenter().y);
+    //Durante a animação as respostas ao mouse são desligadas
+
+    //Arruma o posicionamento do termo em relação a posicao do setor
     double mediana = angS+angF/2;
     if(0 < mediana && mediana <= 90){//primeiro quadrante
         termBox.SetPosition(agl.GetCenter().x+(agl.GetRadius()+agl.setorDist+sp.GetWidth())*cos( mediana *PI/180),
@@ -204,35 +227,6 @@ void Setor::PositionTermbox(){
     }
 }
 
-void Setor::AdjustOpacity(){
-    if(hasClick == nullptr){
-        sp.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
-    }else if(hasClick != this){
-        if(termo == hasClick->termo){
-            timer.Restart();
-            sp.SetAlpha(SDL_ALPHA_OPAQUE);
-        }else{
-            sp.SetAlpha(SDL_ALPHA_OPAQUE*0.2);
-        }
-    }else if(hasClick == this){
-        sp.SetAlpha(SDL_ALPHA_OPAQUE);
-    }
-}
-
-void Setor::SetColor(SDL_Color color){
-    this->color.r = color.r;
-    this->color.g = color.g;
-    this->color.b = color.b;
-    this->color.a = color.a;
-}
-
-void Setor::SetColor(int r, int g, int b, int a){
-    this->color.r = r;
-    this->color.g = g;
-    this->color.b = b;
-    this->color.a = a;
-}
-
 void Setor::SetPercent(double percent){
     this->percent = percent;
 }
@@ -253,14 +247,6 @@ bool Setor::IsMouseInside(){
                    return true;
             } else return false;
     }else return false;
-}
-
-bool Setor::IsClicked(){
-    return (IsMouseInside() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED);
-}
-
-bool Setor::ClickedOut(){
-    return (!IsMouseInside() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED);
 }
 
 void Setor::NewAngle(int totalTermos){
@@ -317,6 +303,10 @@ void Setor::ShowLines(){
             SDL_RenderDrawLine(Window::GetRenderer(), agl.GetCenter().x, agl.GetCenter().y, pt1.x, pt1.y);
             SDL_RenderDrawLine(Window::GetRenderer(), agl.GetCenter().x, agl.GetCenter().y, pt2.x, pt2.y);
 
+}
+
+Aglutinado& Setor::GetAgl(){
+    return agl;
 }
 
 #ifdef DEBUG
