@@ -9,6 +9,8 @@
         #define DEBUG_PRINT(message)
 #endif //DEBUG
 
+bool DialogBox::transfer(false);
+
 DialogBox::DialogBox(Aglutinado& agl, int x, int y, string bgFile, string fontFile, int fontSize, TextStyle style):
     agl(agl),
     posRel(x,y),
@@ -54,11 +56,12 @@ void DialogBox::Render(){
 }
 
 void DialogBox::Update(float dt){
-    if(agl.hasSectorSelected){
-        Open();
-    }
+    //DEBUG_PRINT("DialogBox::Update() - inicio");
     if(showDBox && !IsMouseInside() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED ){
         Close();
+    }
+    if(agl.hasSectorSelected){
+        Open();
     }
     if(showDBox){
         UpdatePosition(dt);
@@ -81,6 +84,7 @@ void DialogBox::Update(float dt){
         OnClick();
         OnHover();
     }
+    //DEBUG_PRINT("DialogBox::Update() - fim");
 }
 
 void DialogBox::UpdatePosition(float dt){
@@ -101,28 +105,29 @@ void DialogBox::UpdatePosition(float dt){
 
 void DialogBox::OnClick(){
     if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
-        if(buttonBack.IsMouseInside()){
+        if(buttonBack.IsMouseInside() || buttonNext.IsMouseInside()){
+            transfer = true;
             Close();
-            DEBUG_PRINT("Fez Close;");
-            //se for o primeiro, vai para o ultimo
-            if( Setor::GetSetorSet().find(Setor::hasClick) != Setor::GetSetorSet().begin() ){
-                Setor::hasClick = (*(--(Setor::GetSetorSet().find(Setor::hasClick))));
-            }else{
-                Setor::hasClick = (*(--(Setor::GetSetorSet().end())));
+            Setor::hasClick->UnselectSetor();
+            if(buttonBack.IsMouseInside()){
+                //se for o primeiro, vai para o ultimo
+                if( Setor::GetSetorSet().find(Setor::hasClick) != Setor::GetSetorSet().begin() ){
+                    Setor::hasClick = (*(--(Setor::GetSetorSet().find(Setor::hasClick))));
+                }else{
+                    Setor::hasClick = (*(--(Setor::GetSetorSet().end())));
+                }
+            }
+            if(buttonNext.IsMouseInside()){
+                //se for o ultimo, vai para o primeiro
+                if( Setor::GetSetorSet().find(Setor::hasClick) != --(Setor::GetSetorSet().end())){
+                    Setor::hasClick = (*(++(Setor::GetSetorSet().find(Setor::hasClick))));
+                }else{
+                    Setor::hasClick = *(Setor::GetSetorSet().begin());
+                }
             }
             Setor::hasClick->SelectSetor();
-            DEBUG_PRINT("Selecionou o novo setor;");
-        }
-        if(buttonNext.IsMouseInside()){
-            Close();
-            //se for o ultimo, vai para o primeiro
-            if( Setor::GetSetorSet().find(Setor::hasClick) != --(Setor::GetSetorSet().end())){
-                Setor::hasClick = (*(++(Setor::GetSetorSet().find(Setor::hasClick))));
-            }else{
-                Setor::hasClick = *(Setor::GetSetorSet().begin());
-            }
-            Setor::hasClick->SelectSetor();
-            DEBUG_PRINT("Selecionou o novo setor;");
+        }else{
+            transfer = false;
         }
     }
 }
@@ -132,10 +137,7 @@ void DialogBox::OnHover(){
 }
 
 void DialogBox::SetTermo(string termo){
-    //DEBUG_PRINT("DialogBox::SetTermo() - inicio");
     this->termo.SetText(termo);
-    //CentralizeText(this->termo);
-    //DEBUG_PRINT("DialogBox::SetTermo() - fim");
 }
 
 void DialogBox::Open(){
@@ -172,7 +174,10 @@ void DialogBox::CentralizeText(Text text){
 }
 
 bool DialogBox::IsMouseInside(){
-    return body.IsMouseInside();
+    bool cumulativeCondition = false;
+    cumulativeCondition |= body.IsMouseInside();
+    cumulativeCondition |= agl.IsMouseInsideExternalRadius();
+    return cumulativeCondition;
 }
 
 #ifdef DEBUG

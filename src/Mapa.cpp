@@ -77,13 +77,12 @@ void Mapa::Update(float dt){
     //recebe nullpointer.
     //Se nenhum aglutinado está selecionado, significa que nenhum setor está selecionado.
     //O aglutinado não pode colocar o hasClick do setor em nullpointer uma vez que o aglutinado
-    //conhece apenas os seus proprios setores.
-    bool aglClicked = false;
+    //conhece apenas os seus proprios setores.;
     for(auto it = aglutinados.begin(); it != aglutinados.end(); it++){
         (*it)->Update(dt);
-        aglClicked |= (*it)->selected;
     }
-    if(aglClicked == false){
+
+    if(!Aglutinado::selected){
         Aglutinado::aglSelected = nullptr;
         Setor::hasClick = nullptr;
     }

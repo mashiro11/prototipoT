@@ -68,6 +68,7 @@ void Setor::Render(){
 }
 
 void Setor::Update(float dt){
+    //DEBUG_PRINT("Setor::Update() - inicio");
     UpdatePosition(dt);
     AdjustOpacity();
     //Quando for montar a lista de quais os setores com mesmo termo
@@ -91,6 +92,7 @@ void Setor::Update(float dt){
     if(InputHandler::GetKey() == SDLK_0){
         showLines = !showLines;
     }
+    //DEBUG_PRINT("Setor::Update() - fim");
 }
 
 void Setor::Animate(float dt){
@@ -114,6 +116,7 @@ void Setor::Animate(float dt){
 void Setor::OnClick(){
     if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
         if(IsMouseInside()){
+            hasClick = this;
             SelectSetor();
         }
         if(!IsMouseInside()){
@@ -139,7 +142,6 @@ void Setor::OnHover(){
 }
 
 void Setor::SelectSetor(){
-    hasClick = this;
     agl.SelectAglutinado();
     agl.hasSectorSelected = true;
 
@@ -165,6 +167,7 @@ void Setor::SelectSetor(){
 }
 
 void Setor::UnselectSetor(){
+    DEBUG_PRINT("Passei aqui");
     agl.UnselectAglutinado();
     agl.hasSectorSelected = false;
 }

@@ -38,6 +38,7 @@ class DialogBox
         bool showPosts;
         string termoTemp;
         string termoSelected;
+        static bool transfer;
 
     protected:
 
