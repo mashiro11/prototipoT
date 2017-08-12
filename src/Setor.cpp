@@ -26,6 +26,7 @@ Setor::Setor(Aglutinado &agl, string termo, string tipo, string posts):
     posts("img/Posts/"+ tipo + "/" + posts + ".png"),
     hadMouseHover(false),
     baseAlpha(SDL_ALPHA_OPAQUE*0.5)
+//    state(OPACITY_DEFAULT)
 {
     sp.Resize(20, 5);
     this->termo = termo;
@@ -70,7 +71,7 @@ void Setor::Render(){
 void Setor::Update(float dt){
     //DEBUG_PRINT("Setor::Update() - inicio");
     UpdatePosition(dt);
-    AdjustOpacity();
+//    AdjustOpacity();
     //Quando for montar a lista de quais os setores com mesmo termo
     if(hasClick != nullptr){
         if(!setoresTermo.empty()){
@@ -126,17 +127,21 @@ void Setor::OnClick(){
 }
 
 void Setor::OnHover(){
-    if(IsMouseInside()){//MouseHover
-        if(hadMouseHover == false){//entrou
-            hadMouseHover = true;
+    if(InputHandler::mouseMoved){
+        if(IsMouseInside()){//MouseHover
+            sp.SetAlpha(SDL_ALPHA_OPAQUE);
             if(hasClick != this){//se não for esse o setor clicado
                 showTermbox = true;
             }
-        }
-    }else{//se não está em MouseHover
-        if(hadMouseHover == true){//se saiu do mouseHover
-            hadMouseHover = false;
-            showTermbox = false;
+        }else{//se não está em MouseHover
+                showTermbox = false;
+                if(hasClick == nullptr){
+                    sp.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
+                }else if(hasClick == this){
+                    sp.SetAlpha(SDL_ALPHA_OPAQUE);
+                }else if(hasClick != this){
+                    sp.SetAlpha(SDL_ALPHA_OPAQUE*0.2);
+                }
         }
     }
 }
@@ -167,18 +172,7 @@ void Setor::SelectSetor(){
 
 void Setor::UnselectSetor(){
     agl.hasSectorSelected = false;
-}
-
-void Setor::AdjustOpacity(){
-    if(hasClick == nullptr){
-        sp.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
-    }else if(hasClick != this){
-        if(setoresTermo.find(this) == setoresTermo.end()){
-            sp.SetAlpha(SDL_ALPHA_OPAQUE*0.2);
-        }else{
-            sp.SetAlpha(SDL_ALPHA_OPAQUE);
-        }
-    }
+    sp.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
 }
 
 void Setor::UpdatePosition(float dt){
