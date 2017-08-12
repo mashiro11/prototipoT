@@ -14,16 +14,20 @@ class Camera
         virtual ~Camera();
         static void Update(float dt);
         static void Follow(Point& pt);
+        static Point& GetFollow();
 
         static Point position;
         static int speed;
         static bool cameraScroll;
+        static bool cameraMove;
 
     protected:
     private:
+        static Point pastPosition;
         static int speedMouseRoll;
         static Point follow;
         static bool following;
+        static int followSpeed;
         static int windowWidth;
         static int windowHeight;
         static Point upperBound;

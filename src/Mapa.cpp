@@ -13,7 +13,8 @@ Mapa::Mapa():
     bg("img/Mapa/Topogramas_Mapa1.png"),
     reUpdate(false),
     mousePosition("fonts/Roboto-Bold.ttf", 10, BLENDED, "x", 0, 0, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
-    showMousePosition(false)
+    cameraFocus("fonts/Roboto-Bold.ttf", 10, BLENDED, "x", 0, 15, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
+    showInfo(false)
 {
     bg.Resize(WINDOW_WIDTH*3, WINDOW_HEIGHT*3);
     bg.SetPosition(-WINDOW_WIDTH, -WINDOW_HEIGHT);
@@ -70,7 +71,9 @@ Mapa::~Mapa()
 }
 
 void Mapa::Update(float dt){
-    bg.SetPosition(-WINDOW_WIDTH-Camera::position.x, -WINDOW_HEIGHT-Camera::position.y);
+    if(Camera::cameraMove){
+        bg.SetPosition(-WINDOW_WIDTH-Camera::position.x, -WINDOW_HEIGHT-Camera::position.y);
+    }
 
     //Aqui verifica-se se algum Aglutinado foi clicado.
     //Caso negativo, aglSelected, que contem o endereço do aglutinado clicado
@@ -89,11 +92,13 @@ void Mapa::Update(float dt){
 
     //DEBUG
     if(InputHandler::GetKey() == SDLK_0){
-        showMousePosition = !showMousePosition;
+        showInfo = !showInfo;
     }
-
-    if(showMousePosition){
-        mousePosition.SetText(to_string(InputHandler::GetMouseX())+"x"+to_string(InputHandler::GetMouseY()));
+    if(showInfo && InputHandler::mouseMoved){
+        mousePosition.SetText(to_string((int)(InputHandler::GetMousePosition().x + Camera::position.x))+"x"
+                              +to_string((int)(InputHandler::GetMousePosition().y + Camera::position.y)));
+        mousePosition.SetPos(InputHandler::GetMousePosition().x, InputHandler::GetMousePosition().y-10);
+        cameraFocus.SetText(to_string(Camera::GetFollow().x)+"x"+to_string(Camera::GetFollow().y));
     }
 }
 
@@ -102,9 +107,21 @@ void Mapa::Render(){
     for(auto it = aglutinados.begin(); it != aglutinados.end(); it++){
         (*it)->Render();
     }
+
     //DEBUG
-    if(showMousePosition){
+    if(showInfo){
         mousePosition.Render();
+        cameraFocus.Render();
+
+        SDL_SetRenderDrawColor(Window::GetRenderer(), 100, 100, 0, 255);
+        //linha vertical
+        SDL_RenderDrawLine(Window::GetRenderer(),
+                           InputHandler::GetMousePosition().x, 0,
+                           InputHandler::GetMousePosition().x, WINDOW_HEIGHT);
+        //Linha horizontal
+        SDL_RenderDrawLine(Window::GetRenderer(),
+                           0, InputHandler::GetMousePosition().y,
+                           WINDOW_WIDTH, InputHandler::GetMousePosition().y);
     }
 }
 

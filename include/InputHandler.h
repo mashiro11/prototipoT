@@ -17,13 +17,15 @@ class InputHandler
 {
     public:
         static MOUSE_LB_STATE GetMouseLBState();
-        static int GetMouseX();
-        static int GetMouseY();
+        static SDL_Point& GetMousePosition();
+        //static int GetMouseY();
         static int GetKey();
         static bool QuitRequested();
         static void Update(float dt);
         static int GetMouseScrollX();
         static int GetMouseScrollY();
+        static bool mouseMoved;
+        static bool mouseScroll;
 
     protected:
 
@@ -33,9 +35,10 @@ class InputHandler
         static bool keydown;
         static bool quitRequested;
 
-        static bool mouseScroll;
         static SDL_MouseWheelEvent *mouseState;
         static int mouseScrollAmountX;
+        static SDL_Point mousePosition;
+        static SDL_Point pastMousePosition;
 };
 
 #endif // INPUTHANDLER_H

@@ -7,6 +7,7 @@
 #include "Aglutinado.h"
 #include "WindowSize.h"
 #include "Text.h"
+#include "Window.h"
 
 #define RAIO 20
 
@@ -28,9 +29,10 @@ class Mapa
     private:
         Sprite bg;
         Text mousePosition;
+        Text cameraFocus;
         vector<Aglutinado*> aglutinados;
         bool reUpdate;
-        bool showMousePosition;
+        bool showInfo;
 
 };
 

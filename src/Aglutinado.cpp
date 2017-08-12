@@ -22,7 +22,7 @@ Aglutinado::Aglutinado(int x, int y, int radius, string bgFile, string fontFile,
     showCircleCenter(false),
     showLine(false),
     hasSectorSelected(false),
-    enquadramento(350*cos(30*PI/180), 250*sin(45*PI/180))
+    enquadramento(ENQUADRAMENTO_X + center.x, ENQUADRAMENTO_Y + center.y)
 {
     dBox = new DialogBox(*this, radius + 20 + 10 + 10,- radius - 20 - 10, bgFile, fontFile, fontSize, style);
 
@@ -88,13 +88,13 @@ void Aglutinado::Render(){
 
 void Aglutinado::Update(float dt){
     //DEBUG_PRINT("Aglutinado::Update() - inicio");
+
     UpdatePositions(dt);
     UpdateSectors(dt);
     OnClick();
     OnHover();
 
     dBox->Update(dt);
-
 
     //DEBUG
     if(InputHandler::GetKey() == SDLK_0){
@@ -104,14 +104,19 @@ void Aglutinado::Update(float dt){
 }
 
 void Aglutinado::UpdatePositions(float dt){
-    centerRelative.x = center.x - Camera::position.x;
-    centerRelative.y = center.y - Camera::position.y;
+    if(Camera::cameraMove){
+        centerRelative.x = center.x - Camera::position.x;
+        centerRelative.y = center.y - Camera::position.y;
 
-    circle.SetX(centerRelative.x - circle.GetWidth()/2);
-    circle.SetY(centerRelative.y - circle.GetHeight()/2);
+        circle.SetX(centerRelative.x - circle.GetWidth()/2);
+        circle.SetY(centerRelative.y - circle.GetHeight()/2);
 
-    circleCenter.SetX(centerRelative.x - circleCenter.GetWidth()/2);
-    circleCenter.SetY(centerRelative.y - circleCenter.GetHeight()/2);
+        circleCenter.SetX(centerRelative.x - circleCenter.GetWidth()/2);
+        circleCenter.SetY(centerRelative.y - circleCenter.GetHeight()/2);
+
+        enquadramento.x = ENQUADRAMENTO_X + center.x;
+        enquadramento.y = ENQUADRAMENTO_Y + center.y;
+    }
 }
 
 void Aglutinado::UpdateSectors(float dt){
@@ -140,10 +145,10 @@ void Aglutinado::OnClick(){
         if(IsMouseInsideSector()){
             hasSectorSelected = true;
         }
-        if(IsOutside() && aglSelected == this && !dBox->transfer){//Se clicou fora do aglomerado
+
+        if(IsOutside() && (aglSelected == this) && !dBox->transfer){//Se clicou fora do aglomerado
             showRelations = false;
-            DEBUG_PRINT("Quem ta fazendo merda: " << this);
-            DEBUG_PRINT("olha eu aqui!");
+            showCircleCenter = false;
             UnselectAglutinado();
         }
     }
@@ -152,18 +157,22 @@ void Aglutinado::OnClick(){
 
 void Aglutinado::OnHover(){
     //DEBUG_PRINT("Aglutinado::OnHover() - inicio");
-    //MouseHover
-    if(IsMouseInsideExternalRadius()){
-        showCircleCenter = true;
-    }else{
-        if(!showRelations){
-            showCircleCenter = false;
-            circleCenter.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
+    if(InputHandler::mouseMoved){
+        if(IsMouseInsideExternalRadius()){
+            showCircleCenter = true;
+        }else{
+            if(showRelations){
+                circleCenter.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
+            }else{
+                showCircleCenter = false;
+            }
         }
-    }
-    if(IsMouseInsideInternalRadius()){
-        if(aglSelected != this){
-            if(!showRelations) circleCenter.SetAlpha(SDL_ALPHA_OPAQUE);
+        if(IsMouseInsideInternalRadius()){
+            if(aglSelected != this){
+                if(!showRelations) circleCenter.SetAlpha(SDL_ALPHA_OPAQUE);
+            }else{
+                circleCenter.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
+            }
         }else{
             circleCenter.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
         }
@@ -177,7 +186,6 @@ DialogBox* Aglutinado::GetDialogBox(){
 
 void Aglutinado::SelectAglutinado(){
     aglSelected = this;
-    DEBUG_PRINT("Ultimo selecionado: " << this);
     selected = true;
     circle.SetAlpha(SDL_ALPHA_OPAQUE);
 }
@@ -229,24 +237,20 @@ bool Aglutinado::IsOutside(){
 }
 
 bool Aglutinado::IsMouseInsideInternalRadius(){
-    if(centerRelative.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) <= circleCenter.GetWidth()/2){
+    if(centerRelative.DistTo(InputHandler::GetMousePosition().x, InputHandler::GetMousePosition().y ) <= circleCenter.GetWidth()/2){
             return true;
     }else return false;
 }
 
 bool Aglutinado::IsMouseInsideExternalRadius(){
-    if(centerRelative.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) <= circle.GetWidth()/2){
+    if(centerRelative.DistTo(InputHandler::GetMousePosition().x, InputHandler::GetMousePosition().y ) <= circle.GetWidth()/2){
             return true;
     }else return false;
 }
 
-bool Aglutinado::IsSectorClicked(){
-    return( IsMouseInsideSector() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED );
-}
-
 bool Aglutinado::IsMouseInsideSector(){
-    if(centerRelative.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) <= radius + setorWidth + setorDist &&
-       centerRelative.DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY() ) >= radius + setorDist){
+    if(centerRelative.DistTo(InputHandler::GetMousePosition().x, InputHandler::GetMousePosition().y ) <= radius + setorWidth + setorDist &&
+       centerRelative.DistTo(InputHandler::GetMousePosition().x, InputHandler::GetMousePosition().y ) >= radius + setorDist){
             return true;
     }else return false;
 }
@@ -288,7 +292,12 @@ void Aglutinado::Shrink(float percent){
     setorWidth *= percent;
 
     circle.Resize(circle.GetWidth()*percent, circle.GetHeight()*percent);
+    circle.SetPosition(center.x - circle.GetWidth()/2, center.y - circle.GetHeight()/2);
+    DEBUG_PRINT(circle.GetX() << "x" << circle.GetY());
+
     circleCenter.Resize(circleCenter.GetWidth()*percent, circleCenter.GetHeight()*percent);
+    circleCenter.SetPosition(center.x - circleCenter.GetWidth()/2, center.y - circleCenter.GetHeight()/2);
+
     for(auto it = setores.begin(); it != setores.end(); it++){
         it->second->Shrink(percent);
     }
@@ -299,16 +308,18 @@ int Aglutinado::GetRadiusExternal(){
 }
 
 void Aglutinado::ShowDebugLines(){
+    SDL_SetRenderDrawColor(Window::GetRenderer(), 255, 0, 0, 255);
+    SDL_RenderDrawPoint(Window::GetRenderer(), centerRelative.x, centerRelative.y);
     if(IsMouseInsideInternalRadius()){
             SDL_SetRenderDrawColor(Window::GetRenderer(), 255, 0, 0, 255);
         }else if(IsMouseInsideExternalRadius()){
             SDL_SetRenderDrawColor(Window::GetRenderer(), 0, 255, 0, 255);
-        }
+    }
 
-        if(IsMouseInsideExternalRadius()){
-            SDL_RenderDrawLine(Window::GetRenderer(), centerRelative.x, centerRelative.y,
-                               InputHandler::GetMouseX(), InputHandler::GetMouseY());
-        }
+    if(IsMouseInsideExternalRadius()){
+        SDL_RenderDrawLine(Window::GetRenderer(), centerRelative.x, centerRelative.y,
+                           InputHandler::GetMousePosition().x, InputHandler::GetMousePosition().y);
+    }
 }
 
 #ifdef DEBUG

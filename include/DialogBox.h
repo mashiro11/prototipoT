@@ -24,8 +24,10 @@ class DialogBox
 
         void OnClick();
         void OnHover();
+        void OnMouseRoll();
 
         void Open();
+        void ChangeTermo();
         void Close();
         void SetTermo(string termo);
         void SetPost(string post, int x = 0, int y = 0);

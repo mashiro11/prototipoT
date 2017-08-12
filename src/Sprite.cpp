@@ -102,8 +102,8 @@ void Sprite::Transform(int w, int h){
 }
 
 bool Sprite::IsMouseInside(){
-    if(InputHandler::GetMouseX() >= imgRect.x && InputHandler::GetMouseX() <= imgRect.x + imgRect.w &&
-       InputHandler::GetMouseY() >= imgRect.y && InputHandler::GetMouseY() <= imgRect.y + imgRect.h  ){
+    if(InputHandler::GetMousePosition().x >= imgRect.x && InputHandler::GetMousePosition().x <= imgRect.x + imgRect.w &&
+       InputHandler::GetMousePosition().y >= imgRect.y && InputHandler::GetMousePosition().y <= imgRect.y + imgRect.h  ){
         return true;
     }else return false;
 }

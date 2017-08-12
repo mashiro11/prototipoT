@@ -47,6 +47,7 @@ public:
     int GetWidth();
     int GetX();
     int GetY();
+    string GetText();
     bool IsMouseInside();
 
 private:

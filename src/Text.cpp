@@ -38,7 +38,6 @@ Text::Text(std::string fontFile, int fontSize, TextStyle style, std::string text
     if(!Initialized){
         Initialize();
     }
-	DEBUG_PRINT("non empty text constructor")
 
 	this->box.x = x;
 	this->box.y = y;
@@ -173,10 +172,14 @@ int Text::GetY(){
     return box.y;
 }
 
+string Text::GetText(){
+    return text;
+}
+
 
 bool Text::IsMouseInside(){
-    if(box.x <= InputHandler::GetMouseX() && InputHandler::GetMouseX() <= box.x + box.w &&
-       box.y <= InputHandler::GetMouseY() && InputHandler::GetMouseY() <= box.y + box.h){
+    if(box.x <= InputHandler::GetMousePosition().x && InputHandler::GetMousePosition().x <= box.x + box.w &&
+       box.y <= InputHandler::GetMousePosition().y && InputHandler::GetMousePosition().y <= box.y + box.h){
         return true;
     }else return false;
 }

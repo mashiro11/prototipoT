@@ -155,20 +155,17 @@ void Setor::SelectSetor(){
     //Ao ser selecionado, o setor verifica se é
     //necessario limpar a lista de setores de mesmo termo
     if(!setoresTermo.empty() && (*setoresTermo.begin())->termo != termo){
-        auto it = setoresTermo.begin();
-        while(true){
+        DEBUG_PRINT("Limpa lista de setores com mesmo termo");
+        do{
+            auto it = setoresTermo.begin();
             setoresTermo.erase(it);
-            if(setoresTermo.empty()) break;
-            it = setoresTermo.begin();
-        }
+        }while(!setoresTermo.empty());
     }
     if(setoresTermo.empty()) setoresTermo.emplace(this);
     Camera::Follow(agl.enquadramento);
 }
 
 void Setor::UnselectSetor(){
-    DEBUG_PRINT("Passei aqui");
-    agl.UnselectAglutinado();
     agl.hasSectorSelected = false;
 }
 
@@ -188,7 +185,7 @@ void Setor::UpdatePosition(float dt){
     //quando a animação está ligada e o aglomerado selecionado é o dono deste setor
     //Ao invés de cada setor calcular quando deve andar, será feito apenas um calculo
     //e todos serão atualizados a mesma quantidade fixa.
-    if(animate && &agl == agl.aglSelected ){
+    if(animate && (&agl == agl.aglSelected) ){
         Animate(dt);
     }
     sp.SetX(agl.GetCenter().x + agl.GetRadius() + agl.setorDist);
@@ -240,9 +237,9 @@ void Setor::SetAng(double ang){
 }
 
 bool Setor::IsMouseInside(){
-    double dist = agl.GetCenter().DistTo(InputHandler::GetMouseX(), InputHandler::GetMouseY());
+    double dist = agl.GetCenter().DistTo(InputHandler::GetMousePosition().x, InputHandler::GetMousePosition().y);
     //angulo em graus
-    double angle = (180/PI) * agl.GetCenter().AngleTo(InputHandler::GetMouseX(), InputHandler::GetMouseY());
+    double angle = (180/PI) * agl.GetCenter().AngleTo(InputHandler::GetMousePosition().x, InputHandler::GetMousePosition().y);
     if(dist <= agl.GetRadius() + sp.GetWidth() + agl.setorDist &&
        dist >= agl.GetRadius() + agl.setorDist){
            if(( angS <= angle && angle <= angS + angF) ||

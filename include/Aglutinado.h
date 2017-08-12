@@ -19,6 +19,9 @@
 
 #define PI 3.1415
 
+#define ENQUADRAMENTO_X 50*cos(30*PI/180)
+#define ENQUADRAMENTO_Y 30*sin(45*PI/180)
+
 using std::unordered_map;
 using std::string;
 using std::cout;
@@ -58,7 +61,6 @@ class Aglutinado : public ScreenObject
         void OnClick();
         void OnHover();
 
-        bool IsSectorClicked();
         void SetAlpha(int alpha);
         Point& GetCenter();
         Point& GetFixedCenter();

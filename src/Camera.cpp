@@ -11,15 +11,18 @@
 
 
 Point Camera::position(0,0);
+Point Camera::pastPosition(0,0);
 Point Camera::follow(0,0);
 int Camera::speed(3);
 int Camera::speedMouseRoll(10);
+int Camera::followSpeed(10);
 bool Camera::following(false);
-bool Camera::cameraScroll(true);
+bool Camera::cameraScroll(false);
 int Camera::windowHeight(WINDOW_HEIGHT);
 int Camera::windowWidth(WINDOW_WIDTH);
 Point Camera::upperBound(BOUNDARY, BOUNDARY);
 Point Camera::lowerBound(WINDOW_WIDTH - BOUNDARY, WINDOW_HEIGHT - BOUNDARY);
+bool Camera::cameraMove(false);
 
 Camera::~Camera()
 {
@@ -28,9 +31,15 @@ Camera::~Camera()
 
 void Camera::Update(float dt){
     //Movimentação por scroll
+    if(InputHandler::GetMouseScrollX() || InputHandler::GetMouseScrollY()){
+        cameraScroll = true;
+    }else{
+        cameraScroll = false;
+    }
     if(cameraScroll){
         position.y += -InputHandler::GetMouseScrollY()*speedMouseRoll;
         position.x += InputHandler::GetMouseScrollX()*speedMouseRoll;
+        following = false;
     }
 
     //Movimentação pelas setas
@@ -67,41 +76,50 @@ void Camera::Update(float dt){
 //    }
 
     //Movimentação por follow
+
     if(following){
         Point endPoint(windowWidth/4, windowHeight/4);
 
         if(follow.x != position.x + endPoint.x ||
            follow.y != position.y + endPoint.y){
             if(follow.x > position.x + endPoint.x){
-                if( position.x + endPoint.x + speed > follow.x){
+                if( position.x + endPoint.x + followSpeed > follow.x){
                     position.x = follow.x - endPoint.x;
                 }else{
-                    position.x += speed;
+                    position.x += followSpeed;
                 }
             }else{
-                if( position.x + endPoint.x - speed < follow.x){
+                if( position.x + endPoint.x - followSpeed < follow.x){
                     position.x = follow.x - endPoint.x;
                 }else{
-                    position.x -= speed;
+                    position.x -= followSpeed;
                 }
             }
 
             if(follow.y > position.y + endPoint.y){
-                if( position.y + endPoint.y + speed > follow.y){
+                if( position.y + endPoint.y + followSpeed > follow.y){
                     position.y = follow.y - endPoint.y;
                 }else{
-                    position.y += speed;
+                    position.y += followSpeed;
                 }
             }else{
-                if( position.y + endPoint.y - speed < follow.y){
+                if( position.y + endPoint.y - followSpeed < follow.y){
                     position.y = follow.y - endPoint.y;
                 }else{
-                    position.y -= speed;
+                    position.y -= followSpeed;
                 }
             }
         }else{
             following = false;
         }
+    }
+    if(pastPosition.x != position.x ||
+       pastPosition.y != position.y){
+        pastPosition.x = position.x;
+        pastPosition.y = position.y;
+        cameraMove = true;
+    }else{
+        cameraMove = false;
     }
 }
 
@@ -109,6 +127,10 @@ void Camera::Follow(Point& pt){
     following = true;
     follow.x = pt.x;
     follow.y = pt.y;
+}
+
+Point& Camera::GetFollow(){
+    return follow;
 }
 
 #ifdef DEBUG

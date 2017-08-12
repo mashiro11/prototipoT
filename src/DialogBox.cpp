@@ -29,8 +29,6 @@ DialogBox::DialogBox(Aglutinado& agl, int x, int y, string bgFile, string fontFi
     buttonBack.SetPosition(body.GetX() + body.GetWidth()/2 - buttonBack.GetWidth(), body.GetY() + body.GetHeight()/2);
     buttonNext.SetPosition(body.GetX() + body.GetWidth()/2, body.GetY() + body.GetHeight()/2);
 
-    body.Resize(body.GetWidth(), 35);
-
     //CentralizeText(verPosts);
     //ctor
 }
@@ -60,51 +58,47 @@ void DialogBox::Update(float dt){
     if(showDBox && !IsMouseInside() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED ){
         Close();
     }
-    if(agl.hasSectorSelected){
+    if(!showDBox && agl.hasSectorSelected){
         Open();
+    }
+    if(Setor::hasClick != nullptr && Setor::hasClick->termo != termo.GetText()){
+        ChangeTermo();
     }
     if(showDBox){
         UpdatePosition(dt);
-        if(post != nullptr){
-            post->SetPosition(body.GetX() + body.GetWidth(), body.GetY());
-        }
-
-        if(body.GetHeight() == 35){
-            body.SetHeight(165);
-        }
-        if(verPosts.IsMouseInside() && InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
-            showPosts = true;
-        }
-        if(post != nullptr && post->IsMouseInside()){
-            Camera::cameraScroll = false;
-            post->SlideClip(0, InputHandler::GetMouseScrollY()*SCROLL_SPEED);
-        }else if(post != nullptr && !post->IsMouseInside()){
-            Camera::cameraScroll = true;
-        }
         OnClick();
         OnHover();
+        OnMouseRoll();
     }
     //DEBUG_PRINT("DialogBox::Update() - fim");
 }
 
 void DialogBox::UpdatePosition(float dt){
-    body.SetX(posRel.x + agl.GetCenter().x);
-    body.SetY(posRel.y + agl.GetCenter().y);
+    if(Camera::cameraMove){
+        body.SetX(posRel.x + agl.GetCenter().x);
+        body.SetY(posRel.y + agl.GetCenter().y);
 
-    termo.SetX(body.GetX());
-    termo.SetY(body.GetY() + 10);
+        termo.SetX(body.GetX());
+        termo.SetY(body.GetY() + 10);
 
-    verPosts.SetX(body.GetX() + body.GetWidth()/2 );
-    verPosts.SetY(body.GetY() + body.GetHeight() - 20);
+        verPosts.SetX(body.GetX() + body.GetWidth()/2 );
+        verPosts.SetY(body.GetY() + body.GetHeight() - 20);
 
-    buttonBack.SetPosition(body.GetX() + body.GetWidth()/2 - buttonBack.GetWidth(),
-                           body.GetY() + body.GetHeight()/2);
-    buttonNext.SetPosition(body.GetX() + body.GetWidth()/2,
-                           body.GetY() + body.GetHeight()/2);
+        buttonBack.SetPosition(body.GetX() + body.GetWidth()/2 - buttonBack.GetWidth(),
+                               body.GetY() + body.GetHeight()/2);
+        buttonNext.SetPosition(body.GetX() + body.GetWidth()/2,
+                               body.GetY() + body.GetHeight()/2);
+        if(post != nullptr){
+            post->SetPosition(body.GetX() + body.GetWidth(), body.GetY());
+        }
+    }
 }
 
 void DialogBox::OnClick(){
     if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
+        if(verPosts.IsMouseInside()){
+            showPosts = true;
+        }
         if(buttonBack.IsMouseInside() || buttonNext.IsMouseInside()){
             transfer = true;
             Close();
@@ -133,7 +127,20 @@ void DialogBox::OnClick(){
 }
 
 void DialogBox::OnHover(){
+    if(InputHandler::mouseMoved){
 
+    }
+}
+
+void DialogBox::OnMouseRoll(){
+    if(InputHandler::mouseScroll){
+        if(post != nullptr && post->IsMouseInside()){
+            Camera::cameraScroll = false;
+            post->SlideClip(0, InputHandler::GetMouseScrollY()*SCROLL_SPEED);
+        }else if(post != nullptr && !post->IsMouseInside()){
+            Camera::cameraScroll = true;
+        }
+    }
 }
 
 void DialogBox::SetTermo(string termo){
@@ -142,7 +149,11 @@ void DialogBox::SetTermo(string termo){
 
 void DialogBox::Open(){
     showDBox = true;
-    termoTemp = Setor::hasClick->termo;
+    ChangeTermo();
+}
+
+void DialogBox::ChangeTermo(){
+    //termoTemp = Setor::hasClick->termo;
     SetTermo(Setor::hasClick->termo);
     //informa qual imagem de post deve ser renderizada
     SetPost(Setor::hasClick->GetPostPath());
