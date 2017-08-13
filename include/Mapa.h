@@ -8,6 +8,7 @@
 #include "WindowSize.h"
 #include "Text.h"
 #include "Window.h"
+#include "DialogBox.h"
 
 #define RAIO 20
 
@@ -31,9 +32,7 @@ class Mapa
         Text mousePosition;
         Text cameraFocus;
         vector<Aglutinado*> aglutinados;
-        bool reUpdate;
         bool showInfo;
-
 };
 
 #endif // MAPA_H

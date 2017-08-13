@@ -8,8 +8,9 @@
 #include "Aglutinado.h"
 #include "Setor.h"
 
-#define BUTTON_BACK_PATH "img/Botoes/Topogramas_Botao_Recuar_1.png"
-#define BUTTON_NEXT_PATH "img/Botoes/Topogramas_Botao_Avancar_1.png"
+#define WINDOW_BOX_PATH     "img/janela.png"
+#define BUTTON_BACK_PATH    "img/Botoes/Topogramas_Botao_Recuar_1.png"
+#define BUTTON_NEXT_PATH    "img/Botoes/Topogramas_Botao_Avancar_1.png"
 
 #define SCROLL_SPEED 3
 
@@ -20,7 +21,6 @@ class Aglutinado;
 class DialogBox
 {
     public:
-        DialogBox(Aglutinado& agl, int x, int y, string bgFile, string fontFile, int fontSize, TextStyle style);
         virtual ~DialogBox();
 
         void Render();
@@ -42,9 +42,10 @@ class DialogBox
         int GetWidth();
         void CentralizeText(Text text);
         bool IsMouseInside();
+        static DialogBox& GetInstance();
 
-        bool showDBox;
-        bool showPosts;
+        static bool showDBox;
+        static bool showPosts;
         string termoTemp;
         string termoSelected;
         static bool transfer;
@@ -52,7 +53,8 @@ class DialogBox
     protected:
 
     private:
-        Aglutinado& agl;
+        DialogBox();//int x, int y, string fontFile, int fontSize, TextStyle style);
+        //Aglutinado& agl;
         Point posRel;
         Sprite body;
         Sprite buttonBack;
@@ -60,8 +62,9 @@ class DialogBox
         Text termo;
         Text verPosts;
         Text quantSetores;
-        int numSetores;
+        unsigned int numSetores;
         Sprite* post;
+        static DialogBox* instance;
 };
 
 #endif // DIALOGBOX_H
