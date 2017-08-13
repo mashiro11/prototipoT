@@ -131,6 +131,10 @@ void Aglutinado::UpdateSectors(float dt){
         if(it->second == Setor::hasClick) continue;
         (it->second)->Update(dt);
     }
+    //Atualiza todos, exceto o que foi clicado
+    for(auto it = setores.begin(); it != setores.end(); it++){
+        (it->second)->LateUpdate();
+    }
 }
 
 void Aglutinado::OnClick(){
@@ -168,8 +172,8 @@ void Aglutinado::OnHover(){
             }
         }
         if(IsMouseInsideInternalRadius()){
-            if(aglSelected != this){
-                if(!showRelations) circleCenter.SetAlpha(SDL_ALPHA_OPAQUE);
+            if(!showRelations){
+                circleCenter.SetAlpha(SDL_ALPHA_OPAQUE);
             }else{
                 circleCenter.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
             }

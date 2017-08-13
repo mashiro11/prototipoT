@@ -96,6 +96,23 @@ void Setor::Update(float dt){
     //DEBUG_PRINT("Setor::Update() - fim");
 }
 
+void Setor::LateUpdate(){
+    if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED ||
+       InputHandler::mouseMoved ){
+        if(IsMouseInside()){
+            sp.SetAlpha(SDL_ALPHA_OPAQUE);
+        }else{
+            if(hasClick == nullptr){
+                sp.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
+            }else if(hasClick == this || hasClick->termo == termo){
+                sp.SetAlpha(SDL_ALPHA_OPAQUE);
+            }else if(hasClick != this){
+                sp.SetAlpha(SDL_ALPHA_OPAQUE*0.2);
+            }
+        }
+    }
+}
+
 void Setor::Animate(float dt){
     //se não é o setor selecionado
     if(hasClick != this){
@@ -135,13 +152,6 @@ void Setor::OnHover(){
             }
         }else{//se não está em MouseHover
                 showTermbox = false;
-                if(hasClick == nullptr){
-                    sp.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
-                }else if(hasClick == this){
-                    sp.SetAlpha(SDL_ALPHA_OPAQUE);
-                }else if(hasClick != this){
-                    sp.SetAlpha(SDL_ALPHA_OPAQUE*0.2);
-                }
         }
     }
 }

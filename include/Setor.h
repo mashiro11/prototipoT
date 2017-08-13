@@ -37,6 +37,7 @@ class Setor: public ScreenObject
 
         void Render();
         void Update(float dt);
+        void LateUpdate();
         void UpdatePosition(float dt);
         void Animate(float dt);
         void NewAngle(int totalTerms);
@@ -71,14 +72,6 @@ class Setor: public ScreenObject
     protected:
 
     private:
-
-//        typedef enum{
-//            OPACITY_DEFAULT = 0,
-//            OPACITY_CLICKED,
-//            OPACITY_HOVER
-//        }OpacityState;
-
-//        OpacityState state;
 
         Aglutinado &agl;
         Sprite termBox;
