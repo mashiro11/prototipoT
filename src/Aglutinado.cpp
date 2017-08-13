@@ -107,7 +107,10 @@ void Aglutinado::LateUpdate(){
     for(auto it = setores.begin(); it != setores.end(); it++){
         (it->second)->LateUpdate();
     }
-    //dBox->LateUpdate();
+//    if(aglSelected == nullptr && selected){
+//        UnselectAglutinado();
+//    }
+//    //dBox->LateUpdate();
 }
 
 void Aglutinado::UpdatePositions(float dt){
@@ -152,9 +155,10 @@ void Aglutinado::OnClick(){
         if(IsMouseInsideSector()){
             hasSectorSelected = true;
         }
-
+        DEBUG_PRINT("IsOutside()" << IsOutside());
+        DEBUG_PRINT("(aglSelected == this)" << (aglSelected == this));
+        DEBUG_PRINT("!DialogBox::transfer" << !DialogBox::transfer);
         if(IsOutside() && (aglSelected == this) && !DialogBox::transfer){//Se clicou fora do aglomerado
-            showRelations = false;
             showCircleCenter = false;
             UnselectAglutinado();
         }
@@ -311,7 +315,7 @@ void Aglutinado::Shrink(float percent){
 }
 
 int Aglutinado::GetRadiusExternal(){
-    return circle.GetWidth();
+    return circle.GetWidth()/2;
 }
 
 void Aglutinado::ShowDebugLines(){

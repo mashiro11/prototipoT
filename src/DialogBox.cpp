@@ -65,11 +65,12 @@ void DialogBox::Render(){
 void DialogBox::Update(float dt){
     //DEBUG_PRINT("DialogBox::Update() - inicio");
     if(!showDBox &&
+       Aglutinado::aglSelected != nullptr &&
        Aglutinado::aglSelected->hasSectorSelected){
         Open();
         if(posRel.x == 0 && posRel.y == 0){
-            posRel.x = Aglutinado::aglSelected->GetRadiusExternal()/2;
-            posRel.y -= Aglutinado::aglSelected->GetRadiusExternal()/2;
+            posRel.x = Aglutinado::aglSelected->GetRadiusExternal();
+            posRel.y -= Aglutinado::aglSelected->GetRadiusExternal();
         }
     }
     if(showDBox){
@@ -82,28 +83,29 @@ void DialogBox::Update(float dt){
 }
 
 void DialogBox::UpdatePosition(float dt){
-    if(Camera::cameraMove){
-        body.SetX(posRel.x + Aglutinado::aglSelected->GetCenter().x);
-        body.SetY(posRel.y + Aglutinado::aglSelected->GetCenter().y);
+    if(Camera::cameraMove &&
+       Aglutinado::aglSelected != nullptr){
+            body.SetX(posRel.x + Aglutinado::aglSelected->GetCenter().x);
+            body.SetY(posRel.y + Aglutinado::aglSelected->GetCenter().y);
 
-        termo.SetX(body.GetX() + body.GetWidth()/2 - termo.GetWidth()/2);
-        termo.SetY(body.GetY() + 10);
+            termo.SetX(body.GetX() + body.GetWidth()/2 - termo.GetWidth()/2);
+            termo.SetY(body.GetY() + 10);
 
-        verPosts.SetX(body.GetX() + body.GetWidth()/2 - verPosts.GetWidth()/2 );
-        verPosts.SetY(body.GetY() + body.GetHeight() - 20);
+            verPosts.SetX(body.GetX() + body.GetWidth()/2 - verPosts.GetWidth()/2 );
+            verPosts.SetY(body.GetY() + body.GetHeight() - 20);
 
 
-        quantSetores.SetPos(body.GetX() + body.GetWidth()/2 - quantSetores.GetWidth()/2,
-                            body.GetY() + body.GetHeight()/2 + buttonBack.GetHeight()/2 - quantSetores.GetHeight()/2);
+            quantSetores.SetPos(body.GetX() + body.GetWidth()/2 - quantSetores.GetWidth()/2,
+                                body.GetY() + body.GetHeight()/2 + buttonBack.GetHeight()/2 - quantSetores.GetHeight()/2);
 
-        buttonBack.SetPosition(quantSetores.GetX() - buttonBack.GetWidth()*1.5,
-                               body.GetY() + body.GetHeight()/2);
+            buttonBack.SetPosition(quantSetores.GetX() - buttonBack.GetWidth()*1.5,
+                                   body.GetY() + body.GetHeight()/2);
 
-        buttonNext.SetPosition(quantSetores.GetX() + quantSetores.GetWidth()*1.5,
-                               body.GetY() + body.GetHeight()/2);
-        if(post != nullptr){
-            post->SetPosition(body.GetX() + body.GetWidth(), body.GetY());
-        }
+            buttonNext.SetPosition(quantSetores.GetX() + quantSetores.GetWidth()*1.5,
+                                   body.GetY() + body.GetHeight()/2);
+            if(post != nullptr){
+                post->SetPosition(body.GetX() + body.GetWidth(), body.GetY());
+            }
     }
 }
 
@@ -155,8 +157,6 @@ void DialogBox::OnClick(){
                     }
                 }
                 Setor::hasClick->SelectSetor();
-            }else{
-                transfer = false;
             }
         }
     }
@@ -180,12 +180,8 @@ void DialogBox::OnMouseRoll(){
 }
 
 void DialogBox::SetTermo(string termo){
-    //if(termo != this->termo.GetText()){
-        DialogBox::termo.SetText(termo);
-        DialogBox::termo.SetX(body.GetX() + body.GetWidth()/2 - DialogBox::termo.GetWidth()/2);
-//        this->buttonBack.SetX(quantSetores.GetX() - buttonBack.GetWidth()*1.5);
-//        this->buttonNext.SetX(quantSetores.GetX() + quantSetores.GetWidth()*1.5);
-    //}
+    DialogBox::termo.SetText(termo);
+    DialogBox::termo.SetX(body.GetX() + body.GetWidth()/2 - DialogBox::termo.GetWidth()/2);
 }
 
 void DialogBox::SetQuantSetores(){
@@ -207,7 +203,7 @@ void DialogBox::ChangeTermo(){
 }
 
 void DialogBox::Close(){
-    showDBox = showPosts = false;
+    showDBox = showPosts = transfer = false;
     verPosts.SetText("ver publicações");
     verPosts.SetX(body.GetX() + body.GetWidth()/2 - verPosts.GetWidth()/2);
     RemovePost();
@@ -239,6 +235,10 @@ bool DialogBox::IsMouseInside(){
     if(Aglutinado::aglSelected != nullptr){
         cumulativeCondition |= Aglutinado::aglSelected->IsMouseInsideExternalRadius();
     }
+//    if(cumulativeCondition){
+//            if(buttonBack.IsMouseInside()) cumulativeCondition = false;
+//            if(buttonNext.IsMouseInside()) cumulativeCondition = false;
+//    }
     return cumulativeCondition;
 }
 

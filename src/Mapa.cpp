@@ -87,10 +87,10 @@ void Mapa::Update(float dt){
     for(auto it = aglutinados.begin(); it != aglutinados.end(); it++){
         (*it)->LateUpdate();
     }
-    if(Aglutinado::aglSelected != nullptr){
+    //if(Aglutinado::aglSelected != nullptr){
         DialogBox::GetInstance().Update(dt);
         DialogBox::GetInstance().LateUpdate();
-    }
+    //}
 
 
     //DEBUG
