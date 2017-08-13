@@ -119,11 +119,14 @@ void Setor::Animate(float dt){
     if(hasClick != this){
         angS += diff;
     }else{//se for o setor selecionado
+
         double med = angS + angF/2;
+        //if(med == STOP_ANGLE) animate = false;
         if(diff + med > STOP_ANGLE && //quando deve parar
         !(diff + med > STOP_ANGLE + 25) ){//tolerancia
             animate = false;
-            diff = STOP_ANGLE - med;
+            diff = 0;
+            //diff = STOP_ANGLE - med;
         }else{
             diff = ANIMATION_SPEED*dt;
             angS += diff;

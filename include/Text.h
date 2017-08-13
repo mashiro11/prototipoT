@@ -44,6 +44,7 @@ public:
 	void SetStyle(TextStyle style);
 	void SetFontSize(int fontSize);
 	void SetText(std::string text);
+    int GetHeight();
     int GetWidth();
     int GetX();
     int GetY();

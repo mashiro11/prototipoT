@@ -107,6 +107,7 @@ void Aglutinado::LateUpdate(){
     for(auto it = setores.begin(); it != setores.end(); it++){
         (it->second)->LateUpdate();
     }
+    dBox->LateUpdate();
 }
 
 void Aglutinado::UpdatePositions(float dt){

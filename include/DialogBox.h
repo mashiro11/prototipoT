@@ -1,6 +1,8 @@
 #ifndef DIALOGBOX_H
 #define DIALOGBOX_H
 
+#include <string>
+
 #include "Sprite.h"
 #include "Text.h"
 #include "Aglutinado.h"
@@ -11,6 +13,9 @@
 
 #define SCROLL_SPEED 3
 
+using std::string;
+using std::to_string;
+
 class Aglutinado;
 class DialogBox
 {
@@ -20,6 +25,7 @@ class DialogBox
 
         void Render();
         void Update(float dt);
+        void LateUpdate();
         void UpdatePosition(float dt);
 
         void OnClick();
@@ -30,6 +36,7 @@ class DialogBox
         void ChangeTermo();
         void Close();
         void SetTermo(string termo);
+        void SetQuantSetores();
         void SetPost(string post, int x = 0, int y = 0);
         void RemovePost();
         int GetWidth();
@@ -52,6 +59,8 @@ class DialogBox
         Sprite buttonNext;
         Text termo;
         Text verPosts;
+        Text quantSetores;
+        int numSetores;
         Sprite* post;
 };
 

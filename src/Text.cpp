@@ -164,6 +164,10 @@ int Text::GetWidth(){
     return box.w;
 }
 
+int Text::GetHeight(){
+    return box.h;
+}
+
 int Text::GetX(){
     return box.x;
 }

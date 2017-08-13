@@ -20,9 +20,13 @@ DialogBox::DialogBox(Aglutinado& agl, int x, int y, string bgFile, string fontFi
     buttonNext(BUTTON_NEXT_PATH, body.GetX() + body.GetWidth()/2, body.GetY() + body.GetHeight()/2),
     termo(fontFile, fontSize, style, " ", body.GetX(), body.GetY() + 10, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
     verPosts(fontFile, 10, style, "ver publicações", body.GetX() + body.GetWidth()/2 , body.GetY() + body.GetHeight() - 20, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE ),
+    quantSetores(fontFile, 10, style, " ", body.GetX() + body.GetWidth()/2 , body.GetY() + body.GetHeight() - 20, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE ),
+    numSetores(0),
     post(nullptr),
     showPosts(false)
 {
+    quantSetores.SetY(body.GetY() + body.GetHeight()/2);
+
     buttonBack.Resize(buttonBack.GetWidth()/2, buttonBack.GetHeight()/2);
     buttonNext.Resize(buttonNext.GetWidth()/2, buttonNext.GetHeight()/2);
 
@@ -45,6 +49,7 @@ void DialogBox::Render(){
         termo.Render();
         verPosts.Render();
         buttonBack.Render();
+        quantSetores.Render();
         buttonNext.Render();
         if(post != nullptr && showPosts){
             post->Render();
@@ -61,9 +66,9 @@ void DialogBox::Update(float dt){
     if(!showDBox && agl.hasSectorSelected){
         Open();
     }
-    if(Setor::hasClick != nullptr && Setor::hasClick->termo != termo.GetText()){
-        ChangeTermo();
-    }
+//    if(Setor::hasClick != nullptr && Setor::hasClick->termo != termo.GetText()){
+//        ChangeTermo();
+//    }
     if(showDBox){
         UpdatePosition(dt);
         OnClick();
@@ -78,15 +83,20 @@ void DialogBox::UpdatePosition(float dt){
         body.SetX(posRel.x + agl.GetCenter().x);
         body.SetY(posRel.y + agl.GetCenter().y);
 
-        termo.SetX(body.GetX());
+        termo.SetX(body.GetX() + body.GetWidth()/2 - termo.GetWidth()/2);
         termo.SetY(body.GetY() + 10);
 
-        verPosts.SetX(body.GetX() + body.GetWidth()/2 );
+        verPosts.SetX(body.GetX() + body.GetWidth()/2 - verPosts.GetWidth()/2 );
         verPosts.SetY(body.GetY() + body.GetHeight() - 20);
 
-        buttonBack.SetPosition(body.GetX() + body.GetWidth()/2 - buttonBack.GetWidth(),
+
+        quantSetores.SetPos(body.GetX() + body.GetWidth()/2 - quantSetores.GetWidth()/2,
+                            body.GetY() + body.GetHeight()/2 + buttonBack.GetHeight()/2 - quantSetores.GetHeight()/2);
+
+        buttonBack.SetPosition(quantSetores.GetX() - buttonBack.GetWidth()*1.5,
                                body.GetY() + body.GetHeight()/2);
-        buttonNext.SetPosition(body.GetX() + body.GetWidth()/2,
+
+        buttonNext.SetPosition(quantSetores.GetX() + quantSetores.GetWidth()*1.5,
                                body.GetY() + body.GetHeight()/2);
         if(post != nullptr){
             post->SetPosition(body.GetX() + body.GetWidth(), body.GetY());
@@ -94,10 +104,26 @@ void DialogBox::UpdatePosition(float dt){
     }
 }
 
+void DialogBox::LateUpdate(){
+    if(Setor::hasClick != nullptr &&
+       Setor::hasClick->termo != termo.GetText()){
+        ChangeTermo();
+    }
+    if(numSetores != Setor::setoresTermo.size()){
+        SetQuantSetores();
+    }
+}
+
 void DialogBox::OnClick(){
     if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
         if(verPosts.IsMouseInside()){
-            showPosts = true;
+            showPosts = !showPosts;
+            if(showPosts){
+                verPosts.SetText("esconder publicações");
+            }else{
+                verPosts.SetText("ver publicações");
+            }
+            verPosts.SetX(body.GetX() + body.GetWidth()/2 - verPosts.GetWidth()/2);
         }
         if(buttonBack.IsMouseInside() || buttonNext.IsMouseInside()){
             transfer = true;
@@ -144,7 +170,18 @@ void DialogBox::OnMouseRoll(){
 }
 
 void DialogBox::SetTermo(string termo){
-    this->termo.SetText(termo);
+    //if(termo != this->termo.GetText()){
+        this->termo.SetText(termo);
+        this->termo.SetX(body.GetX() + body.GetWidth()/2 - this->termo.GetWidth()/2);
+//        this->buttonBack.SetX(quantSetores.GetX() - buttonBack.GetWidth()*1.5);
+//        this->buttonNext.SetX(quantSetores.GetX() + quantSetores.GetWidth()*1.5);
+    //}
+}
+
+void DialogBox::SetQuantSetores(){
+    numSetores = Setor::setoresTermo.size();
+    this->quantSetores.SetText(to_string(1) + " de " + to_string(numSetores) );
+    this->quantSetores.SetX(body.GetX() + body.GetWidth()/2 - this->quantSetores.GetWidth()/2);
 }
 
 void DialogBox::Open(){
@@ -161,6 +198,8 @@ void DialogBox::ChangeTermo(){
 
 void DialogBox::Close(){
     showDBox = showPosts = false;
+    verPosts.SetText("ver publicações");
+    verPosts.SetX(body.GetX() + body.GetWidth()/2 - verPosts.GetWidth()/2);
     RemovePost();
 }
 
