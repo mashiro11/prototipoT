@@ -25,6 +25,7 @@ DialogBox::DialogBox(Aglutinado& agl, int x, int y, string bgFile, string fontFi
     post(nullptr),
     showPosts(false)
 {
+    //DialogBox agora vai ser uma classe separada de Aglutinado
     quantSetores.SetY(body.GetY() + body.GetHeight()/2);
 
     buttonBack.Resize(buttonBack.GetWidth()/2, buttonBack.GetHeight()/2);
