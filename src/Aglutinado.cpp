@@ -103,6 +103,12 @@ void Aglutinado::Update(float dt){
     //DEBUG_PRINT("Aglutinado::Update() - fim");
 }
 
+void Aglutinado::LateUpdate(){
+    for(auto it = setores.begin(); it != setores.end(); it++){
+        (it->second)->LateUpdate();
+    }
+}
+
 void Aglutinado::UpdatePositions(float dt){
     if(Camera::cameraMove){
         centerRelative.x = center.x - Camera::position.x;
@@ -130,10 +136,6 @@ void Aglutinado::UpdateSectors(float dt){
     for(auto it = setores.begin(); it != setores.end(); it++){
         if(it->second == Setor::hasClick) continue;
         (it->second)->Update(dt);
-    }
-    //Atualiza todos, exceto o que foi clicado
-    for(auto it = setores.begin(); it != setores.end(); it++){
-        (it->second)->LateUpdate();
     }
 }
 

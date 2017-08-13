@@ -26,6 +26,7 @@ class Sprite
         void SetX(int x);
         void SetY(int y);
         void SetHeight(int h);
+        void SetWidth(int w);
         void SetPosition(int x, int y);
         void Resize(int w, int h);
         void Clip(int w, int h, int x = 0, int y = 0);

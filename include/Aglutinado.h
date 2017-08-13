@@ -41,6 +41,7 @@ class Aglutinado : public ScreenObject
         ~Aglutinado();
         void Render();
         void Update(float dt);
+        void LateUpdate();
         void UpdatePositions(float dt);
         void UpdateSectors(float dt);
 

@@ -56,6 +56,10 @@ void Sprite::SetHeight(int h){
     imgRect.h = h;
 }
 
+void Sprite::SetWidth(int w){
+    imgRect.w = w;
+}
+
 void Sprite::SetAlpha(int alpha){
     this->alpha = alpha;
 }

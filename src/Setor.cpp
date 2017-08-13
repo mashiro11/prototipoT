@@ -32,6 +32,7 @@ Setor::Setor(Aglutinado &agl, string termo, string tipo, string posts):
     this->termo = termo;
     this->quantTermos = 1;
     this->angS = 0;
+    termBox.SetWidth(termSetor.GetWidth());
 
     SDL_Point pt;
     pt.x = - agl.GetRadius() - agl.setorDist;
@@ -122,7 +123,7 @@ void Setor::Animate(float dt){
         if(diff + med > STOP_ANGLE && //quando deve parar
         !(diff + med > STOP_ANGLE + 25) ){//tolerancia
             animate = false;
-            diff = 0;
+            diff = STOP_ANGLE - med;
         }else{
             diff = ANIMATION_SPEED*dt;
             angS += diff;

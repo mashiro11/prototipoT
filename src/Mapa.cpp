@@ -90,6 +90,11 @@ void Mapa::Update(float dt){
         Setor::hasClick = nullptr;
     }
 
+    for(auto it = aglutinados.begin(); it != aglutinados.end(); it++){
+        (*it)->LateUpdate();
+    }
+
+
     //DEBUG
     if(InputHandler::GetKey() == SDLK_0){
         showInfo = !showInfo;
