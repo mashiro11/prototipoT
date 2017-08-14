@@ -35,7 +35,7 @@ class DialogBox
         void Open();
         void ChangeTermo();
         void Close();
-        void SetTermo(string termo);
+        void SetTermo();
         void SetQuantSetores();
         void SetPost(string post, int x = 0, int y = 0);
         void RemovePost();

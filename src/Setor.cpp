@@ -18,6 +18,7 @@ float Setor::diff(0);
 
 Setor::Setor(Aglutinado &agl, string termo, string tipo, string posts):
     agl(agl),
+    tipo(tipo),
     termBox("img/termbox.png", agl.GetCenter().x, agl.GetCenter().y),
     termSetor("fonts/Roboto-Bold.ttf", 10, BLENDED, termo, agl.GetCenter().x, agl.GetCenter().y, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
     showTermbox(false),

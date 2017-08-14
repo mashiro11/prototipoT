@@ -60,6 +60,7 @@ class Setor: public ScreenObject
         int angS;
         int angF;
         string termo;
+        string tipo;
         void SetAlpha(int alpha);
         void Shrink(float percent);
         void ShowLines();

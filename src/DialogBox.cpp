@@ -188,8 +188,17 @@ void DialogBox::OnMouseRoll(){
     }
 }
 
-void DialogBox::SetTermo(string termo){
-    DialogBox::termo.SetText(termo);
+void DialogBox::SetTermo(){
+    DialogBox::termo.SetText(Setor::hasClick->termo);
+    if(Setor::hasClick->tipo == "hashtagfeliz"){
+        DialogBox::termo.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
+    }else if(Setor::hasClick->tipo == "hashtagtriste"){
+        DialogBox::termo.SetColor(0x05, 0x8C, 0xF1, SDL_ALPHA_OPAQUE);
+    }else if(Setor::hasClick->tipo == "termofeliz"){
+        DialogBox::termo.SetColor(0xF9, 0xD6, 0x26, SDL_ALPHA_OPAQUE);
+    }else if(Setor::hasClick->tipo == "termotriste"){
+        DialogBox::termo.SetColor(0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE);
+    }
     DialogBox::termo.SetX(body.GetX() + body.GetWidth()/2 - DialogBox::termo.GetWidth()/2);
 }
 
@@ -207,7 +216,7 @@ void DialogBox::Open(){
 
 void DialogBox::ChangeTermo(){
     //termoTemp = Setor::hasClick->termo;
-    SetTermo(Setor::hasClick->termo);
+    SetTermo();
     //informa qual imagem de post deve ser renderizada
     SetPost(Setor::hasClick->GetPostPath());
 }
