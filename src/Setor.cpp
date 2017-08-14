@@ -34,6 +34,15 @@ Setor::Setor(Aglutinado &agl, string termo, string tipo, string posts):
     this->quantTermos = 1;
     this->angS = 0;
     termBox.SetWidth(termSetor.GetWidth());
+    if(tipo == "hashtagfeliz"){
+        termSetor.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
+    }else if(tipo == "hashtagtriste"){
+        termSetor.SetColor(0x05, 0x8C, 0xF1, SDL_ALPHA_OPAQUE);
+    }else if(tipo == "termofeliz"){
+        termSetor.SetColor(0xF9, 0xD6, 0x26, SDL_ALPHA_OPAQUE);
+    }else if(tipo == "termotriste"){
+        termSetor.SetColor(0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE);
+    }
 
     SDL_Point pt;
     pt.x = - agl.GetRadius() - agl.setorDist;
