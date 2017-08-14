@@ -65,6 +65,8 @@ class DialogBox
         unsigned int numSetores;
         Sprite* post;
         static DialogBox* instance;
+        Aglutinado* first;
+        int counter;
 };
 
 #endif // DIALOGBOX_H

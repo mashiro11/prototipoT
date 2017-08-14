@@ -30,7 +30,9 @@ DialogBox::DialogBox():
     quantSetores("fonts/Roboto-Bold.ttf", 10, BLENDED, " ", body.GetX() + body.GetWidth()/2 , body.GetY() + body.GetHeight() - 20, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE ),
     posRel(0,0),
     numSetores(0),
-    post(nullptr)
+    post(nullptr),
+    first(nullptr),
+    counter(1)
 {
 }
 
@@ -147,6 +149,7 @@ void DialogBox::OnClick(){
                     }else{
                         Setor::hasClick = (*(--(Setor::GetSetorSet().end())));
                     }
+                    counter--;
                 }
                 if(buttonNext.IsMouseInside()){
                     //se for o ultimo, vai para o primeiro
@@ -155,8 +158,12 @@ void DialogBox::OnClick(){
                     }else{
                         Setor::hasClick = *(Setor::GetSetorSet().begin());
                     }
+                    counter++;
                 }
                 Setor::hasClick->SelectSetor();
+                if(Aglutinado::aglSelected == first) counter = 1;
+                if(counter == 0) counter = Setor::setoresTermo.size();
+                SetQuantSetores();
             }
         }
     }
@@ -186,12 +193,13 @@ void DialogBox::SetTermo(string termo){
 
 void DialogBox::SetQuantSetores(){
     numSetores = Setor::setoresTermo.size();
-    quantSetores.SetText(to_string(1) + " de " + to_string(numSetores) );
+    quantSetores.SetText(to_string(counter) + " de " + to_string(numSetores) );
     quantSetores.SetX(body.GetX() + body.GetWidth()/2 - quantSetores.GetWidth()/2);
 }
 
 void DialogBox::Open(){
     showDBox = true;
+    first = Aglutinado::aglSelected;
     ChangeTermo();
 }
 
@@ -206,6 +214,8 @@ void DialogBox::Close(){
     showDBox = showPosts = transfer = false;
     verPosts.SetText("ver publicações");
     verPosts.SetX(body.GetX() + body.GetWidth()/2 - verPosts.GetWidth()/2);
+    first = nullptr;
+    counter = 1;
     RemovePost();
 }
 
