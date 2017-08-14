@@ -11,6 +11,28 @@
 
 Mapa::Mapa():
     bg("img/Mapa/Topogramas_Mapa1.png"),
+    busca("img/Botoes/Topogramas_Botao_Pesquisa_1.png"),
+    compartilhar("img/Botoes/Topogramas_Botao_Relacoes_1.png"),
+    calendario("img/Botoes/Topogramas_Botao_Calendario_1.png"),
+
+    zoomOut("img/Botoes/Topogramas_Botao_Afastar_1.png"),//, busca.GetX(), WINDOW_HEIGHT - 74),
+    zoomIn("img/Botoes/Topogramas_Botao_Aproximar_1.png"),//, busca.GetX(), zoomOut.GetY() - zoomOut.GetHeight()),
+    meEncontrar("img/Botoes/Topogramas_Botao_Localizacao_1.png"),//, busca.GetX(), zoomIn.GetY()-zoomIn.GetHeight()),
+
+    buscaH("fonts/Roboto-Bold.ttf", 10, BLENDED, "Buscar", 0, 0, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
+    compartilharH("fonts/Roboto-Bold.ttf", 10, BLENDED, "Compartilhar", 0, 0, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
+    calendarioH("fonts/Roboto-Bold.ttf", 10, BLENDED, "Selecionar data", 0, 0, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
+    meEncontrarH("fonts/Roboto-Bold.ttf", 10, BLENDED, "Localizar-me", 0, 0, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
+    zoomInH("fonts/Roboto-Bold.ttf", 10, BLENDED, "Aproximar mapa", 0, 0, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
+    zoomOutH("fonts/Roboto-Bold.ttf", 10, BLENDED, "Distanciar mapa", 0, 0, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
+
+    showBusca(false),
+    showCompartilhar(false),
+    showCalendario(false),
+    showMeEncontrar(false),
+    showZoomIn(false),
+    showZoomOut(false),
+
     mousePosition("fonts/Roboto-Bold.ttf", 10, BLENDED, "x", 0, 0, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
     cameraFocus("fonts/Roboto-Bold.ttf", 10, BLENDED, "x", 0, 15, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
     showInfo(false)
@@ -18,6 +40,33 @@ Mapa::Mapa():
 {
     bg.Resize(WINDOW_WIDTH*3, WINDOW_HEIGHT*3);
     bg.SetPosition(-WINDOW_WIDTH, -WINDOW_HEIGHT);
+
+    busca.Resize(30, 30);
+    compartilhar.Resize(30, 30);
+    calendario.Resize(30, 30);
+
+    meEncontrar.Resize(30, 30);
+    zoomIn.Resize(30, 30);
+    zoomOut.Resize(30, zoomOut.GetHeight());//arrumar esse sprite
+
+    busca.SetPosition(WINDOW_WIDTH - (30 + 5), 5);
+    compartilhar.SetPosition(WINDOW_WIDTH - (30 + 5), 30 + 5);
+    calendario.SetPosition(WINDOW_WIDTH - (30 + 5), 30*2 + 5);
+
+    zoomOut.SetPosition(WINDOW_WIDTH - (30 + 5), WINDOW_HEIGHT - (30 + 5) );
+    zoomIn.SetPosition(WINDOW_WIDTH - (30 + 5), WINDOW_HEIGHT - (30*2 + 5));
+    meEncontrar.SetPosition(WINDOW_WIDTH - (30 + 5), WINDOW_HEIGHT - (30*3 + 5));
+
+    buscaH.SetPos(busca.GetX() - buscaH.GetWidth(), busca.GetY());
+    compartilharH.SetPos(compartilhar.GetX() - compartilharH.GetWidth(), compartilhar.GetY());
+    calendarioH.SetPos(calendario.GetX() - calendarioH.GetWidth(), calendario.GetY());
+    meEncontrarH.SetPos(meEncontrar.GetX() - meEncontrarH.GetWidth(), meEncontrar.GetY());
+    zoomInH.SetPos(zoomIn.GetX() - zoomInH.GetWidth(), zoomIn.GetY());
+    zoomOutH.SetPos(zoomOut.GetX() - zoomOutH.GetWidth(), zoomOut.GetY());
+
+    DEBUG_PRINT("zoomOut.getY()" << zoomOut.GetY());
+    DEBUG_PRINT("zoomIn.getY()" << zoomIn.GetY());
+    DEBUG_PRINT("meEncontrar.getY()" << meEncontrar.GetY());
 
     //Primeiro
     Aglutinado *ag1 = new Aglutinado(WINDOW_WIDTH/4, WINDOW_HEIGHT/4, RAIO, "fonts/Roboto-Bold.ttf", 20, BLENDED);
@@ -54,6 +103,7 @@ Mapa::Mapa():
     aglutinados.back()->AddTermo("correr", "termofeliz", "Correr_Twitter_11");
     aglutinados.back()->AddTermo("netflix", "termofeliz", "Correr_Twitter_11");
 
+
     aglutinados.back()->AddTermo("chuva", 2);
     aglutinados.back()->AddTermo("#fogo", 8);
     aglutinados.back()->AddTermo("correr", 9);
@@ -87,21 +137,44 @@ void Mapa::Update(float dt){
     for(auto it = aglutinados.begin(); it != aglutinados.end(); it++){
         (*it)->LateUpdate();
     }
-    //if(Aglutinado::aglSelected != nullptr){
-        DialogBox::GetInstance().Update(dt);
-        DialogBox::GetInstance().LateUpdate();
-    //}
+    DialogBox::GetInstance().Update(dt);
+    DialogBox::GetInstance().LateUpdate();
+
+    OnHover();
 
 
     //DEBUG
     if(InputHandler::GetKey() == SDLK_0){
         showInfo = !showInfo;
     }
+
     if(showInfo && InputHandler::mouseMoved){
         mousePosition.SetText(to_string((int)(InputHandler::GetMousePosition().x + Camera::position.x))+"x"
                               +to_string((int)(InputHandler::GetMousePosition().y + Camera::position.y)));
         mousePosition.SetPos(InputHandler::GetMousePosition().x, InputHandler::GetMousePosition().y-10);
         cameraFocus.SetText(to_string(Camera::GetFollow().x)+"x"+to_string(Camera::GetFollow().y));
+    }
+}
+
+void Mapa::OnHover(){
+    if(InputHandler::mouseMoved){
+        if(busca.IsMouseInside()) showBusca = true;
+        else showBusca = false;
+
+        if(compartilhar.IsMouseInside()) showCompartilhar = true;
+        else showCompartilhar = false;
+
+        if(calendario.IsMouseInside()) showCalendario = true;
+        else showCalendario = false;
+
+        if(meEncontrar.IsMouseInside()) showMeEncontrar = true;
+        else showMeEncontrar = false;
+
+        if(zoomIn.IsMouseInside()) showZoomIn = true;
+        else showZoomIn = false;
+
+        if(zoomOut.IsMouseInside())showZoomOut = true;
+        else showZoomOut = false;
     }
 }
 
@@ -111,6 +184,19 @@ void Mapa::Render(){
         (*it)->Render();
     }
     DialogBox::GetInstance().Render();
+    busca.Render();
+    compartilhar.Render();
+    calendario.Render();
+    meEncontrar.Render();
+    zoomIn.Render();
+    zoomOut.Render();
+
+    if(showBusca) buscaH.Render();
+    if(showCalendario) calendarioH.Render();
+    if(showCompartilhar) compartilharH.Render();
+    if(showMeEncontrar) meEncontrarH.Render();
+    if(showZoomIn) zoomInH.Render();
+    if(showZoomOut) zoomOutH.Render();
 
     //DEBUG
     if(showInfo){

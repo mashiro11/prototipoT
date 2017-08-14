@@ -25,10 +25,34 @@ class Mapa
         void Update(float dt);
         void Render();
 
+        void OnHover();
+
     protected:
 
     private:
         Sprite bg;
+        Sprite busca;
+        Sprite compartilhar;
+        Sprite calendario;
+        Sprite meEncontrar;
+        Sprite zoomIn;
+        Sprite zoomOut;
+
+        Text buscaH;
+        Text compartilharH;
+        Text calendarioH;
+        Text meEncontrarH;
+        Text zoomInH;
+        Text zoomOutH;
+
+        bool showBusca;
+        bool showCompartilhar;
+        bool showCalendario;
+        bool showMeEncontrar;
+        bool showZoomIn;
+        bool showZoomOut;
+
+
         Text mousePosition;
         Text cameraFocus;
         vector<Aglutinado*> aglutinados;
