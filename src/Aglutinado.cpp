@@ -73,8 +73,8 @@ void Aglutinado::Render(){
                 SDL_RenderDrawLine(Window::GetRenderer(),
                                    centerRelative.x + (circle.GetWidth()/2)*cosThisOther,
                                    centerRelative.y + (circle.GetWidth()/2)*sinThisOther,
-                                   (*it)->GetCenter().x + ((*it)->GetRadiusExternal()/2)*cosOtherThis,
-                                   (*it)->GetCenter().y + ((*it)->GetRadiusExternal()/2)*sinOtherThis);
+                                   (*it)->GetCenter().x + ((*it)->GetRadiusExternal())*cosOtherThis,
+                                   (*it)->GetCenter().y + ((*it)->GetRadiusExternal())*sinOtherThis);
             }
         }
     }

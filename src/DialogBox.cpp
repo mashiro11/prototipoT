@@ -70,10 +70,6 @@ void DialogBox::Update(float dt){
        Aglutinado::aglSelected != nullptr &&
        Aglutinado::aglSelected->hasSectorSelected){
         Open();
-        if(posRel.x == 0 && posRel.y == 0){
-            posRel.x = Aglutinado::aglSelected->GetRadiusExternal();
-            posRel.y -= Aglutinado::aglSelected->GetRadiusExternal();
-        }
     }
     if(showDBox){
         UpdatePosition(dt);
@@ -87,6 +83,11 @@ void DialogBox::Update(float dt){
 void DialogBox::UpdatePosition(float dt){
     if(Camera::cameraMove &&
        Aglutinado::aglSelected != nullptr){
+            //if(posRel.x == 0 && posRel.y == 0){
+                posRel.x = Aglutinado::aglSelected->GetRadiusExternal();
+                posRel.y = -Aglutinado::aglSelected->GetRadiusExternal();
+            //}
+
             body.SetX(posRel.x + Aglutinado::aglSelected->GetCenter().x);
             body.SetY(posRel.y + Aglutinado::aglSelected->GetCenter().y);
 
@@ -164,6 +165,7 @@ void DialogBox::OnClick(){
                 if(Aglutinado::aglSelected == first) counter = 1;
                 if(counter == 0) counter = Setor::setoresTermo.size();
                 SetQuantSetores();
+
             }
         }
     }
