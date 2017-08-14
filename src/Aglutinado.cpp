@@ -54,7 +54,6 @@ Aglutinado::~Aglutinado()
 void Aglutinado::Render(){
     //DEBUG_PRINT("Aglutinado::Render() - inicio");
     circle.Render();
-//    dBox->Render();
 
     for(auto it = setores.begin(); it != setores.end(); it++){
         it->second->Render();
@@ -144,9 +143,8 @@ void Aglutinado::UpdateSectors(float dt){
 }
 
 void Aglutinado::OnClick(){
-    //DEBUG_PRINT("Aglutinado::OnClick() - inicio");
-    //Reação a click
     if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
+    DEBUG_PRINT("Aglutinado::OnClick() - inicio");
         if(circleCenter.IsMouseInside()){
             SelectAglutinado();
             showRelations = true;
@@ -155,15 +153,16 @@ void Aglutinado::OnClick(){
         if(IsMouseInsideSector()){
             hasSectorSelected = true;
         }
-        DEBUG_PRINT("IsOutside()" << IsOutside());
-        DEBUG_PRINT("(aglSelected == this)" << (aglSelected == this));
-        DEBUG_PRINT("!DialogBox::transfer" << !DialogBox::transfer);
+        DEBUG_PRINT("   IsOutside()" << IsOutside());
+        DEBUG_PRINT("   (aglSelected == this)" << (aglSelected == this));
+        DEBUG_PRINT("   !DialogBox::transfer" << !DialogBox::transfer);
         if(IsOutside() && (aglSelected == this) && !DialogBox::transfer){//Se clicou fora do aglomerado
             showCircleCenter = false;
             UnselectAglutinado();
         }
+    DEBUG_PRINT("Aglutinado::OnClick() - fim");
+    DEBUG_PRINT("");
     }
-    //DEBUG_PRINT("Aglutinado::OnClick() - fim");
 }
 
 void Aglutinado::OnHover(){
@@ -202,9 +201,11 @@ void Aglutinado::SelectAglutinado(){
 }
 
 void Aglutinado::UnselectAglutinado(){
+    DEBUG_PRINT("UnselectAglutinado() - inicio");
     showRelations = false;
     selected = false;
     circle.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
+    DEBUG_PRINT("UnselectAglutinado() - fim");
 }
 
 void Aglutinado::AddTermo(string termo, string file, string posts){

@@ -138,7 +138,7 @@ void DialogBox::OnClick(){
             }
             if(buttonBack.IsMouseInside() || buttonNext.IsMouseInside()){
                 transfer = true;
-                //Close();
+                Aglutinado::aglSelected->UnselectAglutinado();
                 Setor::hasClick->UnselectSetor();
                 if(buttonBack.IsMouseInside()){
                     //se for o primeiro, vai para o ultimo
