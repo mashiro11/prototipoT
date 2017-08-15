@@ -37,8 +37,10 @@ DialogBox::DialogBox():
     instagram("fonts/Roboto-Light.ttf", 20, BLENDED, "Instagram", body.GetX(), body.GetY() + 10, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE),
     topogramas("fonts/Roboto-Light.ttf", 20, BLENDED, "Topogramas", body.GetX(), body.GetY() + 10, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE),
     twitter("fonts/Roboto-Light.ttf", 20, BLENDED, "Twitter", body.GetX(), body.GetY() + 10, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE),
-    tab(FACEBOOK)
+    tab(FACEBOOK),
+    lastTab(NONE)
 {
+    defaultTabColor = {0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE};
 }
 
 DialogBox& DialogBox::GetInstance(){
@@ -159,12 +161,16 @@ void DialogBox::OnClick(){
             }
             if(post != nullptr){
                 if(facebook.IsMouseInside()){
+                    lastTab = tab;
                     tab = FACEBOOK;
                 }else if(instagram.IsMouseInside()){
+                    lastTab = tab;
                     tab = INSTAGRAM;
                 }else if(twitter.IsMouseInside()){
+                    lastTab = tab;
                     tab = TWITTER;
                 }else if(topogramas.IsMouseInside()){
+                    lastTab = tab;
                     tab = TOPOGRAMAS;
                 }
                 SetPostTab();
@@ -205,31 +211,31 @@ void DialogBox::OnHover(){
     if(InputHandler::mouseMoved){
         if(post != nullptr){
             if(tab != FACEBOOK){
-                if(facebook.IsMouseInside()){
+                if(facebook.MouseEntered()){
                     facebook.SetColor(color);
                 }else if(facebook.MouseLeaved()){
-                    facebook.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+                    facebook.SetColor(defaultTabColor);
                 }
             }
             if(tab != INSTAGRAM){
-                if(instagram.IsMouseInside()){
+                if(instagram.MouseEntered()){
                     instagram.SetColor(color);
                 }else if(instagram.MouseLeaved()){
-                    instagram.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+                    instagram.SetColor(defaultTabColor);
                 }
             }
             if(tab != TWITTER){
-                if(twitter.IsMouseInside()){
+                if(twitter.MouseEntered()){
                     twitter.SetColor(color);
                 }else if(twitter.MouseLeaved()){
-                    twitter.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+                    twitter.SetColor(defaultTabColor);
                 }
             }
             if(tab != TOPOGRAMAS){
-                if(topogramas.IsMouseInside()){
+                if(topogramas.MouseEntered()){
                     topogramas.SetColor(color);
                 }else if(topogramas.MouseLeaved()){
-                    topogramas.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+                    topogramas.SetColor(defaultTabColor);
                 }
             }
         }
@@ -298,27 +304,29 @@ void DialogBox::SetTabColor(){
     switch(tab){
         case FACEBOOK:
             facebook.SetColor(color);
-            instagram.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
-            topogramas.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
-            twitter.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
             break;
         case INSTAGRAM:
             instagram.SetColor(color);
-            facebook.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
-            topogramas.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
-            twitter.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
             break;
         case TWITTER:
             twitter.SetColor(color);
-            instagram.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
-            facebook.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
-            topogramas.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
             break;
         case TOPOGRAMAS:
             topogramas.SetColor(color);
-            twitter.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
-            instagram.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
-            facebook.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+            break;
+    }
+    switch(lastTab){
+        case FACEBOOK:
+            facebook.SetColor(defaultTabColor);
+            break;
+        case INSTAGRAM:
+            instagram.SetColor(defaultTabColor);
+            break;
+        case TWITTER:
+            twitter.SetColor(defaultTabColor);
+            break;
+        case TOPOGRAMAS:
+            topogramas.SetColor(defaultTabColor);
             break;
     }
 }

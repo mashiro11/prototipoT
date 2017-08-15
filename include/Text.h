@@ -51,6 +51,7 @@ public:
     int GetY();
     string GetText();
     bool IsMouseInside();
+    bool MouseEntered();
     bool MouseLeaved();
 
 private:

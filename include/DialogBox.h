@@ -75,15 +75,18 @@ class DialogBox
         Text topogramas;
         Text twitter;
         SDL_Color color;
+        SDL_Color defaultTabColor;
 
         typedef enum{
             FACEBOOK = 0,
             INSTAGRAM,
             TWITTER,
-            TOPOGRAMAS
+            TOPOGRAMAS,
+            NONE
         }PostSelected;
 
         PostSelected tab;
+        PostSelected lastTab;
 };
 
 #endif // DIALOGBOX_H

@@ -199,6 +199,10 @@ bool Text::MouseLeaved(){
     return (!newMouseState && lastMouseState);
 }
 
+bool Text::MouseEntered(){
+    return (newMouseState && !lastMouseState);
+}
+
 void Text::SetFont(string font){
     this->fontFile = font;
     RemakeTexture();
