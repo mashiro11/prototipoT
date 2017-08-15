@@ -350,9 +350,7 @@ void DialogBox::Open(){
 }
 
 void DialogBox::ChangeTermo(){
-    //termoTemp = Setor::hasClick->termo;
     SetTermo();
-    //informa qual imagem de post deve ser renderizada
     SetPost(Setor::hasClick->GetPostPath(tab));
 }
 
