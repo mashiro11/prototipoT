@@ -33,10 +33,11 @@ DialogBox::DialogBox():
     post(nullptr),
     first(nullptr),
     counter(1),
-    facebook("fonts/Roboto-Bold.ttf", 20, BLENDED, "Facebook", body.GetX(), body.GetY() + 10, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
-    instagram("fonts/Roboto-Bold.ttf", 20, BLENDED, "Instagram", body.GetX(), body.GetY() + 10, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
-    topogramas("fonts/Roboto-Bold.ttf", 20, BLENDED, "Topogramas", body.GetX(), body.GetY() + 10, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
-    twitter("fonts/Roboto-Bold.ttf", 20, BLENDED, "Twitter", body.GetX(), body.GetY() + 10, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE)
+    facebook("fonts/Roboto-Light.ttf", 20, BLENDED, "Facebook", body.GetX(), body.GetY() + 10, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE),
+    instagram("fonts/Roboto-Light.ttf", 20, BLENDED, "Instagram", body.GetX(), body.GetY() + 10, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE),
+    topogramas("fonts/Roboto-Light.ttf", 20, BLENDED, "Topogramas", body.GetX(), body.GetY() + 10, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE),
+    twitter("fonts/Roboto-Light.ttf", 20, BLENDED, "Twitter", body.GetX(), body.GetY() + 10, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE),
+    tab(FACEBOOK)
 {
 }
 
@@ -151,6 +152,18 @@ void DialogBox::OnClick(){
                 }
                 verPosts.SetX(body.GetX() + body.GetWidth()/2 - verPosts.GetWidth()/2);
             }
+            if(post != nullptr){
+                if(facebook.IsMouseInside()){
+                    tab = FACEBOOK;
+                }else if(instagram.IsMouseInside()){
+                    tab = INSTAGRAM;
+                }else if(twitter.IsMouseInside()){
+                    tab = TWITTER;
+                }else if(topogramas.IsMouseInside()){
+                    tab = TOPOGRAMAS;
+                }
+                SetPostTab();
+            }
             if(buttonBack.IsMouseInside() || buttonNext.IsMouseInside()){
                 transfer = true;
                 Aglutinado::aglSelected->UnselectAglutinado();
@@ -203,35 +216,75 @@ void DialogBox::OnMouseRoll(){
 void DialogBox::SetTermo(){
     DialogBox::termo.SetText(Setor::hasClick->termo);
     if(Setor::hasClick->tipo == "hashtagfeliz"){
-        DialogBox::termo.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
-        facebook.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
-        instagram.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
-        topogramas.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
-        twitter.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
-
+        color = {0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE};
     }else if(Setor::hasClick->tipo == "hashtagtriste"){
-        DialogBox::termo.SetColor(0x05, 0x8C, 0xF1, SDL_ALPHA_OPAQUE);
-        facebook.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
-        instagram.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
-        topogramas.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
-        twitter.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
-
+        color = {0x05, 0x8C, 0xF1, SDL_ALPHA_OPAQUE};
     }else if(Setor::hasClick->tipo == "termofeliz"){
-        DialogBox::termo.SetColor(0xF9, 0xD6, 0x26, SDL_ALPHA_OPAQUE);
-        facebook.SetColor(0xF9, 0xD6, 0x26, SDL_ALPHA_OPAQUE);
-        instagram.SetColor(0xF9, 0xD6, 0x26, SDL_ALPHA_OPAQUE);
-        topogramas.SetColor(0xF9, 0xD6, 0x26, SDL_ALPHA_OPAQUE);
-        twitter.SetColor(0xF9, 0xD6, 0x26, SDL_ALPHA_OPAQUE);
-
+        color = {0xF9, 0xD6, 0x26, SDL_ALPHA_OPAQUE};
     }else if(Setor::hasClick->tipo == "termotriste"){
-        DialogBox::termo.SetColor(0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE);
-        facebook.SetColor(0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE);
-        instagram.SetColor(0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE);
-        topogramas.SetColor(0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE);
-        twitter.SetColor(0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE);
-
+        color = {0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE};
     }
+    DialogBox::termo.SetColor(color);
     DialogBox::termo.SetX(body.GetX() + body.GetWidth()/2 - DialogBox::termo.GetWidth()/2);
+}
+
+void DialogBox::SetPostTab(){
+    switch(tab){
+        case FACEBOOK:
+            facebook.SetFont("fonts/Roboto-Bold.ttf");
+            instagram.SetFont("fonts/Roboto-Light.ttf");
+            twitter.SetFont("fonts/Roboto-Light.ttf");
+            topogramas.SetFont("fonts/Roboto-Light.ttf");
+            break;
+        case INSTAGRAM:
+            instagram.SetFont("fonts/Roboto-Bold.ttf");
+            facebook.SetFont("fonts/Roboto-Light.ttf");
+            twitter.SetFont("fonts/Roboto-Light.ttf");
+            topogramas.SetFont("fonts/Roboto-Light.ttf");
+            break;
+        case TWITTER:
+            twitter.SetFont("fonts/Roboto-Bold.ttf");
+            facebook.SetFont("fonts/Roboto-Light.ttf");
+            instagram.SetFont("fonts/Roboto-Light.ttf");
+            topogramas.SetFont("fonts/Roboto-Light.ttf");
+            break;
+        case TOPOGRAMAS:
+            topogramas.SetFont("fonts/Roboto-Bold.ttf");
+            facebook.SetFont("fonts/Roboto-Light.ttf");
+            instagram.SetFont("fonts/Roboto-Light.ttf");
+            twitter.SetFont("fonts/Roboto-Light.ttf");
+            break;
+    }
+    SetTabColor();
+}
+
+void DialogBox::SetTabColor(){
+    switch(tab){
+        case FACEBOOK:
+            facebook.SetColor(color);
+            instagram.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+            topogramas.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+            twitter.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+            break;
+        case INSTAGRAM:
+            instagram.SetColor(color);
+            facebook.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+            topogramas.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+            twitter.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+            break;
+        case TWITTER:
+            twitter.SetColor(color);
+            instagram.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+            facebook.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+            topogramas.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+            break;
+        case TOPOGRAMAS:
+            topogramas.SetColor(color);
+            twitter.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+            instagram.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+            facebook.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+            break;
+    }
 }
 
 void DialogBox::SetQuantSetores(){
@@ -285,6 +338,12 @@ void DialogBox::CentralizeText(Text text){
 bool DialogBox::IsMouseInside(){
     bool cumulativeCondition = false;
     cumulativeCondition |= body.IsMouseInside();
+    if(post != nullptr){
+        cumulativeCondition |= facebook.IsMouseInside();
+        cumulativeCondition |= instagram.IsMouseInside();
+        cumulativeCondition |= twitter.IsMouseInside();
+        cumulativeCondition |= topogramas.IsMouseInside();
+    }
     if(Aglutinado::aglSelected != nullptr){
         cumulativeCondition |= Aglutinado::aglSelected->IsMouseInsideExternalRadius();
     }

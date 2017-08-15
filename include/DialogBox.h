@@ -31,6 +31,9 @@ class DialogBox
         void OnClick();
         void OnHover();
         void OnMouseRoll();
+        void SetPostTab();
+        void SetTabColor();
+
 
         void Open();
         void ChangeTermo();
@@ -71,6 +74,16 @@ class DialogBox
         Text instagram;
         Text topogramas;
         Text twitter;
+        SDL_Color color;
+
+        typedef enum{
+            FACEBOOK = 0,
+            INSTAGRAM,
+            TWITTER,
+            TOPOGRAMAS
+        }PostSelected;
+
+        PostSelected tab;
 };
 
 #endif // DIALOGBOX_H

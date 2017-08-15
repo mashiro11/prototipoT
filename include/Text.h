@@ -41,6 +41,7 @@ public:
 	void SetY(int y, bool centered = false);
 	void SetColor(SDL_Color color);
 	void SetColor(int r, int g, int b, int a);
+	void SetFont(string file);
 	void SetStyle(TextStyle style);
 	void SetFontSize(int fontSize);
 	void SetText(std::string text);

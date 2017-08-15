@@ -188,6 +188,11 @@ bool Text::IsMouseInside(){
     }else return false;
 }
 
+void Text::SetFont(string font){
+    this->fontFile = font;
+    RemakeTexture();
+}
+
 #ifdef DEBUG
     #undef DEBUG
 #endif // DEBUG
