@@ -13,7 +13,7 @@
 Aglutinado* Aglutinado::aglSelected = nullptr;
 bool Aglutinado::selected(false);
 
-Aglutinado::Aglutinado(int x, int y, int radius, string bgFile, string fontFile, int fontSize, TextStyle style):
+Aglutinado::Aglutinado(int x, int y, int radius, string fontFile, int fontSize, TextStyle style):
     center(x,y),
     centerRelative(x + Camera::position.x, y + Camera::position.y),
     circle("img/Setores/circulo.png"),
@@ -24,7 +24,7 @@ Aglutinado::Aglutinado(int x, int y, int radius, string bgFile, string fontFile,
     hasSectorSelected(false),
     enquadramento(ENQUADRAMENTO_X + center.x, ENQUADRAMENTO_Y + center.y)
 {
-    dBox = new DialogBox(*this, radius + 20 + 10 + 10,- radius - 20 - 10, bgFile, fontFile, fontSize, style);
+//    dBox = new DialogBox(*this, radius + 20 + 10 + 10,- radius - 20 - 10, bgFile, fontFile, fontSize, style);
 
     setorWidth = SETOR_WIDTH;
     setorDist = SETOR_DIST;
@@ -54,7 +54,6 @@ Aglutinado::~Aglutinado()
 void Aglutinado::Render(){
     //DEBUG_PRINT("Aglutinado::Render() - inicio");
     circle.Render();
-    dBox->Render();
 
     for(auto it = setores.begin(); it != setores.end(); it++){
         it->second->Render();
@@ -74,8 +73,8 @@ void Aglutinado::Render(){
                 SDL_RenderDrawLine(Window::GetRenderer(),
                                    centerRelative.x + (circle.GetWidth()/2)*cosThisOther,
                                    centerRelative.y + (circle.GetWidth()/2)*sinThisOther,
-                                   (*it)->GetCenter().x + ((*it)->GetRadiusExternal()/2)*cosOtherThis,
-                                   (*it)->GetCenter().y + ((*it)->GetRadiusExternal()/2)*sinOtherThis);
+                                   (*it)->GetCenter().x + ((*it)->GetRadiusExternal())*cosOtherThis,
+                                   (*it)->GetCenter().y + ((*it)->GetRadiusExternal())*sinOtherThis);
             }
         }
     }
@@ -94,7 +93,7 @@ void Aglutinado::Update(float dt){
     OnClick();
     OnHover();
 
-    dBox->Update(dt);
+    //dBox->Update(dt);
 
     //DEBUG
     if(InputHandler::GetKey() == SDLK_0){
@@ -107,7 +106,10 @@ void Aglutinado::LateUpdate(){
     for(auto it = setores.begin(); it != setores.end(); it++){
         (it->second)->LateUpdate();
     }
-    dBox->LateUpdate();
+//    if(aglSelected == nullptr && selected){
+//        UnselectAglutinado();
+//    }
+//    //dBox->LateUpdate();
 }
 
 void Aglutinado::UpdatePositions(float dt){
@@ -141,9 +143,8 @@ void Aglutinado::UpdateSectors(float dt){
 }
 
 void Aglutinado::OnClick(){
-    //DEBUG_PRINT("Aglutinado::OnClick() - inicio");
-    //Reação a click
     if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
+    DEBUG_PRINT("Aglutinado::OnClick() - inicio");
         if(circleCenter.IsMouseInside()){
             SelectAglutinado();
             showRelations = true;
@@ -152,14 +153,16 @@ void Aglutinado::OnClick(){
         if(IsMouseInsideSector()){
             hasSectorSelected = true;
         }
-
-        if(IsOutside() && (aglSelected == this) && !dBox->transfer){//Se clicou fora do aglomerado
-            showRelations = false;
+        DEBUG_PRINT("   IsOutside()" << IsOutside());
+        DEBUG_PRINT("   (aglSelected == this)" << (aglSelected == this));
+        DEBUG_PRINT("   !DialogBox::transfer" << !DialogBox::transfer);
+        if(IsOutside() && (aglSelected == this) && !DialogBox::transfer){//Se clicou fora do aglomerado
             showCircleCenter = false;
             UnselectAglutinado();
         }
+    DEBUG_PRINT("Aglutinado::OnClick() - fim");
+    DEBUG_PRINT("");
     }
-    //DEBUG_PRINT("Aglutinado::OnClick() - fim");
 }
 
 void Aglutinado::OnHover(){
@@ -186,10 +189,10 @@ void Aglutinado::OnHover(){
     }
     //DEBUG_PRINT("Aglutinado::OnHover() - fim");
 }
-
-DialogBox* Aglutinado::GetDialogBox(){
-    return dBox;
-}
+//
+//DialogBox* Aglutinado::GetDialogBox(){
+//    return dBox;
+//}
 
 void Aglutinado::SelectAglutinado(){
     aglSelected = this;
@@ -198,18 +201,20 @@ void Aglutinado::SelectAglutinado(){
 }
 
 void Aglutinado::UnselectAglutinado(){
+    DEBUG_PRINT("UnselectAglutinado() - inicio");
     showRelations = false;
     selected = false;
     circle.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
+    DEBUG_PRINT("UnselectAglutinado() - fim");
 }
 
-void Aglutinado::AddTermo(string termo, string file, string posts){
+void Aglutinado::AddTermo(string termo, string file){
     totalTermos++;
     //se NÃO for o primeiro desse termo adicionado
     if( setores.find(termo) != setores.end() ){
         setores[termo]->quantTermos++;
     }else{
-        setores[termo] = new Setor(*this, termo, file, posts);
+        setores[termo] = new Setor(*this, termo, file);
     }
     UpdateValues();
 }
@@ -239,7 +244,7 @@ void Aglutinado::UpdateValues(){
 bool Aglutinado::IsOutside(){
     bool cumulativeCondition = false;
     cumulativeCondition |= circle.IsMouseInside();
-    cumulativeCondition |= (dBox->showDBox ? dBox->IsMouseInside(): false) ;
+    cumulativeCondition |= (DialogBox::showDBox ? DialogBox::GetInstance().IsMouseInside(): false) ;
     return !cumulativeCondition;
 }
 
@@ -311,7 +316,7 @@ void Aglutinado::Shrink(float percent){
 }
 
 int Aglutinado::GetRadiusExternal(){
-    return circle.GetWidth();
+    return circle.GetWidth()/2;
 }
 
 void Aglutinado::ShowDebugLines(){

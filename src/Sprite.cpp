@@ -1,7 +1,9 @@
 #include "Sprite.h"
 
 Sprite::Sprite(string path, int x, int y):
-    alpha(SDL_ALPHA_OPAQUE)
+    alpha(SDL_ALPHA_OPAQUE),
+    lastMouseInside(false),
+    newMouseInside(false)
 {
     imgRect.x = x;
     imgRect.y = y;
@@ -83,6 +85,11 @@ void Sprite::SetRotationAngle(int angle){
     this->angle = angle;
 }
 
+void Sprite::Update(float dt){
+    lastMouseInside = newMouseInside;
+    newMouseInside = IsMouseInside();
+}
+
 void Sprite::Render(){
     //como vai aparecer na tela
     if(alpha >= SDL_ALPHA_OPAQUE) alpha = SDL_ALPHA_OPAQUE;
@@ -140,4 +147,8 @@ void Sprite::SlideClip(int amountX, int amountY){
 
 string Sprite::GetPath(){
     return path;
+}
+
+bool Sprite::MouseLeaved(){
+    return !newMouseInside && lastMouseInside;
 }

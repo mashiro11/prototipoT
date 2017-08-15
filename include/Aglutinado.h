@@ -32,12 +32,12 @@ using std::iter_swap;
 
 
 class Setor;
-class DialogBox;
+//class DialogBox;
 
 class Aglutinado : public ScreenObject
 {
     public:
-        Aglutinado(int x, int y, int radius, string bgFile, string fontFile, int fontSize, TextStyle style);
+        Aglutinado(int x, int y, int radius, string fontFile, int fontSize, TextStyle style);
         ~Aglutinado();
         void Render();
         void Update(float dt);
@@ -45,7 +45,7 @@ class Aglutinado : public ScreenObject
         void UpdatePositions(float dt);
         void UpdateSectors(float dt);
 
-        void AddTermo(string termo, string file, string posts);
+        void AddTermo(string termo, string file);
         void AddTermo(string termo, int quant);
 
         void Relaciona(Aglutinado* agl);
@@ -67,7 +67,7 @@ class Aglutinado : public ScreenObject
         Point& GetFixedCenter();
         int& GetRadius();
         int GetRadiusExternal();
-        DialogBox* GetDialogBox();
+        //DialogBox* GetDialogBox();
 
         void SelectAglutinado();
         void UnselectAglutinado();
@@ -98,7 +98,7 @@ class Aglutinado : public ScreenObject
         bool showCircleCenter;
         unordered_map<string, Setor*> setores;
         bool clockwise;
-        DialogBox* dBox;
+        //DialogBox* dBox;
 
         int totalTermos;
 

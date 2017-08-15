@@ -11,21 +11,21 @@
 
 Mapa::Mapa():
     bg("img/Mapa/Topogramas_Mapa1.png"),
-    reUpdate(false),
     mousePosition("fonts/Roboto-Bold.ttf", 10, BLENDED, "x", 0, 0, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
     cameraFocus("fonts/Roboto-Bold.ttf", 10, BLENDED, "x", 0, 15, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
     showInfo(false)
+    //dBox(radius + 20 + 10 + 10,- radius - 20 - 10, fontFile, fontSize, style);
 {
     bg.Resize(WINDOW_WIDTH*3, WINDOW_HEIGHT*3);
     bg.SetPosition(-WINDOW_WIDTH, -WINDOW_HEIGHT);
 
     //Primeiro
-    Aglutinado *ag1 = new Aglutinado(WINDOW_WIDTH/4, WINDOW_HEIGHT/4, RAIO, "img/janela.png", "fonts/Roboto-Bold.ttf", 20, BLENDED);
+    Aglutinado *ag1 = new Aglutinado(WINDOW_WIDTH/4, WINDOW_HEIGHT/4, RAIO, "fonts/Roboto-Bold.ttf", 20, BLENDED);
     aglutinados.push_back(ag1);
-    aglutinados.back()->AddTermo("#fogo", "hashtagfeliz", "#Fogo-Facebook1");
-    aglutinados.back()->AddTermo("chuva", "termofeliz", "Chuva_Twitter_11");
-    aglutinados.back()->AddTermo("engarrafamento", "termotriste", "Engarrafamento_Twitter_11");
-    aglutinados.back()->AddTermo("correr", "termofeliz", "Correr_Twitter_11");
+    aglutinados.back()->AddTermo("#fogo", "hashtagfeliz");
+    aglutinados.back()->AddTermo("chuva", "termofeliz");
+    aglutinados.back()->AddTermo("engarrafamento", "termotriste");
+    aglutinados.back()->AddTermo("correr", "termofeliz");
 
     aglutinados.back()->AddTermo("chuva", 10);
     aglutinados.back()->AddTermo("#fogo", 5);
@@ -34,11 +34,11 @@ Mapa::Mapa():
 
     //Segundo
     //Aglutinado *ag1 = ;
-    aglutinados.push_back(new Aglutinado(WINDOW_WIDTH* 3/4.0, WINDOW_HEIGHT* 3/4.0, RAIO, "img/janela.png", "fonts/Roboto-Bold.ttf", 20, BLENDED));
-    aglutinados.back()->AddTermo("#fogo", "hashtagfeliz", "#Fogo-Facebook1");
-    aglutinados.back()->AddTermo("chuva", "termofeliz", "Chuva_Twitter_11");
-    aglutinados.back()->AddTermo("engarrafamento", "termotriste", "Engarrafamento_Twitter_11");
-    aglutinados.back()->AddTermo("correr", "termofeliz", "Correr_Twitter_11");
+    aglutinados.push_back(new Aglutinado(WINDOW_WIDTH* 3/4.0, WINDOW_HEIGHT* 3/4.0, RAIO, "fonts/Roboto-Bold.ttf", 20, BLENDED));
+    aglutinados.back()->AddTermo("#fogo", "hashtagfeliz");
+    aglutinados.back()->AddTermo("chuva", "termofeliz");
+    aglutinados.back()->AddTermo("engarrafamento", "termotriste");
+    aglutinados.back()->AddTermo("correr", "termofeliz");
 
     aglutinados.back()->AddTermo("chuva", 3);
     aglutinados.back()->AddTermo("#fogo", 8);
@@ -47,18 +47,18 @@ Mapa::Mapa():
     aglutinados.back()->Relaciona(ag1);
 
     //Terceiro
-    aglutinados.push_back(new Aglutinado(WINDOW_WIDTH* 1/4.0, WINDOW_HEIGHT* 3/4.0, RAIO, "img/janela.png", "fonts/Roboto-Bold.ttf", 20, BLENDED));
-    aglutinados.back()->AddTermo("#fogo", "hashtagfeliz", "#Fogo-Facebook1");
-    aglutinados.back()->AddTermo("chuva", "termofeliz", "Chuva_Twitter_11");
-    aglutinados.back()->AddTermo("engarrafamento", "termotriste", "Engarrafamento_Twitter_11");
-    aglutinados.back()->AddTermo("correr", "termofeliz", "Correr_Twitter_11");
-    aglutinados.back()->AddTermo("netflix", "termofeliz", "Correr_Twitter_11");
+    aglutinados.push_back(new Aglutinado(WINDOW_WIDTH* 1/4.0, WINDOW_HEIGHT* 3/4.0, RAIO, "fonts/Roboto-Bold.ttf", 20, BLENDED));
+    aglutinados.back()->AddTermo("#fogo", "hashtagfeliz");
+    aglutinados.back()->AddTermo("chuva", "termofeliz");
+    aglutinados.back()->AddTermo("engarrafamento", "termotriste");
+    aglutinados.back()->AddTermo("correr", "termofeliz");
+    //aglutinados.back()->AddTermo("netflix", "termofeliz", "Correr");
 
     aglutinados.back()->AddTermo("chuva", 2);
     aglutinados.back()->AddTermo("#fogo", 8);
     aglutinados.back()->AddTermo("correr", 9);
     aglutinados.back()->AddTermo("engarrafamento", 3 );
-    aglutinados.back()->AddTermo("netflix", 5 );
+    //aglutinados.back()->AddTermo("netflix", 5 );
     aglutinados.back()->Relaciona(ag1);
 
     aglutinados.back()->Shrink(0.5);
@@ -75,12 +75,6 @@ void Mapa::Update(float dt){
         bg.SetPosition(-WINDOW_WIDTH-Camera::position.x, -WINDOW_HEIGHT-Camera::position.y);
     }
 
-    //Aqui verifica-se se algum Aglutinado foi clicado.
-    //Caso negativo, aglSelected, que contem o endereço do aglutinado clicado
-    //recebe nullpointer.
-    //Se nenhum aglutinado está selecionado, significa que nenhum setor está selecionado.
-    //O aglutinado não pode colocar o hasClick do setor em nullpointer uma vez que o aglutinado
-    //conhece apenas os seus proprios setores.;
     for(auto it = aglutinados.begin(); it != aglutinados.end(); it++){
         (*it)->Update(dt);
     }
@@ -93,6 +87,10 @@ void Mapa::Update(float dt){
     for(auto it = aglutinados.begin(); it != aglutinados.end(); it++){
         (*it)->LateUpdate();
     }
+    //if(Aglutinado::aglSelected != nullptr){
+        DialogBox::GetInstance().Update(dt);
+        DialogBox::GetInstance().LateUpdate();
+    //}
 
 
     //DEBUG
@@ -112,6 +110,7 @@ void Mapa::Render(){
     for(auto it = aglutinados.begin(); it != aglutinados.end(); it++){
         (*it)->Render();
     }
+    DialogBox::GetInstance().Render();
 
     //DEBUG
     if(showInfo){

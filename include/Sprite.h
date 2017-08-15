@@ -20,6 +20,7 @@ class Sprite
         virtual ~Sprite();
         int GetWidth();
         int GetHeight();
+        void Update(float dt);
         void Render();
         int GetX();
         int GetY();
@@ -34,6 +35,7 @@ class Sprite
         void SetRotationPoint(SDL_Point pt);
         void Transform(int w, int h);
         bool IsMouseInside();
+        bool MouseLeaved();
         void SlideClip(int amountX, int amountY);
         string GetPath();
         void SetAlpha(int alpha);
@@ -50,6 +52,8 @@ class Sprite
         SDL_Point pt;
         int angle;
         Uint32 alpha;
+        bool lastMouseInside;
+        bool newMouseInside;
 };
 
 #endif // SPRITE_H

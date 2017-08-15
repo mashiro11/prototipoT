@@ -16,23 +16,37 @@ int Setor::setorIncrement(0);
 bool Setor::showLines(false);
 float Setor::diff(0);
 
-Setor::Setor(Aglutinado &agl, string termo, string tipo, string posts):
+Setor::Setor(Aglutinado &agl, string termo, string tipo):
     agl(agl),
+    tipo(tipo),
     termBox("img/termbox.png", agl.GetCenter().x, agl.GetCenter().y),
     termSetor("fonts/Roboto-Bold.ttf", 10, BLENDED, termo, agl.GetCenter().x, agl.GetCenter().y, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
     showTermbox(false),
     percent(0),
     sp("img/Setores/"+tipo+".png"),
-    posts("img/Posts/"+ tipo + "/" + posts + ".png"),
+    //posts("img/Posts/"+ tipo + "/" + posts + ".png"),
     hadMouseHover(false),
     baseAlpha(SDL_ALPHA_OPAQUE*0.5)
 //    state(OPACITY_DEFAULT)
 {
+    posts.push_back("img/Posts/"+ tipo + "/" + termo + "_Facebook.png");
+    posts.push_back("img/Posts/"+ tipo + "/" + termo + "_Instagram.png");
+    posts.push_back("img/Posts/"+ tipo + "/" + termo + "_Twitter.png");
+    posts.push_back("img/Posts/"+ tipo + "/" + termo + "_Topogramas.png");
     sp.Resize(20, 5);
     this->termo = termo;
     this->quantTermos = 1;
     this->angS = 0;
     termBox.SetWidth(termSetor.GetWidth());
+    if(tipo == "hashtagfeliz"){
+        termSetor.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
+    }else if(tipo == "hashtagtriste"){
+        termSetor.SetColor(0x05, 0x8C, 0xF1, SDL_ALPHA_OPAQUE);
+    }else if(tipo == "termofeliz"){
+        termSetor.SetColor(0xF9, 0xD6, 0x26, SDL_ALPHA_OPAQUE);
+    }else if(tipo == "termotriste"){
+        termSetor.SetColor(0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE);
+    }
 
     SDL_Point pt;
     pt.x = - agl.GetRadius() - agl.setorDist;
@@ -261,8 +275,8 @@ void Setor::NewAngle(int totalTermos){
     angF = 360* quantTermos/totalTermos;
 }
 
-string Setor::GetPostPath(){
-    return posts;
+string Setor::GetPostPath(PostSelected tab){
+    return posts[tab];
 }
 
 void Setor::SetAlpha(int alpha){
