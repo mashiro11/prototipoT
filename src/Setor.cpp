@@ -16,7 +16,7 @@ int Setor::setorIncrement(0);
 bool Setor::showLines(false);
 float Setor::diff(0);
 
-Setor::Setor(Aglutinado &agl, string termo, string tipo, string posts):
+Setor::Setor(Aglutinado &agl, string termo, string tipo, string post):
     agl(agl),
     tipo(tipo),
     termBox("img/termbox.png", agl.GetCenter().x, agl.GetCenter().y),
@@ -24,11 +24,15 @@ Setor::Setor(Aglutinado &agl, string termo, string tipo, string posts):
     showTermbox(false),
     percent(0),
     sp("img/Setores/"+tipo+".png"),
-    posts("img/Posts/"+ tipo + "/" + posts + ".png"),
+    //posts("img/Posts/"+ tipo + "/" + posts + ".png"),
     hadMouseHover(false),
     baseAlpha(SDL_ALPHA_OPAQUE*0.5)
 //    state(OPACITY_DEFAULT)
 {
+    posts.push_back("img/Posts/"+ tipo + "/" + post + "_Facebook.png");
+    posts.push_back("img/Posts/"+ tipo + "/" + post + "_Instagram.png");
+    posts.push_back("img/Posts/"+ tipo + "/" + post + "_Twitter.png");
+    posts.push_back("img/Posts/"+ tipo + "/" + post + "_Topogramas.png");
     sp.Resize(20, 5);
     this->termo = termo;
     this->quantTermos = 1;
@@ -271,8 +275,8 @@ void Setor::NewAngle(int totalTermos){
     angF = 360* quantTermos/totalTermos;
 }
 
-string Setor::GetPostPath(){
-    return posts;
+string Setor::GetPostPath(PostSelected tab){
+    return posts[tab];
 }
 
 void Setor::SetAlpha(int alpha){

@@ -88,7 +88,11 @@ void DialogBox::Update(float dt){
         twitter.Update(dt);
         topogramas.Update(dt);
 
-        UpdatePosition(dt);
+        if(Camera::cameraMove &&
+           Aglutinado::aglSelected != nullptr){
+                UpdatePosition();
+        }
+
         OnClick();
         OnHover();
         OnMouseRoll();
@@ -96,39 +100,36 @@ void DialogBox::Update(float dt){
     //DEBUG_PRINT("DialogBox::Update() - fim");
 }
 
-void DialogBox::UpdatePosition(float dt){
-    if(Camera::cameraMove &&
-       Aglutinado::aglSelected != nullptr){
-            //if(posRel.x == 0 && posRel.y == 0){
-                posRel.x = Aglutinado::aglSelected->GetRadiusExternal();
-                posRel.y = -Aglutinado::aglSelected->GetRadiusExternal();
-            //}
+void DialogBox::UpdatePosition(){
+    //if(posRel.x == 0 && posRel.y == 0){
+        posRel.x = Aglutinado::aglSelected->GetRadiusExternal();
+        posRel.y = -Aglutinado::aglSelected->GetRadiusExternal();
+    //}
 
-            body.SetX(posRel.x + Aglutinado::aglSelected->GetCenter().x);
-            body.SetY(posRel.y + Aglutinado::aglSelected->GetCenter().y);
+    body.SetX(posRel.x + Aglutinado::aglSelected->GetCenter().x);
+    body.SetY(posRel.y + Aglutinado::aglSelected->GetCenter().y);
 
-            termo.SetX(body.GetX() + body.GetWidth()/2 - termo.GetWidth()/2);
-            termo.SetY(body.GetY() + 10);
+    termo.SetX(body.GetX() + body.GetWidth()/2 - termo.GetWidth()/2);
+    termo.SetY(body.GetY() + 10);
 
-            verPosts.SetX(body.GetX() + body.GetWidth()/2 - verPosts.GetWidth()/2 );
-            verPosts.SetY(body.GetY() + body.GetHeight() - 20);
+    verPosts.SetX(body.GetX() + body.GetWidth()/2 - verPosts.GetWidth()/2 );
+    verPosts.SetY(body.GetY() + body.GetHeight() - 20);
 
 
-            quantSetores.SetPos(body.GetX() + body.GetWidth()/2 - quantSetores.GetWidth()/2,
-                                body.GetY() + body.GetHeight()/2 + buttonBack.GetHeight()/2 - quantSetores.GetHeight()/2);
+    quantSetores.SetPos(body.GetX() + body.GetWidth()/2 - quantSetores.GetWidth()/2,
+                        body.GetY() + body.GetHeight()/2 + buttonBack.GetHeight()/2 - quantSetores.GetHeight()/2);
 
-            buttonBack.SetPosition(quantSetores.GetX() - buttonBack.GetWidth()*1.5,
-                                   body.GetY() + body.GetHeight()/2);
+    buttonBack.SetPosition(quantSetores.GetX() - buttonBack.GetWidth()*1.5,
+                           body.GetY() + body.GetHeight()/2);
 
-            buttonNext.SetPosition(quantSetores.GetX() + quantSetores.GetWidth()*1.5,
-                                   body.GetY() + body.GetHeight()/2);
-            if(post != nullptr){
-                post->SetPosition(body.GetX() + body.GetWidth(), body.GetY() + facebook.GetHeight());
-                facebook.SetPos(body.GetX() + body.GetWidth(), body.GetY());
-                instagram.SetPos(facebook.GetX() + facebook.GetWidth() + 5, body.GetY());
-                twitter.SetPos(instagram.GetX() + instagram.GetWidth() + 5, body.GetY());
-                topogramas.SetPos(twitter.GetX() + twitter.GetWidth() + 5, body.GetY());
-            }
+    buttonNext.SetPosition(quantSetores.GetX() + quantSetores.GetWidth()*1.5,
+                           body.GetY() + body.GetHeight()/2);
+    if(post != nullptr){
+        post->SetPosition(body.GetX() + body.GetWidth(), body.GetY() + facebook.GetHeight());
+        facebook.SetPos(body.GetX() + body.GetWidth(), body.GetY());
+        instagram.SetPos(facebook.GetX() + facebook.GetWidth() + 5, body.GetY());
+        twitter.SetPos(instagram.GetX() + instagram.GetWidth() + 5, body.GetY());
+        topogramas.SetPos(twitter.GetX() + twitter.GetWidth() + 5, body.GetY());
     }
 }
 
@@ -144,13 +145,11 @@ void DialogBox::LateUpdate(){
 
 void DialogBox::OnClick(){
     if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
-        DEBUG_PRINT("Houve um click");
-        DEBUG_PRINT("IsMouseInside: " << IsMouseInside());
         if(!IsMouseInside()){
-            DEBUG_PRINT("fora de DialogBox");
             Close();
         }else{
             if(verPosts.IsMouseInside()){
+                SetPost(Setor::hasClick->GetPostPath(tab));
                 showPosts = !showPosts;
                 if(showPosts){
                     verPosts.SetText("esconder publicações");
@@ -198,6 +197,7 @@ void DialogBox::OnClick(){
                     counter++;
                 }
                 Setor::hasClick->SelectSetor();
+                ChangeTermoColor();
                 if(Aglutinado::aglSelected == first) counter = 1;
                 if(counter == 0) counter = Setor::setoresTermo.size();
                 SetQuantSetores();
@@ -239,7 +239,6 @@ void DialogBox::OnHover(){
                 }
             }
         }
-
     }
 }
 
@@ -254,8 +253,7 @@ void DialogBox::OnMouseRoll(){
     }
 }
 
-void DialogBox::SetTermo(){
-    DialogBox::termo.SetText(Setor::hasClick->termo);
+void DialogBox::ChangeTermoColor(){
     if(Setor::hasClick->tipo == "hashtagfeliz"){
         color = {0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE};
     }else if(Setor::hasClick->tipo == "hashtagtriste"){
@@ -266,11 +264,17 @@ void DialogBox::SetTermo(){
         color = {0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE};
     }
     DialogBox::termo.SetColor(color);
+}
+
+void DialogBox::SetTermo(){
+    DialogBox::termo.SetText(Setor::hasClick->termo);
+    ChangeTermoColor();
     SetTabColor();
     DialogBox::termo.SetX(body.GetX() + body.GetWidth()/2 - DialogBox::termo.GetWidth()/2);
 }
 
 void DialogBox::SetPostTab(){
+    SetPost(Setor::hasClick->GetPostPath(tab));
     switch(tab){
         case FACEBOOK:
             facebook.SetFont("fonts/Roboto-Bold.ttf");
@@ -341,17 +345,20 @@ void DialogBox::Open(){
     showDBox = true;
     first = Aglutinado::aglSelected;
     ChangeTermo();
+    SetQuantSetores();
+    UpdatePosition();
 }
 
 void DialogBox::ChangeTermo(){
     //termoTemp = Setor::hasClick->termo;
     SetTermo();
     //informa qual imagem de post deve ser renderizada
-    SetPost(Setor::hasClick->GetPostPath());
+    SetPost(Setor::hasClick->GetPostPath(tab));
 }
 
 void DialogBox::Close(){
     showDBox = showPosts = transfer = false;
+    tab = FACEBOOK;
     verPosts.SetText("ver publicações");
     verPosts.SetX(body.GetX() + body.GetWidth()/2 - verPosts.GetWidth()/2);
     first = nullptr;

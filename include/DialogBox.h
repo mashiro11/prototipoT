@@ -7,6 +7,7 @@
 #include "Text.h"
 #include "Aglutinado.h"
 #include "Setor.h"
+#include "Origim.h"
 
 #define WINDOW_BOX_PATH     "img/janela.png"
 #define BUTTON_BACK_PATH    "img/Botoes/Topogramas_Botao_Recuar_1.png"
@@ -26,7 +27,7 @@ class DialogBox
         void Render();
         void Update(float dt);
         void LateUpdate();
-        void UpdatePosition(float dt);
+        void UpdatePosition();
 
         void OnClick();
         void OnHover();
@@ -38,6 +39,7 @@ class DialogBox
         void Open();
         void ChangeTermo();
         void Close();
+        void ChangeTermoColor();
         void SetTermo();
         void SetQuantSetores();
         void SetPost(string post, int x = 0, int y = 0);
@@ -76,14 +78,6 @@ class DialogBox
         Text twitter;
         SDL_Color color;
         SDL_Color defaultTabColor;
-
-        typedef enum{
-            FACEBOOK = 0,
-            INSTAGRAM,
-            TWITTER,
-            TOPOGRAMAS,
-            NONE
-        }PostSelected;
 
         PostSelected tab;
         PostSelected lastTab;

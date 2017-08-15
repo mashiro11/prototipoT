@@ -17,7 +17,7 @@ int Camera::speed(3);
 int Camera::speedMouseRoll(10);
 int Camera::followSpeed(10);
 bool Camera::following(false);
-bool Camera::cameraScroll(false);
+bool Camera::cameraScroll(true);
 int Camera::windowHeight(WINDOW_HEIGHT);
 int Camera::windowWidth(WINDOW_WIDTH);
 Point Camera::upperBound(BOUNDARY, BOUNDARY);
@@ -31,11 +31,12 @@ Camera::~Camera()
 
 void Camera::Update(float dt){
     //Movimentação por scroll
-    if(InputHandler::GetMouseScrollX() || InputHandler::GetMouseScrollY()){
-        cameraScroll = true;
-    }else{
-        cameraScroll = false;
-    }
+//    if(InputHandler::GetMouseScrollX() || InputHandler::GetMouseScrollY()){
+//        cameraScrolling = true;
+//    }else{
+//        cameraScrolling = false;
+//    }
+
     if(cameraScroll){
         position.y += -InputHandler::GetMouseScrollY()*speedMouseRoll;
         position.x += InputHandler::GetMouseScrollX()*speedMouseRoll;

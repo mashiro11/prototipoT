@@ -22,10 +22,10 @@ Mapa::Mapa():
     //Primeiro
     Aglutinado *ag1 = new Aglutinado(WINDOW_WIDTH/4, WINDOW_HEIGHT/4, RAIO, "fonts/Roboto-Bold.ttf", 20, BLENDED);
     aglutinados.push_back(ag1);
-    aglutinados.back()->AddTermo("#fogo", "hashtagfeliz", "#Fogo-Facebook1");
-    aglutinados.back()->AddTermo("chuva", "termofeliz", "Chuva_Twitter_11");
-    aglutinados.back()->AddTermo("engarrafamento", "termotriste", "Engarrafamento_Twitter_11");
-    aglutinados.back()->AddTermo("correr", "termofeliz", "Correr_Twitter_11");
+    aglutinados.back()->AddTermo("#fogo", "hashtagfeliz", "#Fogo");
+    aglutinados.back()->AddTermo("chuva", "termofeliz", "Chuva");
+    aglutinados.back()->AddTermo("engarrafamento", "termotriste", "Engarrafamento");
+    aglutinados.back()->AddTermo("correr", "termofeliz", "Correr");
 
     aglutinados.back()->AddTermo("chuva", 10);
     aglutinados.back()->AddTermo("#fogo", 5);
@@ -35,10 +35,10 @@ Mapa::Mapa():
     //Segundo
     //Aglutinado *ag1 = ;
     aglutinados.push_back(new Aglutinado(WINDOW_WIDTH* 3/4.0, WINDOW_HEIGHT* 3/4.0, RAIO, "fonts/Roboto-Bold.ttf", 20, BLENDED));
-    aglutinados.back()->AddTermo("#fogo", "hashtagfeliz", "#Fogo-Facebook1");
-    aglutinados.back()->AddTermo("chuva", "termofeliz", "Chuva_Twitter_11");
-    aglutinados.back()->AddTermo("engarrafamento", "termotriste", "Engarrafamento_Twitter_11");
-    aglutinados.back()->AddTermo("correr", "termofeliz", "Correr_Twitter_11");
+    aglutinados.back()->AddTermo("#fogo", "hashtagfeliz", "#Fogo");
+    aglutinados.back()->AddTermo("chuva", "termofeliz", "Chuva");
+    aglutinados.back()->AddTermo("engarrafamento", "termotriste", "Engarrafamento");
+    aglutinados.back()->AddTermo("correr", "termofeliz", "Correr");
 
     aglutinados.back()->AddTermo("chuva", 3);
     aglutinados.back()->AddTermo("#fogo", 8);
@@ -48,17 +48,17 @@ Mapa::Mapa():
 
     //Terceiro
     aglutinados.push_back(new Aglutinado(WINDOW_WIDTH* 1/4.0, WINDOW_HEIGHT* 3/4.0, RAIO, "fonts/Roboto-Bold.ttf", 20, BLENDED));
-    aglutinados.back()->AddTermo("#fogo", "hashtagfeliz", "#Fogo-Facebook1");
-    aglutinados.back()->AddTermo("chuva", "termofeliz", "Chuva_Twitter_11");
-    aglutinados.back()->AddTermo("engarrafamento", "termotriste", "Engarrafamento_Twitter_11");
-    aglutinados.back()->AddTermo("correr", "termofeliz", "Correr_Twitter_11");
-    aglutinados.back()->AddTermo("netflix", "termofeliz", "Correr_Twitter_11");
+    aglutinados.back()->AddTermo("#fogo", "hashtagfeliz", "#Fogo");
+    aglutinados.back()->AddTermo("chuva", "termofeliz", "Chuva");
+    aglutinados.back()->AddTermo("engarrafamento", "termotriste", "Engarrafamento");
+    aglutinados.back()->AddTermo("correr", "termofeliz", "Correr");
+    //aglutinados.back()->AddTermo("netflix", "termofeliz", "Correr");
 
     aglutinados.back()->AddTermo("chuva", 2);
     aglutinados.back()->AddTermo("#fogo", 8);
     aglutinados.back()->AddTermo("correr", 9);
     aglutinados.back()->AddTermo("engarrafamento", 3 );
-    aglutinados.back()->AddTermo("netflix", 5 );
+    //aglutinados.back()->AddTermo("netflix", 5 );
     aglutinados.back()->Relaciona(ag1);
 
     aglutinados.back()->Shrink(0.5);

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <set>
+#include <vector>
 
 #include "SDL.h"
 #include "ScreenObject.h"
@@ -15,6 +16,7 @@
 #include "Window.h"
 #include "Aglutinado.h"
 #include "Timer.h"
+#include "Origim.h"
 
 #define SETOR_WIDTH 20
 #define SETOR_DIST 10
@@ -26,13 +28,14 @@
 
 using std::string;
 using std::set;
+using std::vector;
 
 class Aglutinado;
 class Setor: public ScreenObject
 {
     public:
         //Setor();
-        Setor(Aglutinado &agl, string termo, string file, string posts);
+        Setor(Aglutinado &agl, string termo, string file, string post);
         virtual ~Setor();
 
         void Render();
@@ -55,7 +58,7 @@ class Setor: public ScreenObject
 
         void SetPercent(double percent);
         bool IsMouseInside();
-        string GetPostPath();
+        string GetPostPath(PostSelected tab);
         int quantTermos;
         int angS;
         int angF;
@@ -85,7 +88,7 @@ class Setor: public ScreenObject
         double percent;
 
         Sprite sp;
-        string posts;
+        vector<string> posts;
         int baseAlpha;
 
         bool hadMouseHover;

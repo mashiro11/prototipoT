@@ -208,13 +208,13 @@ void Aglutinado::UnselectAglutinado(){
     DEBUG_PRINT("UnselectAglutinado() - fim");
 }
 
-void Aglutinado::AddTermo(string termo, string file, string posts){
+void Aglutinado::AddTermo(string termo, string file, string post){
     totalTermos++;
     //se NÃO for o primeiro desse termo adicionado
     if( setores.find(termo) != setores.end() ){
         setores[termo]->quantTermos++;
     }else{
-        setores[termo] = new Setor(*this, termo, file, posts);
+        setores[termo] = new Setor(*this, termo, file, post);
     }
     UpdateValues();
 }
