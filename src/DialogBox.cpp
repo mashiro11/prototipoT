@@ -359,6 +359,7 @@ void DialogBox::ChangeTermo(){
 void DialogBox::Close(){
     showDBox = showPosts = transfer = false;
     tab = FACEBOOK;
+    Camera::cameraScroll = true;
     verPosts.SetText("ver publicações");
     verPosts.SetX(body.GetX() + body.GetWidth()/2 - verPosts.GetWidth()/2);
     first = nullptr;

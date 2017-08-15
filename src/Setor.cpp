@@ -16,7 +16,7 @@ int Setor::setorIncrement(0);
 bool Setor::showLines(false);
 float Setor::diff(0);
 
-Setor::Setor(Aglutinado &agl, string termo, string tipo, string post):
+Setor::Setor(Aglutinado &agl, string termo, string tipo):
     agl(agl),
     tipo(tipo),
     termBox("img/termbox.png", agl.GetCenter().x, agl.GetCenter().y),
@@ -29,10 +29,10 @@ Setor::Setor(Aglutinado &agl, string termo, string tipo, string post):
     baseAlpha(SDL_ALPHA_OPAQUE*0.5)
 //    state(OPACITY_DEFAULT)
 {
-    posts.push_back("img/Posts/"+ tipo + "/" + post + "_Facebook.png");
-    posts.push_back("img/Posts/"+ tipo + "/" + post + "_Instagram.png");
-    posts.push_back("img/Posts/"+ tipo + "/" + post + "_Twitter.png");
-    posts.push_back("img/Posts/"+ tipo + "/" + post + "_Topogramas.png");
+    posts.push_back("img/Posts/"+ tipo + "/" + termo + "_Facebook.png");
+    posts.push_back("img/Posts/"+ tipo + "/" + termo + "_Instagram.png");
+    posts.push_back("img/Posts/"+ tipo + "/" + termo + "_Twitter.png");
+    posts.push_back("img/Posts/"+ tipo + "/" + termo + "_Topogramas.png");
     sp.Resize(20, 5);
     this->termo = termo;
     this->quantTermos = 1;

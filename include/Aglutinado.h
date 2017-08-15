@@ -45,7 +45,7 @@ class Aglutinado : public ScreenObject
         void UpdatePositions(float dt);
         void UpdateSectors(float dt);
 
-        void AddTermo(string termo, string file, string post);
+        void AddTermo(string termo, string file);
         void AddTermo(string termo, int quant);
 
         void Relaciona(Aglutinado* agl);

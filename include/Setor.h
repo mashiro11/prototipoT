@@ -35,7 +35,7 @@ class Setor: public ScreenObject
 {
     public:
         //Setor();
-        Setor(Aglutinado &agl, string termo, string file, string post);
+        Setor(Aglutinado &agl, string termo, string file);
         virtual ~Setor();
 
         void Render();
