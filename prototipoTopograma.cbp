@@ -55,6 +55,9 @@
 		<Unit filename="include/DialogBox.h" />
 		<Unit filename="include/InputHandler.h" />
 		<Unit filename="include/Mapa.h" />
+		<Unit filename="include/Origim.h">
+			<Option target="Debug" />
+		</Unit>
 		<Unit filename="include/Point.h" />
 		<Unit filename="include/Resources.h" />
 		<Unit filename="include/Reta.h" />
