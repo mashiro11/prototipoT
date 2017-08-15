@@ -67,6 +67,10 @@ class DialogBox
         static DialogBox* instance;
         Aglutinado* first;
         int counter;
+        Text facebook;
+        Text instagram;
+        Text topogramas;
+        Text twitter;
 };
 
 #endif // DIALOGBOX_H

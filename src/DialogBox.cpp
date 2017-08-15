@@ -32,7 +32,11 @@ DialogBox::DialogBox():
     numSetores(0),
     post(nullptr),
     first(nullptr),
-    counter(1)
+    counter(1),
+    facebook("fonts/Roboto-Bold.ttf", 20, BLENDED, "Facebook", body.GetX(), body.GetY() + 10, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
+    instagram("fonts/Roboto-Bold.ttf", 20, BLENDED, "Instagram", body.GetX(), body.GetY() + 10, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
+    topogramas("fonts/Roboto-Bold.ttf", 20, BLENDED, "Topogramas", body.GetX(), body.GetY() + 10, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
+    twitter("fonts/Roboto-Bold.ttf", 20, BLENDED, "Twitter", body.GetX(), body.GetY() + 10, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE)
 {
 }
 
@@ -59,6 +63,10 @@ void DialogBox::Render(){
         buttonNext.Render();
         if(post != nullptr && showPosts){
             post->Render();
+            facebook.Render();
+            instagram.Render();
+            topogramas.Render();
+            twitter.Render();
         }
     }
     //DEBUG_PRINT("DialogBox::Render - fim");
@@ -107,7 +115,11 @@ void DialogBox::UpdatePosition(float dt){
             buttonNext.SetPosition(quantSetores.GetX() + quantSetores.GetWidth()*1.5,
                                    body.GetY() + body.GetHeight()/2);
             if(post != nullptr){
-                post->SetPosition(body.GetX() + body.GetWidth(), body.GetY());
+                post->SetPosition(body.GetX() + body.GetWidth(), body.GetY() + facebook.GetHeight());
+                facebook.SetPos(body.GetX() + body.GetWidth(), body.GetY());
+                instagram.SetPos(facebook.GetX() + facebook.GetWidth() + 5, body.GetY());
+                twitter.SetPos(instagram.GetX() + instagram.GetWidth() + 5, body.GetY());
+                topogramas.SetPos(twitter.GetX() + twitter.GetWidth() + 5, body.GetY());
             }
     }
 }
@@ -192,12 +204,32 @@ void DialogBox::SetTermo(){
     DialogBox::termo.SetText(Setor::hasClick->termo);
     if(Setor::hasClick->tipo == "hashtagfeliz"){
         DialogBox::termo.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
+        facebook.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
+        instagram.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
+        topogramas.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
+        twitter.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
+
     }else if(Setor::hasClick->tipo == "hashtagtriste"){
         DialogBox::termo.SetColor(0x05, 0x8C, 0xF1, SDL_ALPHA_OPAQUE);
+        facebook.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
+        instagram.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
+        topogramas.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
+        twitter.SetColor(0xFA, 0xB4, 0x00, SDL_ALPHA_OPAQUE);
+
     }else if(Setor::hasClick->tipo == "termofeliz"){
         DialogBox::termo.SetColor(0xF9, 0xD6, 0x26, SDL_ALPHA_OPAQUE);
+        facebook.SetColor(0xF9, 0xD6, 0x26, SDL_ALPHA_OPAQUE);
+        instagram.SetColor(0xF9, 0xD6, 0x26, SDL_ALPHA_OPAQUE);
+        topogramas.SetColor(0xF9, 0xD6, 0x26, SDL_ALPHA_OPAQUE);
+        twitter.SetColor(0xF9, 0xD6, 0x26, SDL_ALPHA_OPAQUE);
+
     }else if(Setor::hasClick->tipo == "termotriste"){
         DialogBox::termo.SetColor(0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE);
+        facebook.SetColor(0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE);
+        instagram.SetColor(0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE);
+        topogramas.SetColor(0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE);
+        twitter.SetColor(0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE);
+
     }
     DialogBox::termo.SetX(body.GetX() + body.GetWidth()/2 - DialogBox::termo.GetWidth()/2);
 }
