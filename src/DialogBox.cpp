@@ -81,6 +81,11 @@ void DialogBox::Update(float dt){
         Open();
     }
     if(showDBox){
+        facebook.Update(dt);
+        instagram.Update(dt);
+        twitter.Update(dt);
+        topogramas.Update(dt);
+
         UpdatePosition(dt);
         OnClick();
         OnHover();
@@ -198,6 +203,36 @@ void DialogBox::OnClick(){
 
 void DialogBox::OnHover(){
     if(InputHandler::mouseMoved){
+        if(post != nullptr){
+            if(tab != FACEBOOK){
+                if(facebook.IsMouseInside()){
+                    facebook.SetColor(color);
+                }else if(facebook.MouseLeaved()){
+                    facebook.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+                }
+            }
+            if(tab != INSTAGRAM){
+                if(instagram.IsMouseInside()){
+                    instagram.SetColor(color);
+                }else if(instagram.MouseLeaved()){
+                    instagram.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+                }
+            }
+            if(tab != TWITTER){
+                if(twitter.IsMouseInside()){
+                    twitter.SetColor(color);
+                }else if(twitter.MouseLeaved()){
+                    twitter.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+                }
+            }
+            if(tab != TOPOGRAMAS){
+                if(topogramas.IsMouseInside()){
+                    topogramas.SetColor(color);
+                }else if(topogramas.MouseLeaved()){
+                    topogramas.SetColor(0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+                }
+            }
+        }
 
     }
 }

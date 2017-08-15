@@ -34,7 +34,7 @@ public:
 	~Text();
 
 	void Initialize();
-
+    void Update(float dt);
 	void Render();
 	void SetPos(int x, int y, bool centerX = false, bool centerY = false);
 	void SetX(int x, bool centered = false);
@@ -51,6 +51,7 @@ public:
     int GetY();
     string GetText();
     bool IsMouseInside();
+    bool MouseLeaved();
 
 private:
 	void RemakeTexture();
@@ -66,6 +67,8 @@ private:
 	int fontSize;
 	SDL_Rect box;
 	static bool Initialized;
+	bool lastMouseState;
+	bool newMouseState;
 };
 
 #endif

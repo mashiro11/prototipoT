@@ -11,7 +11,9 @@
 
 bool Text::Initialized = false;
 
-Text::Text(std::string fontFile, int fontSize, TextStyle style, std::string text, int x, int y, SDL_Color color)
+Text::Text(std::string fontFile, int fontSize, TextStyle style, std::string text, int x, int y, SDL_Color color):
+    lastMouseState(false),
+    newMouseState(false)
 {
     if(!Initialized){
         Initialize();
@@ -77,6 +79,11 @@ void Text::Render(){
 
 	if(this->texture)
 		SDL_RenderCopy(Window::GetRenderer(), this->texture, NULL, &dstRect);
+}
+
+void Text::Update(float dt){
+    lastMouseState = newMouseState;
+    newMouseState = IsMouseInside();
 }
 
 void Text::SetPos(int x, int y, bool centerX, bool centerY){
@@ -186,6 +193,10 @@ bool Text::IsMouseInside(){
        box.y <= InputHandler::GetMousePosition().y && InputHandler::GetMousePosition().y <= box.y + box.h){
         return true;
     }else return false;
+}
+
+bool Text::MouseLeaved(){
+    return (!newMouseState && lastMouseState);
 }
 
 void Text::SetFont(string font){
