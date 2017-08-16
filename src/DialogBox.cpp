@@ -369,8 +369,10 @@ void DialogBox::Close(){
 void DialogBox::SetPost(string post, int x, int y){
     if(DialogBox::post != nullptr) delete DialogBox::post;
     DialogBox::post = new Sprite(post, body.GetX() + body.GetWidth() + x , body.GetY() + y + facebook.GetHeight());
-    DialogBox::post->Clip(DialogBox::post->GetWidth(), 500);
-    DialogBox::post->Resize(DialogBox::post->GetWidth(), 500);
+    if(DialogBox::post->GetHeight() > 400){
+        DialogBox::post->Clip(DialogBox::post->GetWidth(), 400);
+        DialogBox::post->Resize(DialogBox::post->GetWidth(), 400);
+    }
 }
 
 void DialogBox::RemovePost(){
