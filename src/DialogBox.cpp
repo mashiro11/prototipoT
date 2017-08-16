@@ -41,6 +41,8 @@ DialogBox::DialogBox():
     lastTab(NONE)
 {
     defaultTabColor = {0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE};
+    buttonBack.Resize(buttonBack.GetWidth()*0.5, buttonBack.GetHeight()*0.5 );
+    buttonNext.Resize(buttonNext.GetWidth()*0.5, buttonNext.GetHeight()*0.5 );
 }
 
 DialogBox& DialogBox::GetInstance(){
@@ -247,7 +249,7 @@ void DialogBox::OnMouseRoll(){
     if(InputHandler::mouseScroll){
         if(post != nullptr && post->IsMouseInside()){
             Camera::cameraScroll = false;
-            post->SlideClip(0, InputHandler::GetMouseScrollY()*SCROLL_SPEED);
+            post->SlideClip(0, -InputHandler::GetMouseScrollY()*SCROLL_SPEED);
         }else if(post != nullptr && !post->IsMouseInside()){
             Camera::cameraScroll = true;
         }

@@ -13,7 +13,7 @@
 #define BUTTON_BACK_PATH    "img/Botoes/Topogramas_Botao_Recuar_1.png"
 #define BUTTON_NEXT_PATH    "img/Botoes/Topogramas_Botao_Avancar_1.png"
 
-#define SCROLL_SPEED 3
+#define SCROLL_SPEED 12
 
 using std::string;
 using std::to_string;
