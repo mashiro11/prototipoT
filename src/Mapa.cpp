@@ -74,12 +74,22 @@ void Mapa::Update(float dt){
     if(Camera::cameraMove){
         bg.SetPosition(-WINDOW_WIDTH-Camera::position.x, -WINDOW_HEIGHT-Camera::position.y);
     }
-
+    //É feito update de todos os aglutinados
     for(auto it = aglutinados.begin(); it != aglutinados.end(); it++){
         (*it)->Update(dt);
     }
 
-    if(!Aglutinado::selected){
+    //verifica-se se algum deles está selecionado
+    bool aglSelected = false;
+    for(auto it = aglutinados.begin(); it != aglutinados.end(); it++){
+        if((*it)->selected){
+            aglSelected = true;
+            break;
+        }
+    }
+
+    //Se nenhum estiver selecionado, limpa os ponteiros
+    if(!aglSelected){
         Aglutinado::aglSelected = nullptr;
         Setor::hasClick = nullptr;
     }

@@ -196,8 +196,8 @@ void DialogBox::OnClick(){
                     }
                     counter++;
                 }
-                Setor::hasClick->SelectSetor();
-                ChangeTermoColor();
+                Setor::hasClick->SelectSetor();//marca como selecionado o novo setor
+                ChangeTermoColor();//muda a cor do termo, caso necessario
                 if(Aglutinado::aglSelected == first) counter = 1;
                 if(counter == 0) counter = Setor::setoresTermo.size();
                 SetQuantSetores();

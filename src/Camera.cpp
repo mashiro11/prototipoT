@@ -128,6 +128,7 @@ void Camera::Follow(Point& pt){
     following = true;
     follow.x = pt.x;
     follow.y = pt.y;
+    DEBUG_PRINT("Seguindo o ponto " << follow.x << "x" << follow.y);
 }
 
 Point& Camera::GetFollow(){

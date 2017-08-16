@@ -11,10 +11,10 @@
 #endif //DEBUG
 
 Aglutinado* Aglutinado::aglSelected = nullptr;
-bool Aglutinado::selected(false);
 
 Aglutinado::Aglutinado(int x, int y, int radius, string fontFile, int fontSize, TextStyle style):
     center(x,y),
+    selected(false),
     centerRelative(x + Camera::position.x, y + Camera::position.y),
     circle("img/Setores/circulo.png"),
     circleCenter("img/Setores/circuloCentro.png"),
@@ -93,8 +93,6 @@ void Aglutinado::Update(float dt){
     OnClick();
     OnHover();
 
-    //dBox->Update(dt);
-
     //DEBUG
     if(InputHandler::GetKey() == SDLK_0){
         showLine = !showLine;
@@ -106,10 +104,6 @@ void Aglutinado::LateUpdate(){
     for(auto it = setores.begin(); it != setores.end(); it++){
         (it->second)->LateUpdate();
     }
-//    if(aglSelected == nullptr && selected){
-//        UnselectAglutinado();
-//    }
-//    //dBox->LateUpdate();
 }
 
 void Aglutinado::UpdatePositions(float dt){
@@ -156,9 +150,11 @@ void Aglutinado::OnClick(){
         DEBUG_PRINT("   IsOutside()" << IsOutside());
         DEBUG_PRINT("   (aglSelected == this)" << (aglSelected == this));
         DEBUG_PRINT("   !DialogBox::transfer" << !DialogBox::transfer);
-        if(IsOutside() && (aglSelected == this) && !DialogBox::transfer){//Se clicou fora do aglomerado
-            showCircleCenter = false;
-            UnselectAglutinado();
+        if(IsOutside()){
+            if(!DialogBox::transfer){//Se clicou fora do aglomerado
+                showCircleCenter = false;
+                UnselectAglutinado();
+            }
         }
     DEBUG_PRINT("Aglutinado::OnClick() - fim");
     DEBUG_PRINT("");

@@ -73,7 +73,7 @@ class Aglutinado : public ScreenObject
         void UnselectAglutinado();
 
         static Aglutinado *aglSelected;
-        static bool selected;
+        bool selected;
 
         bool hasSectorSelected;
         int setorDist;
