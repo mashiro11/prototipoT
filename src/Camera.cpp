@@ -40,7 +40,6 @@ void Camera::Update(float dt){
     if(cameraScroll){
         position.y += -InputHandler::GetMouseScrollY()*speedMouseRoll;
         position.x += InputHandler::GetMouseScrollX()*speedMouseRoll;
-        following = false;
     }
 
     //Movimentação pelas setas
@@ -128,6 +127,7 @@ void Camera::Follow(Point& pt){
     following = true;
     follow.x = pt.x;
     follow.y = pt.y;
+    DEBUG_PRINT("Camera em " << position.x << "x" << position.y);
     DEBUG_PRINT("Seguindo o ponto " << follow.x << "x" << follow.y);
 }
 
