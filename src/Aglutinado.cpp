@@ -22,10 +22,12 @@ Aglutinado::Aglutinado(int x, int y, int radius, string fontFile, int fontSize, 
     showCircleCenter(false),
     showLine(false),
     hasSectorSelected(false),
-    enquadramento(ENQUADRAMENTO_X + center.x, ENQUADRAMENTO_Y + center.y)
+    enquadramento(x - ENQUADRAMENTO_X, y - ENQUADRAMENTO_Y)
 {
-//    dBox = new DialogBox(*this, radius + 20 + 10 + 10,- radius - 20 - 10, bgFile, fontFile, fontSize, style);
-
+    DEBUG_PRINT("Aglutinado: " << this);
+    DEBUG_PRINT("   center: " << center.x << "x" << center.y);
+    DEBUG_PRINT("   conEnq: " << ENQUADRAMENTO_X << "x" << ENQUADRAMENTO_Y);
+    DEBUG_PRINT("   enquad: " << enquadramento.x << "x" << enquadramento.y);
     setorWidth = SETOR_WIDTH;
     setorDist = SETOR_DIST;
 
@@ -116,9 +118,6 @@ void Aglutinado::UpdatePositions(float dt){
 
         circleCenter.SetX(centerRelative.x - circleCenter.GetWidth()/2);
         circleCenter.SetY(centerRelative.y - circleCenter.GetHeight()/2);
-
-        enquadramento.x = ENQUADRAMENTO_X + center.x;
-        enquadramento.y = ENQUADRAMENTO_Y + center.y;
     }
 }
 
@@ -185,10 +184,6 @@ void Aglutinado::OnHover(){
     }
     //DEBUG_PRINT("Aglutinado::OnHover() - fim");
 }
-//
-//DialogBox* Aglutinado::GetDialogBox(){
-//    return dBox;
-//}
 
 void Aglutinado::SelectAglutinado(){
     aglSelected = this;
@@ -315,6 +310,9 @@ int Aglutinado::GetRadiusExternal(){
     return circle.GetWidth()/2;
 }
 
+/************************
+        Debug
+************************/
 void Aglutinado::ShowDebugLines(){
     SDL_SetRenderDrawColor(Window::GetRenderer(), 255, 0, 0, 255);
     SDL_RenderDrawPoint(Window::GetRenderer(), centerRelative.x, centerRelative.y);

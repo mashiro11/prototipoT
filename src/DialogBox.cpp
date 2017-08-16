@@ -201,6 +201,7 @@ void DialogBox::OnClick(){
                 if(Aglutinado::aglSelected == first) counter = 1;
                 if(counter == 0) counter = Setor::setoresTermo.size();
                 SetQuantSetores();
+                UpdatePosition();
 
             }
         }

@@ -76,12 +76,11 @@ void Camera::Update(float dt){
 //    }
 
     //Movimentação por follow
-
     if(following){
-        Point endPoint(windowWidth/4, windowHeight/4);
+        Point endPoint(0,0);//windowWidth/4, windowHeight/4);
 
-        if(follow.x != position.x + endPoint.x ||
-           follow.y != position.y + endPoint.y){
+        if(follow.x != position.x ||
+           follow.y != position.y ){
             if(follow.x > position.x + endPoint.x){
                 if( position.x + endPoint.x + followSpeed > follow.x){
                     position.x = follow.x - endPoint.x;

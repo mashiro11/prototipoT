@@ -19,8 +19,8 @@
 
 #define PI 3.1415
 
-#define ENQUADRAMENTO_X 50*cos(30*PI/180)
-#define ENQUADRAMENTO_Y 30*sin(45*PI/180)
+#define ENQUADRAMENTO_X 220*cos(30*PI/180)
+#define ENQUADRAMENTO_Y 220*sin(45*PI/180)
 
 using std::unordered_map;
 using std::string;

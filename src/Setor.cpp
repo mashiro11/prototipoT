@@ -1,6 +1,6 @@
 #include "Setor.h"
 
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
         //se estiver definido debug, imprime os trecos
         #define DEBUG_PRINT(message) do{std::cout << message << std::endl;}while(0)
@@ -29,6 +29,8 @@ Setor::Setor(Aglutinado &agl, string termo, string tipo):
     baseAlpha(SDL_ALPHA_OPAQUE*0.5)
 //    state(OPACITY_DEFAULT)
 {
+    DEBUG_PRINT("Setor: " << this);
+    DEBUG_PRINT("   pertenço a: " << &agl);
     posts.push_back("img/Posts/"+ tipo + "/" + termo + "_Facebook.png");
     posts.push_back("img/Posts/"+ tipo + "/" + termo + "_Instagram.png");
     posts.push_back("img/Posts/"+ tipo + "/" + termo + "_Twitter.png");
@@ -200,7 +202,6 @@ void Setor::SelectSetor(){
 
 void Setor::UnselectSetor(){
     agl.hasSectorSelected = false;
-    sp.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
 }
 
 void Setor::UpdatePosition(float dt){
