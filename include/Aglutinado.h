@@ -13,7 +13,7 @@
 #include "InputHandler.h"
 #include "Setor.h"
 #include "Point.h"
-//#include "Sprite.h"
+#include "Sprite.h"
 #include "DialogBox.h"
 #include "Camera.h"
 
@@ -33,9 +33,7 @@ using std::pair;
 using std::set;
 using std::iter_swap;
 
-
 class Setor;
-//class DialogBox;
 
 class Aglutinado : public ScreenObject
 {
@@ -70,7 +68,6 @@ class Aglutinado : public ScreenObject
         Point& GetFixedCenter();
         int& GetRadius();
         int GetRadiusExternal();
-        //DialogBox* GetDialogBox();
 
         void SelectAglutinado();
         void UnselectAglutinado();
@@ -101,7 +98,6 @@ class Aglutinado : public ScreenObject
         bool showCircleCenter;
         unordered_map<string, Setor*> setores;
         bool clockwise;
-        //DialogBox* dBox;
 
         int totalTermos;
 
