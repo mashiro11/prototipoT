@@ -22,6 +22,9 @@
 #define ENQUADRAMENTO_X 220*cos(30*PI/180)
 #define ENQUADRAMENTO_Y 220*sin(45*PI/180)
 
+#define CIRCULO_EXTERNO_PATH    "img/Setores/circulo.png"
+#define CIRCULO_INTERNO_PATH    "img/Setores/circuloCentro.png"
+
 using std::unordered_map;
 using std::string;
 using std::cout;

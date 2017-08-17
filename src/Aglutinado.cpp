@@ -16,8 +16,8 @@ Aglutinado::Aglutinado(int x, int y, int radius, string fontFile, int fontSize, 
     center(x,y),
     selected(false),
     centerRelative(x + Camera::position.x, y + Camera::position.y),
-    circle("img/Setores/circulo.png"),
-    circleCenter("img/Setores/circuloCentro.png"),
+    circle(CIRCULO_EXTERNO_PATH),
+    circleCenter(CIRCULO_INTERNO_PATH),
     showRelations(false),
     showCircleCenter(false),
     showLine(false),
@@ -89,7 +89,6 @@ void Aglutinado::Render(){
 
 void Aglutinado::Update(float dt){
     //DEBUG_PRINT("Aglutinado::Update() - inicio");
-
     UpdatePositions(dt);
     UpdateSectors(dt);
     OnClick();

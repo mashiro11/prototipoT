@@ -85,6 +85,7 @@ void DialogBox::Update(float dt){
         Open();
     }
     if(showDBox){
+        transfer = false;
         facebook.Update(dt);
         instagram.Update(dt);
         twitter.Update(dt);
