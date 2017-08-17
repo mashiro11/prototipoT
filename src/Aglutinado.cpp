@@ -66,17 +66,20 @@ void Aglutinado::Render(){
     if(showRelations){
         if(!relacoes.empty()){
             for(auto it = relacoes.begin(); it != relacoes.end(); it++){
-                SDL_SetRenderDrawColor(Window::GetRenderer(), 255, 255, 255, 255);
-                float cosThisOther = cos(centerRelative.AngleTo((*it)->GetCenter()));
-                float sinThisOther = sin(centerRelative.AngleTo((*it)->GetCenter()));
 
-                float cosOtherThis = cos((*it)->GetCenter().AngleTo(centerRelative));
-                float sinOtherThis = sin((*it)->GetCenter().AngleTo(centerRelative));
+                it->second->Render();
+
+                SDL_SetRenderDrawColor(Window::GetRenderer(), 255, 255, 255, 255);
+                float cosThisOther = cos(centerRelative.AngleTo( it->first->GetCenter()));
+                float sinThisOther = sin(centerRelative.AngleTo( it->first->GetCenter()));
+
+                float cosOtherThis = cos( it->first->GetCenter().AngleTo(centerRelative));
+                float sinOtherThis = sin( it->first->GetCenter().AngleTo(centerRelative));
                 SDL_RenderDrawLine(Window::GetRenderer(),
                                    centerRelative.x + (circle.GetWidth()/2)*cosThisOther,
                                    centerRelative.y + (circle.GetWidth()/2)*sinThisOther,
-                                   (*it)->GetCenter().x + ((*it)->GetRadiusExternal())*cosOtherThis,
-                                   (*it)->GetCenter().y + ((*it)->GetRadiusExternal())*sinOtherThis);
+                                   it->first->GetCenter().x + ( it->first->GetRadiusExternal())*cosOtherThis,
+                                   it->first->GetCenter().y + ( it->first->GetRadiusExternal())*sinOtherThis);
             }
         }
     }
@@ -279,12 +282,17 @@ bool Aglutinado::IsRelatedTo(Aglutinado* agl){
     return (relacoes.find(agl) != relacoes.end());
 }
 
-void Aglutinado::Relaciona(Aglutinado* agl){
+void Aglutinado::Relaciona(Aglutinado* agl, vector<string> termos){
     if(relacoes.find(agl) == relacoes.end()){
-        relacoes.emplace(agl);
+        //relacoes.emplace(agl);
+        Relacao* rel = new Relacao(*this, *agl, 1);
+        for(int i = 0; i < termos.size(); i++){
+            rel->AddTermo(termos[i]);
+        }
+        relacoes[agl] = rel;
     }
     if(!agl->IsRelatedTo(this)){
-        agl->Relaciona(this);
+        agl->Relaciona(this, termos);
     }
 }
 

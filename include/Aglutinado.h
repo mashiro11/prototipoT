@@ -8,6 +8,8 @@
 #include <set>
 #include <math.h>
 #include <algorithm>
+#include <map>
+#include <vector>
 
 #include "ScreenObject.h"
 #include "InputHandler.h"
@@ -16,6 +18,7 @@
 #include "Sprite.h"
 #include "DialogBox.h"
 #include "Camera.h"
+#include "Relacao.h"
 
 #define PI 3.1415
 
@@ -32,9 +35,11 @@ using std::endl;
 using std::pair;
 using std::set;
 using std::iter_swap;
+using std::map;
+using std::vector;
 
 class Setor;
-
+class Relacao;
 class Aglutinado : public ScreenObject
 {
     public:
@@ -49,7 +54,7 @@ class Aglutinado : public ScreenObject
         void AddTermo(string termo, string file);
         void AddTermo(string termo, int quant);
 
-        void Relaciona(Aglutinado* agl);
+        void Relaciona(Aglutinado* agl, vector<string> termos);
         bool IsRelatedTo(Aglutinado* agl);
 
         void Shrink(float percent);
@@ -78,7 +83,7 @@ class Aglutinado : public ScreenObject
         bool hasSectorSelected;
         int setorDist;
 
-        set<Aglutinado*> relacoes;
+        map<Aglutinado*, Relacao*> relacoes;
         Point enquadramento;
 
     protected:

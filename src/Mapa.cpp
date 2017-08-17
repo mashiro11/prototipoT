@@ -44,7 +44,11 @@ Mapa::Mapa():
     aglutinados.back()->AddTermo("#fogo", 8);
     aglutinados.back()->AddTermo("correr", 5);
     aglutinados.back()->AddTermo("engarrafamento", 11 );
-    aglutinados.back()->Relaciona(ag1);
+    vector<string> termos1;
+    termos1.push_back("engarrafamento");
+    termos1.push_back("cigarro");
+    termos1.push_back("correr");
+    aglutinados.back()->Relaciona(ag1, termos1);
 
     //Terceiro
     aglutinados.push_back(new Aglutinado(WINDOW_WIDTH* 1/4.0, WINDOW_HEIGHT* 3/4.0, RAIO, "fonts/Roboto-Bold.ttf", 20, BLENDED));
@@ -59,7 +63,11 @@ Mapa::Mapa():
     aglutinados.back()->AddTermo("correr", 9);
     aglutinados.back()->AddTermo("engarrafamento", 3 );
     //aglutinados.back()->AddTermo("netflix", 5 );
-    aglutinados.back()->Relaciona(ag1);
+    vector<string> termos2;
+    termos2.push_back("netflix");
+    termos2.push_back("#fogo");
+    termos2.push_back("correr");
+    aglutinados.back()->Relaciona(ag1, termos2);
 
     aglutinados.back()->Shrink(0.5);
 
