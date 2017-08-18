@@ -103,11 +103,11 @@ void Relacao::RePosition(Aglutinado* agl){
     if(forca > 1){
         if(agl == &aglut1){
             retangulo->SetPosition(aglut1.GetCenter().x + aglut1.GetRadiusExternal(), aglut1.GetCenter().y - forca);
-            retangulo->SetWidth( aglut1.GetCenter().DistTo(aglut2.GetCenter()) -
+            retangulo->SetWidth( 2 + aglut1.GetCenter().DistTo(aglut2.GetCenter()) -
                                 (aglut1.GetRadiusExternal()+aglut2.GetRadiusExternal()));
             SDL_Point rotationPoint;
             rotationPoint.x = -aglut1.GetRadiusExternal();
-            rotationPoint.y = 2;
+            rotationPoint.y = forca;
             retangulo->SetRotationPoint(rotationPoint);
             retangulo->SetRotationAngle( aglut1.GetCenter().AngleTo( aglut2.GetCenter())*180/PI);
         }
