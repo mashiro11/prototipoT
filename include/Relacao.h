@@ -30,7 +30,8 @@ class Relacao
     protected:
 
     private:
-        Point pt;
+        Point ptMedio;
+        Point posFixed;
         int forca;
         Aglutinado& aglut1;
         Aglutinado& aglut2;

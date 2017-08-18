@@ -18,15 +18,17 @@ Relacao::Relacao(Aglutinado& aglut1, Aglutinado& aglut2, int forca):
     i(0)
 {
     DEBUG_PRINT("Relacao " << this << " entre " << &aglut1 << " e " << &aglut2);
-    pt.x = (aglut1.GetFixedCenter().x + aglut2.GetFixedCenter().x)/2;
-    pt.y = (aglut1.GetFixedCenter().y + aglut2.GetFixedCenter().y)/2;
+//    ptMedio.x = (aglut1.GetFixedCenter().x + aglut2.GetFixedCenter().x)/2;
+//    ptMedio.y = (aglut1.GetFixedCenter().y + aglut2.GetFixedCenter().y)/2;
     if(forca > 1){
         int dist = aglut1.GetCenter().DistTo(aglut2.GetCenter());
         DEBUG_PRINT("Raio de aglut1 == " << &aglut1 << ": " <<  aglut1.GetRadiusExternal());
         DEBUG_PRINT("Raio de aglut2 == " << &aglut2 << ": " <<  aglut2.GetRadiusExternal());
 
         if(retangulo == nullptr){
-            retangulo = new Sprite("img/Setores/relacao.png", aglut1.GetCenter().x + aglut1.GetRadiusExternal(), aglut1.GetCenter().y - forca);
+            posFixed.x = aglut1.GetCenter().x + aglut1.GetRadiusExternal();
+            posFixed.y = aglut1.GetCenter().y - forca;
+            retangulo = new Sprite("img/Setores/relacao.png", posFixed.x, posFixed.y);
         }
         retangulo->Resize(dist - (aglut1.GetRadiusExternal() + aglut2.GetRadiusExternal() ),forca*2);
 
@@ -45,9 +47,14 @@ Relacao::~Relacao()
 void Relacao::AddTermo(string termo){
     termos.push_back(new Text("fonts/Roboto-Regular.ttf", 10, BLENDED, termo, 0, 0, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE));
     if(termos.size() == 1){
-        termos.back()->SetPos(pt.x, pt.y);
+        termos.back()->SetPos((aglut1.GetFixedCenter().x + aglut2.GetFixedCenter().x)/2,
+                              (aglut1.GetFixedCenter().y + aglut2.GetFixedCenter().y)/2);
+        //termos.back()->SetPos(ptMedio.x, ptMedio.y);
     }else if(termos.size() > 1){
-        termos.back()->SetPos(pt.x, pt.y + (termos.size()-1)*termos.back()->GetHeight());
+        termos.back()->SetPos((aglut1.GetFixedCenter().x + aglut2.GetFixedCenter().x)/2,
+                              (aglut1.GetFixedCenter().y + aglut2.GetFixedCenter().y)/2 +
+                              (termos.size()-1)*termos.back()->GetHeight());
+        //termos.back()->SetPos(ptMedio.x, ptMedio.y + (termos.size()-1)*termos.back()->GetHeight());
     }
 }
 
@@ -58,9 +65,19 @@ void Relacao::PrintTermos(){
 }
 
 void Relacao::Update(float dt){
-    if(forca > 1){
-//        retangulo->SetRotationAngle(i++);
-//        if(i > 360) i -=360;
+    if(Camera::cameraMove){
+
+        if(forca > 1){
+            retangulo->SetPosition(posFixed.x - Camera::position.x, posFixed.y - Camera::position.y);
+        }
+        auto it = termos.begin();
+        (*it)->SetPos((aglut1.GetCenter().x + aglut2.GetCenter().x)/2,
+                              (aglut1.GetCenter().y + aglut2.GetCenter().y)/2);
+        for(int i = 0; it != termos.end(); it++, i++){
+            (*it)->SetPos((aglut1.GetCenter().x + aglut2.GetCenter().x)/2,
+                          (aglut1.GetCenter().y + aglut2.GetCenter().y)/2 +
+                          i*(termos.back()->GetHeight()));
+        }
     }
     //DEBUG
     if(InputHandler::GetKey() == SDLK_0){
@@ -92,7 +109,7 @@ void Relacao::Render(){
     //DEBUG
     if(showDebug){
         SDL_SetRenderDrawColor(Window::GetRenderer(), 255, 0, 0, SDL_ALPHA_OPAQUE);
-        SDL_RenderDrawPoint(Window::GetRenderer(), pt.x, pt.y);
+        SDL_RenderDrawPoint(Window::GetRenderer(), ptMedio.x, ptMedio.y);
 
         SDL_SetRenderDrawColor(Window::GetRenderer(), 0, 0, 255, SDL_ALPHA_OPAQUE);
         SDL_RenderDrawPoint(Window::GetRenderer(), aglut1.GetCenter().x, aglut1.GetCenter().y);
@@ -102,7 +119,14 @@ void Relacao::Render(){
 void Relacao::RePosition(Aglutinado* agl){
     if(forca > 1){
         if(agl == &aglut1){
-            retangulo->SetPosition(aglut1.GetCenter().x + aglut1.GetRadiusExternal(), aglut1.GetCenter().y - forca);
+            posFixed.x = aglut1.GetCenter().x + aglut1.GetRadiusExternal();
+            posFixed.y = aglut1.GetCenter().y - forca;
+
+//            ptMedio.x = (aglut1.GetFixedCenter().x + aglut2.GetFixedCenter().x)/2;
+//            ptMedio.y = (aglut1.GetFixedCenter().y + aglut2.GetFixedCenter().y)/2;
+
+
+            retangulo->SetPosition(posFixed.x, posFixed.y);
             retangulo->SetWidth( 2 + aglut1.GetCenter().DistTo(aglut2.GetCenter()) -
                                 (aglut1.GetRadiusExternal()+aglut2.GetRadiusExternal()));
             SDL_Point rotationPoint;
