@@ -59,6 +59,7 @@
 			<Option target="Debug" />
 		</Unit>
 		<Unit filename="include/Point.h" />
+		<Unit filename="include/Relacao.h" />
 		<Unit filename="include/Resources.h" />
 		<Unit filename="include/Reta.h" />
 		<Unit filename="include/ScreenObject.h" />
@@ -75,6 +76,7 @@
 		<Unit filename="src/InputHandler.cpp" />
 		<Unit filename="src/Mapa.cpp" />
 		<Unit filename="src/Point.cpp" />
+		<Unit filename="src/Relacao.cpp" />
 		<Unit filename="src/Resources.cpp" />
 		<Unit filename="src/Reta.cpp" />
 		<Unit filename="src/ScreenObject.cpp" />
