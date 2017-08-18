@@ -47,14 +47,12 @@ Relacao::~Relacao()
 void Relacao::AddTermo(string termo){
     termos.push_back(new Text("fonts/Roboto-Regular.ttf", 10, BLENDED, termo, 0, 0, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE));
     if(termos.size() == 1){
-        termos.back()->SetPos((aglut1.GetFixedCenter().x + aglut2.GetFixedCenter().x)/2,
-                              (aglut1.GetFixedCenter().y + aglut2.GetFixedCenter().y)/2);
-        //termos.back()->SetPos(ptMedio.x, ptMedio.y);
+        termos.back()->SetPos((aglut1.GetFixedCenter().x + aglut2.GetFixedCenter().x)/2 + forca*2,
+                              (aglut1.GetFixedCenter().y + aglut2.GetFixedCenter().y)/2 + forca*2);
     }else if(termos.size() > 1){
-        termos.back()->SetPos((aglut1.GetFixedCenter().x + aglut2.GetFixedCenter().x)/2,
-                              (aglut1.GetFixedCenter().y + aglut2.GetFixedCenter().y)/2 +
+        termos.back()->SetPos((aglut1.GetFixedCenter().x + aglut2.GetFixedCenter().x)/2 + forca*2,
+                              (aglut1.GetFixedCenter().y + aglut2.GetFixedCenter().y)/2 + forca*2+
                               (termos.size()-1)*termos.back()->GetHeight());
-        //termos.back()->SetPos(ptMedio.x, ptMedio.y + (termos.size()-1)*termos.back()->GetHeight());
     }
 }
 
@@ -66,16 +64,15 @@ void Relacao::PrintTermos(){
 
 void Relacao::Update(float dt){
     if(Camera::cameraMove){
-
         if(forca > 1){
             retangulo->SetPosition(posFixed.x - Camera::position.x, posFixed.y - Camera::position.y);
         }
         auto it = termos.begin();
-        (*it)->SetPos((aglut1.GetCenter().x + aglut2.GetCenter().x)/2,
-                              (aglut1.GetCenter().y + aglut2.GetCenter().y)/2);
+        (*it)->SetPos((aglut1.GetCenter().x + aglut2.GetCenter().x)/2 + forca*2,
+                      (aglut1.GetCenter().y + aglut2.GetCenter().y)/2 + forca*2);
         for(int i = 0; it != termos.end(); it++, i++){
-            (*it)->SetPos((aglut1.GetCenter().x + aglut2.GetCenter().x)/2,
-                          (aglut1.GetCenter().y + aglut2.GetCenter().y)/2 +
+            (*it)->SetPos((aglut1.GetCenter().x + aglut2.GetCenter().x)/2 + forca*2,
+                          (aglut1.GetCenter().y + aglut2.GetCenter().y)/2 + forca*2+
                           i*(termos.back()->GetHeight()));
         }
     }
@@ -122,13 +119,10 @@ void Relacao::RePosition(Aglutinado* agl){
             posFixed.x = aglut1.GetCenter().x + aglut1.GetRadiusExternal();
             posFixed.y = aglut1.GetCenter().y - forca;
 
-//            ptMedio.x = (aglut1.GetFixedCenter().x + aglut2.GetFixedCenter().x)/2;
-//            ptMedio.y = (aglut1.GetFixedCenter().y + aglut2.GetFixedCenter().y)/2;
-
-
             retangulo->SetPosition(posFixed.x, posFixed.y);
             retangulo->SetWidth( 2 + aglut1.GetCenter().DistTo(aglut2.GetCenter()) -
                                 (aglut1.GetRadiusExternal()+aglut2.GetRadiusExternal()));
+
             SDL_Point rotationPoint;
             rotationPoint.x = -aglut1.GetRadiusExternal();
             rotationPoint.y = forca;
