@@ -49,12 +49,14 @@ class Aglutinado : public ScreenObject
         void Update(float dt);
         void LateUpdate();
         void UpdatePositions(float dt);
+        void UpdateRelations(float dt);
         void UpdateSectors(float dt);
 
         void AddTermo(string termo, string file);
         void AddTermo(string termo, int quant);
 
-        void Relaciona(Aglutinado* agl, vector<string> termos);
+        void Relaciona(Aglutinado* agl, vector<string> termos, int forca = 1);
+        void Relaciona(Aglutinado* agl, Relacao* rel);
         bool IsRelatedTo(Aglutinado* agl);
 
         void Shrink(float percent);

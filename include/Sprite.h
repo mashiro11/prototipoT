@@ -39,6 +39,7 @@ class Sprite
         void SlideClip(int amountX, int amountY);
         string GetPath();
         void SetAlpha(int alpha);
+        SDL_Point& GetRotationPoint();
 
     protected:
 

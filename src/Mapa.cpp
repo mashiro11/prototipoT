@@ -67,7 +67,7 @@ Mapa::Mapa():
     termos2.push_back("netflix");
     termos2.push_back("#fogo");
     termos2.push_back("correr");
-    aglutinados.back()->Relaciona(ag1, termos2);
+    aglutinados.back()->Relaciona(ag1, termos2, 3);
 
     aglutinados.back()->Shrink(0.5);
 

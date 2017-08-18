@@ -152,3 +152,7 @@ string Sprite::GetPath(){
 bool Sprite::MouseLeaved(){
     return !newMouseInside && lastMouseInside;
 }
+
+SDL_Point& Sprite::GetRotationPoint(){
+    return pt;
+}

@@ -68,18 +68,6 @@ void Aglutinado::Render(){
             for(auto it = relacoes.begin(); it != relacoes.end(); it++){
 
                 it->second->Render();
-
-                SDL_SetRenderDrawColor(Window::GetRenderer(), 255, 255, 255, 255);
-                float cosThisOther = cos(centerRelative.AngleTo( it->first->GetCenter()));
-                float sinThisOther = sin(centerRelative.AngleTo( it->first->GetCenter()));
-
-                float cosOtherThis = cos( it->first->GetCenter().AngleTo(centerRelative));
-                float sinOtherThis = sin( it->first->GetCenter().AngleTo(centerRelative));
-                SDL_RenderDrawLine(Window::GetRenderer(),
-                                   centerRelative.x + (circle.GetWidth()/2)*cosThisOther,
-                                   centerRelative.y + (circle.GetWidth()/2)*sinThisOther,
-                                   it->first->GetCenter().x + ( it->first->GetRadiusExternal())*cosOtherThis,
-                                   it->first->GetCenter().y + ( it->first->GetRadiusExternal())*sinOtherThis);
             }
         }
     }
@@ -94,6 +82,7 @@ void Aglutinado::Update(float dt){
     //DEBUG_PRINT("Aglutinado::Update() - inicio");
     UpdatePositions(dt);
     UpdateSectors(dt);
+    UpdateRelations(dt);
     OnClick();
     OnHover();
 
@@ -134,6 +123,12 @@ void Aglutinado::UpdateSectors(float dt){
     for(auto it = setores.begin(); it != setores.end(); it++){
         if(it->second == Setor::hasClick) continue;
         (it->second)->Update(dt);
+    }
+}
+
+void Aglutinado::UpdateRelations(float dt){
+    for(auto it = relacoes.begin(); it != relacoes.end(); it++){
+        it->second->Update(dt);
     }
 }
 
@@ -282,18 +277,23 @@ bool Aglutinado::IsRelatedTo(Aglutinado* agl){
     return (relacoes.find(agl) != relacoes.end());
 }
 
-void Aglutinado::Relaciona(Aglutinado* agl, vector<string> termos){
+void Aglutinado::Relaciona(Aglutinado* agl, vector<string> termos, int forca){
     if(relacoes.find(agl) == relacoes.end()){
         //relacoes.emplace(agl);
-        Relacao* rel = new Relacao(*this, *agl, 1);
+        Relacao* rel = new Relacao(*this, *agl, forca);
         for(int i = 0; i < termos.size(); i++){
             rel->AddTermo(termos[i]);
         }
         relacoes[agl] = rel;
+        agl->Relaciona(this, rel);
     }
-    if(!agl->IsRelatedTo(this)){
-        agl->Relaciona(this, termos);
-    }
+//    if(!agl->IsRelatedTo(this)){
+//        agl->Relaciona(this, termos, forca);
+//    }
+}
+
+void Aglutinado::Relaciona(Aglutinado*agl, Relacao* rel){
+    relacoes[agl] = rel;
 }
 
 void Aglutinado::Shrink(float percent){
@@ -303,13 +303,15 @@ void Aglutinado::Shrink(float percent){
 
     circle.Resize(circle.GetWidth()*percent, circle.GetHeight()*percent);
     circle.SetPosition(center.x - circle.GetWidth()/2, center.y - circle.GetHeight()/2);
-    DEBUG_PRINT(circle.GetX() << "x" << circle.GetY());
 
     circleCenter.Resize(circleCenter.GetWidth()*percent, circleCenter.GetHeight()*percent);
     circleCenter.SetPosition(center.x - circleCenter.GetWidth()/2, center.y - circleCenter.GetHeight()/2);
 
     for(auto it = setores.begin(); it != setores.end(); it++){
         it->second->Shrink(percent);
+    }
+    for(auto it = relacoes.begin(); it != relacoes.end(); it++){
+        it->second->RePosition(this);
     }
 }
 

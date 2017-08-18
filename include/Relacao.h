@@ -3,9 +3,14 @@
 
 #include <vector>
 #include <string>
+#include <math.h>
 
 #include "Aglutinado.h"
 #include "Text.h"
+#include "Window.h"
+#include "Sprite.h"
+
+#define PI 3.1415
 
 using std::vector;
 using std::string;
@@ -20,6 +25,7 @@ class Relacao
         void Render();
         void AddTermo(string termo);
         void PrintTermos();
+        void RePosition(Aglutinado* agl);
 
     protected:
 
@@ -29,6 +35,9 @@ class Relacao
         Aglutinado& aglut1;
         Aglutinado& aglut2;
         vector<Text*> termos;
+        Sprite *retangulo;
+        bool showDebug;
+        int i;
 };
 
 #endif // RELACAO_H
