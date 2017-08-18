@@ -1,6 +1,6 @@
 #include "Relacao.h"
 
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
         //se estiver definido debug, imprime os trecos
         #define DEBUG_PRINT(message) do{std::cout << message << std::endl;}while(0)
@@ -18,8 +18,6 @@ Relacao::Relacao(Aglutinado& aglut1, Aglutinado& aglut2, int forca):
     i(0)
 {
     DEBUG_PRINT("Relacao " << this << " entre " << &aglut1 << " e " << &aglut2);
-//    ptMedio.x = (aglut1.GetFixedCenter().x + aglut2.GetFixedCenter().x)/2;
-//    ptMedio.y = (aglut1.GetFixedCenter().y + aglut2.GetFixedCenter().y)/2;
     if(forca > 1){
         int dist = aglut1.GetCenter().DistTo(aglut2.GetCenter());
         DEBUG_PRINT("Raio de aglut1 == " << &aglut1 << ": " <<  aglut1.GetRadiusExternal());
