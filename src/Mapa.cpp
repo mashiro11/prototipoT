@@ -48,7 +48,7 @@ Mapa::Mapa():
     termos1.push_back("engarrafamento");
     termos1.push_back("cigarro");
     termos1.push_back("correr");
-    aglutinados.back()->Relaciona(ag1, termos1);
+    aglutinados.back()->Relaciona(ag1, termos1, 2);
 
     //Terceiro
     aglutinados.push_back(new Aglutinado(WINDOW_WIDTH* 1/4.0, WINDOW_HEIGHT* 3/4.0, RAIO, "fonts/Roboto-Bold.ttf", 20, BLENDED));

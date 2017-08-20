@@ -1,6 +1,6 @@
 #include "Relacao.h"
 
-//#define DEBUG
+#define DEBUG
 #ifdef DEBUG
         //se estiver definido debug, imprime os trecos
         #define DEBUG_PRINT(message) do{std::cout << message << std::endl;}while(0)
@@ -31,10 +31,9 @@ Relacao::Relacao(Aglutinado& aglut1, Aglutinado& aglut2, int forca):
         retangulo->Resize(dist - (aglut1.GetRadiusExternal() + aglut2.GetRadiusExternal() ),forca*2);
 
         SDL_Point rotationPoint;
-        rotationPoint = {aglut1.GetCenter().x, aglut1.GetCenter().y};
-        DEBUG_PRINT("ponto de rotacao: " << rotationPoint.x << "x" << rotationPoint.y);
+        rotationPoint = {-aglut1.GetRadiusExternal(), -forca};
         retangulo->SetRotationPoint(rotationPoint);
-        //retangulo->SetRotationAngle(aglut1.GetCenter().AngleTo( aglut2.GetCenter())*180/PI);
+        retangulo->SetRotationAngle(aglut1.GetCenter().AngleTo( aglut2.GetCenter())*180/PI);
     }
 }
 
@@ -125,6 +124,7 @@ void Relacao::RePosition(Aglutinado* agl){
             rotationPoint.x = -aglut1.GetRadiusExternal();
             rotationPoint.y = forca;
             retangulo->SetRotationPoint(rotationPoint);
+            DEBUG_PRINT("rotation angle: " << aglut1.GetCenter().AngleTo( aglut2.GetCenter())*180/PI);
             retangulo->SetRotationAngle( aglut1.GetCenter().AngleTo( aglut2.GetCenter())*180/PI);
         }
     }

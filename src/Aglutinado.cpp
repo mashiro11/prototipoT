@@ -1,7 +1,7 @@
 #include "Aglutinado.h"
 #include "Window.h"
 
-//#define DEBUG
+#define DEBUG
 #ifdef DEBUG
         //se estiver definido debug, imprime os trecos
         #define DEBUG_PRINT(message) do{std::cout << message << std::endl;}while(0)
@@ -135,6 +135,7 @@ void Aglutinado::UpdateRelations(float dt){
 void Aglutinado::OnClick(){
     if(InputHandler::GetMouseLBState() == MOUSE_LBUTTON_PRESSED){
     DEBUG_PRINT("Aglutinado::OnClick() - inicio");
+    //DEBUG_PRINT("Aglutinado clicado: " << this);
         if(circleCenter.IsMouseInside()){
             SelectAglutinado();
             showRelations = true;
