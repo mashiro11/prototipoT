@@ -81,15 +81,14 @@ void Relacao::Update(float dt){
 }
 
 void Relacao::Render(){
-
-    SDL_SetRenderDrawColor(Window::GetRenderer(), 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
-    float cosThisOther = cos(aglut1.GetCenter().AngleTo( aglut2.GetCenter()));
-    float sinThisOther = sin(aglut1.GetCenter().AngleTo( aglut2.GetCenter()));
-
-    float cosOtherThis = cos( aglut2.GetCenter().AngleTo(aglut1.GetCenter()));
-    float sinOtherThis = sin( aglut2.GetCenter().AngleTo(aglut1.GetCenter()));
-
     if(forca == 1){
+        SDL_SetRenderDrawColor(Window::GetRenderer(), 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+        float cosThisOther = cos(aglut1.GetCenter().AngleTo( aglut2.GetCenter()));
+        float sinThisOther = sin(aglut1.GetCenter().AngleTo( aglut2.GetCenter()));
+
+        float cosOtherThis = cos( aglut2.GetCenter().AngleTo(aglut1.GetCenter()));
+        float sinOtherThis = sin( aglut2.GetCenter().AngleTo(aglut1.GetCenter()));
+
         SDL_RenderDrawLine(Window::GetRenderer(),
                            aglut1.GetCenter().x + aglut1.GetRadiusExternal()*cosThisOther,
                            aglut1.GetCenter().y + aglut1.GetRadiusExternal()*sinThisOther,

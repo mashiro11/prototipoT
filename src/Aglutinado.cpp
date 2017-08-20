@@ -139,10 +139,12 @@ void Aglutinado::OnClick(){
         if(circleCenter.IsMouseInside()){
             SelectAglutinado();
             showRelations = true;
+            DialogBox::GetInstance().Close();
             circleCenter.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
         }
         if(IsMouseInsideSector()){
             hasSectorSelected = true;
+            showRelations = false;
         }
         DEBUG_PRINT("   IsOutside()" << IsOutside());
         DEBUG_PRINT("   (aglSelected == this)" << (aglSelected == this));
