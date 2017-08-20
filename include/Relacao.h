@@ -36,6 +36,7 @@ class Relacao
         Aglutinado& aglut1;
         Aglutinado& aglut2;
         vector<Text*> termos;
+        Sprite termBox;
         Sprite *retangulo;
         bool showDebug;
         int i;

@@ -13,6 +13,7 @@ Relacao::Relacao(Aglutinado& aglut1, Aglutinado& aglut2, int forca):
     aglut1(aglut1),
     aglut2(aglut2),
     forca(forca),
+    termBox("img/termbox.png"),
     retangulo(nullptr),
     showDebug(false),
     i(0)
@@ -80,9 +81,7 @@ void Relacao::Update(float dt){
 }
 
 void Relacao::Render(){
-    for(int i = 0; i < termos.size(); i++){
-        termos[i]->Render();
-    }
+
     SDL_SetRenderDrawColor(Window::GetRenderer(), 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
     float cosThisOther = cos(aglut1.GetCenter().AngleTo( aglut2.GetCenter()));
     float sinThisOther = sin(aglut1.GetCenter().AngleTo( aglut2.GetCenter()));
@@ -98,6 +97,13 @@ void Relacao::Render(){
                            aglut2.GetCenter().y + aglut2.GetRadiusExternal()*sinOtherThis);
     }else{
         retangulo->Render();
+    }
+
+    for(int i = 0; i < termos.size(); i++){
+        termBox.Resize(termos[i]->GetWidth(), termos[i]->GetHeight());
+        termBox.SetPosition(termos[i]->GetX(), termos[i]->GetY());
+        termBox.Render();
+        termos[i]->Render();
     }
 
     //DEBUG
