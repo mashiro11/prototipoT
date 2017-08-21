@@ -172,7 +172,7 @@ void Mapa::SetButtons(){
     hoverText->SetPos(button->GetX() - hoverText->GetWidth() - 2, button->GetY());
     botoes.push_back(make_pair(button, hoverText));
 
-    button = new Sprite("img/Botoes/ampliar.png", WINDOW_WIDTH - 22 - 5, WINDOW_HEIGHT - 2*22 - 2*5);
+    button = new Sprite("img/Botoes/ampliar.png", WINDOW_WIDTH - 22 - 5, WINDOW_HEIGHT - 2*button->GetHeight() - 2*5);
     hoverText = new Text("fonts/Roboto-Bold.ttf", 10, BLENDED, "ampliar", 0, 0, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
     hoverText->SetPos(button->GetX() - hoverText->GetWidth() - 2, button->GetY());
     botoes.push_back(make_pair(button, hoverText));
@@ -181,7 +181,6 @@ void Mapa::SetButtons(){
     hoverText = new Text("fonts/Roboto-Bold.ttf", 10, BLENDED, "reduzir", 0, 0, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
     hoverText->SetPos(button->GetX() - hoverText->GetWidth() - 2, button->GetY());
     botoes.push_back(make_pair(button, hoverText));
-
 }
 
 #ifdef DEBUG
