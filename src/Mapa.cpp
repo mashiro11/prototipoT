@@ -18,6 +18,7 @@ Mapa::Mapa():
 {
     bg.Resize(WINDOW_WIDTH*3, WINDOW_HEIGHT*3);
     bg.SetPosition(-WINDOW_WIDTH, -WINDOW_HEIGHT);
+    SetButtons();
 
     //Primeiro
     Aglutinado *ag1 = new Aglutinado(WINDOW_WIDTH/4, WINDOW_HEIGHT/4, RAIO, "fonts/Roboto-Bold.ttf", 20, BLENDED);
@@ -56,21 +57,18 @@ Mapa::Mapa():
     aglutinados.back()->AddTermo("chuva", "termofeliz");
     aglutinados.back()->AddTermo("engarrafamento", "termotriste");
     aglutinados.back()->AddTermo("correr", "termofeliz");
-    //aglutinados.back()->AddTermo("netflix", "termofeliz", "Correr");
 
     aglutinados.back()->AddTermo("chuva", 2);
     aglutinados.back()->AddTermo("#fogo", 8);
     aglutinados.back()->AddTermo("correr", 9);
     aglutinados.back()->AddTermo("engarrafamento", 3 );
-    //aglutinados.back()->AddTermo("netflix", 5 );
+
     vector<string> termos2;
     termos2.push_back("netflix");
     termos2.push_back("#fogo");
     termos2.push_back("correr");
     aglutinados.back()->Relaciona(ag1, termos2, 3);
-
     aglutinados.back()->Shrink(0.5);
-
 }
 
 Mapa::~Mapa()
@@ -128,6 +126,12 @@ void Mapa::Render(){
     for(auto it = aglutinados.begin(); it != aglutinados.end(); it++){
         (*it)->Render();
     }
+    for(unsigned int i = 0; i < botoes.size(); i++){
+        botoes[i].first->Render();
+        if(botoes[i].first->IsMouseInside()){
+            botoes[i].second->Render();
+        }
+    }
     DialogBox::GetInstance().Render();
 
     //DEBUG
@@ -145,6 +149,39 @@ void Mapa::Render(){
                            0, InputHandler::GetMousePosition().y,
                            WINDOW_WIDTH, InputHandler::GetMousePosition().y);
     }
+}
+
+void Mapa::SetButtons(){
+    Sprite* button = new Sprite("img/Botoes/calendario.png", WINDOW_WIDTH - 103 - 5, 5);
+    Text* hoverText = new Text("fonts/Roboto-Bold.ttf", 10, BLENDED, "calendario", 0, 0, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+    hoverText->SetPos(button->GetX() - hoverText->GetWidth() - 2, button->GetY());
+    botoes.push_back(make_pair(button, hoverText));
+
+    button = new Sprite("img/Botoes/buscar.png", WINDOW_WIDTH - 22 - 5, button->GetY() + button->GetHeight() + 5);
+    hoverText = new Text("fonts/Roboto-Bold.ttf", 10, BLENDED, "buscar", 0, 0, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+    hoverText->SetPos(button->GetX() - hoverText->GetWidth() - 2, button->GetY());
+    botoes.push_back(make_pair(button, hoverText));
+
+    button = new Sprite("img/Botoes/localizar.png", WINDOW_WIDTH - 22 - 5, button->GetY() + button->GetHeight() + 5);
+    hoverText = new Text("fonts/Roboto-Bold.ttf", 10, BLENDED, "localizar", 0, 0, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+    hoverText->SetPos(button->GetX() - hoverText->GetWidth() - 2, button->GetY());
+    botoes.push_back(make_pair(button, hoverText));
+
+    button = new Sprite("img/Botoes/compartilhar.png", WINDOW_WIDTH - 22 - 5, button->GetY() + button->GetHeight() + 5);
+    hoverText = new Text("fonts/Roboto-Bold.ttf", 10, BLENDED, "compartilhar", 0, 0, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+    hoverText->SetPos(button->GetX() - hoverText->GetWidth() - 2, button->GetY());
+    botoes.push_back(make_pair(button, hoverText));
+
+    button = new Sprite("img/Botoes/ampliar.png", WINDOW_WIDTH - 22 - 5, WINDOW_HEIGHT - 2*22 - 2*5);
+    hoverText = new Text("fonts/Roboto-Bold.ttf", 10, BLENDED, "ampliar", 0, 0, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+    hoverText->SetPos(button->GetX() - hoverText->GetWidth() - 2, button->GetY());
+    botoes.push_back(make_pair(button, hoverText));
+
+    button = new Sprite("img/Botoes/reduzir.png", WINDOW_WIDTH - 22 - 5, button->GetY() + button->GetHeight() + 5);
+    hoverText = new Text("fonts/Roboto-Bold.ttf", 10, BLENDED, "reduzir", 0, 0, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+    hoverText->SetPos(button->GetX() - hoverText->GetWidth() - 2, button->GetY());
+    botoes.push_back(make_pair(button, hoverText));
+
 }
 
 #ifdef DEBUG

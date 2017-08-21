@@ -15,6 +15,8 @@
 
 using std::vector;
 using std::to_string;
+using std::pair;
+using std::make_pair;
 
 class Mapa
 {
@@ -24,6 +26,7 @@ class Mapa
 
         void Update(float dt);
         void Render();
+        void SetButtons();
 
     protected:
 
@@ -33,6 +36,7 @@ class Mapa
         Text cameraFocus;
         vector<Aglutinado*> aglutinados;
         bool showInfo;
+        vector<pair<Sprite*, Text*>> botoes;
 };
 
 #endif // MAPA_H

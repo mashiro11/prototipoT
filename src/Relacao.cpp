@@ -74,6 +74,7 @@ void Relacao::Update(float dt){
                           i*(termos.back()->GetHeight()));
         }
     }
+
     //DEBUG
     if(InputHandler::GetKey() == SDLK_0){
         showDebug = true;
