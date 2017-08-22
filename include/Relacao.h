@@ -40,6 +40,8 @@ class Relacao
         Sprite *retangulo;
         bool showDebug;
         int i;
+        int dist;
+        bool showRelation;
 };
 
 #endif // RELACAO_H

@@ -136,9 +136,11 @@ void Aglutinado::UpdateSectors(float dt){
 }
 
 void Aglutinado::UpdateRelations(float dt){
-    for(auto it = relacoes.begin(); it != relacoes.end(); it++){
-        it->second->Update(dt);
-    }
+    //if(showRelations){
+        for(auto it = relacoes.begin(); it != relacoes.end(); it++){
+            it->second->Update(dt);
+        }
+    //}
 }
 
 void Aglutinado::OnClick(){

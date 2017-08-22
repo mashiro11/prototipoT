@@ -19,7 +19,6 @@ Relacao::Relacao(Aglutinado& aglut1, Aglutinado& aglut2, int forca):
     i(0)
 {
     if(forca > 1){
-        int dist = aglut1.GetCenter().DistTo(aglut2.GetCenter());
         DEBUG_PRINT("Raio de aglut1 == " << &aglut1 << ": " <<  aglut1.GetRadiusExternal());
         DEBUG_PRINT("Raio de aglut2 == " << &aglut2 << ": " <<  aglut2.GetRadiusExternal());
 
@@ -28,7 +27,9 @@ Relacao::Relacao(Aglutinado& aglut1, Aglutinado& aglut2, int forca):
             posFixed.y = aglut1.GetCenter().y - forca;
             retangulo = new Sprite("img/Setores/relacao.png", posFixed.x, posFixed.y);
         }
-        retangulo->Resize(dist - (aglut1.GetRadiusExternal() + aglut2.GetRadiusExternal() ),forca*2);
+        dist = aglut1.GetCenter().DistTo(aglut2.GetCenter()) - (aglut1.GetRadiusExternal() + aglut2.GetRadiusExternal() );
+        retangulo->Resize(dist, forca*2);
+        //retangulo->Resize(0,forca*2);
 
         SDL_Point rotationPoint;
         rotationPoint = {-aglut1.GetRadiusExternal(), -forca};
@@ -76,6 +77,9 @@ void Relacao::Update(float dt){
                           i*(termos.back()->GetHeight()));
         }
     }
+//    if(retangulo->GetWidth() < dist){
+//        retangulo->SetWidth( retangulo->GetWidth() + 1);
+//    }
     //DEBUG_PRINT("Relacao::Update() - fim");
 
     //DEBUG
@@ -126,8 +130,10 @@ void Relacao::RePosition(Aglutinado* agl){
             posFixed.y = aglut1.GetCenter().y - forca;
 
             retangulo->SetPosition(posFixed.x, posFixed.y);
-            retangulo->SetWidth( 2 + aglut1.GetCenter().DistTo(aglut2.GetCenter()) -
-                                (aglut1.GetRadiusExternal()+aglut2.GetRadiusExternal()));
+            dist =  2 + aglut1.GetCenter().DistTo(aglut2.GetCenter()) -
+                    (aglut1.GetRadiusExternal()+aglut2.GetRadiusExternal());
+            retangulo->SetWidth(dist);
+            //retangulo->SetWidth(0);
 
             SDL_Point rotationPoint;
             rotationPoint.x = -aglut1.GetRadiusExternal();
@@ -137,7 +143,6 @@ void Relacao::RePosition(Aglutinado* agl){
         }
     }
 }
-
 #ifdef DEBUG
     #undef DEBUG
 #endif // DEBUG
