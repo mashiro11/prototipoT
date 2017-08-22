@@ -59,6 +59,11 @@ class Aglutinado : public ScreenObject
         void Relaciona(Aglutinado* agl, Relacao* rel);
         bool IsRelatedTo(Aglutinado* agl);
 
+        void SetorSelected();
+
+        void LightRing();
+        void DarkRing();
+
         void Shrink(float percent);
 
         bool IsMouseInsideInternalRadius();
@@ -94,6 +99,7 @@ class Aglutinado : public ScreenObject
         void UpdateValues();
 
         Sprite circle;
+        Sprite constelation;
         Sprite circleCenter;
         Point center;
         Point centerRelative;

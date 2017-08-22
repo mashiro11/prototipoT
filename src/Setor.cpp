@@ -177,9 +177,7 @@ void Setor::OnHover(){
 }
 
 void Setor::SelectSetor(){
-    agl.SelectAglutinado();
-    agl.hasSectorSelected = true;
-
+    agl.SetorSelected();
     sp.SetAlpha(SDL_ALPHA_OPAQUE);
 
     double med = Setor::hasClick->angS + Setor::hasClick->angF/2;

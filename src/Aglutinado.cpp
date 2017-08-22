@@ -18,6 +18,7 @@ Aglutinado::Aglutinado(int x, int y, int radius, string fontFile, int fontSize, 
     centerRelative(x + Camera::position.x, y + Camera::position.y),
     circle(CIRCULO_EXTERNO_PATH),
     circleCenter(CIRCULO_INTERNO_PATH),
+    constelation("img/Setores/relacoes1.png"),
     showRelations(false),
     showCircleCenter(false),
     showLine(false),
@@ -25,9 +26,6 @@ Aglutinado::Aglutinado(int x, int y, int radius, string fontFile, int fontSize, 
     enquadramento(x - ENQUADRAMENTO_X, y - ENQUADRAMENTO_Y)
 {
     DEBUG_PRINT("Aglutinado: " << this);
-    DEBUG_PRINT("   center: " << center.x << "x" << center.y);
-    DEBUG_PRINT("   conEnq: " << ENQUADRAMENTO_X << "x" << ENQUADRAMENTO_Y);
-    DEBUG_PRINT("   enquad: " << enquadramento.x << "x" << enquadramento.y);
     setorWidth = SETOR_WIDTH;
     setorDist = SETOR_DIST;
 
@@ -36,6 +34,8 @@ Aglutinado::Aglutinado(int x, int y, int radius, string fontFile, int fontSize, 
                   radius*2 + setorDist*2 + setorWidth*2 + 20);
     circle.SetPosition(centerRelative.x - circle.GetWidth()/2,
                        centerRelative.y - circle.GetHeight()/2);
+
+    constelation.SetPosition(x - constelation.GetWidth()/2, y - constelation.GetHeight()/2);
 
     circleCenter.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
     circleCenter.Resize(radius*2, radius*2);
@@ -70,6 +70,7 @@ void Aglutinado::Render(){
                 it->second->Render();
             }
         }
+        constelation.Render();
     }
     //DEBUG
     if(showLine){
@@ -97,12 +98,20 @@ void Aglutinado::LateUpdate(){
     for(auto it = setores.begin(); it != setores.end(); it++){
         (it->second)->LateUpdate();
     }
+    if(showRelations){
+        for(auto it = relacoes.begin(); it != relacoes.end(); it++){
+            it->first->LightRing();
+        }
+    }
 }
 
 void Aglutinado::UpdatePositions(float dt){
     if(Camera::cameraMove){
         centerRelative.x = center.x - Camera::position.x;
         centerRelative.y = center.y - Camera::position.y;
+
+        constelation.SetPosition(centerRelative.x - constelation.GetWidth()/2, centerRelative.y - constelation.GetHeight()/2);
+
 
         circle.SetX(centerRelative.x - circle.GetWidth()/2);
         circle.SetY(centerRelative.y - circle.GetHeight()/2);
@@ -140,7 +149,7 @@ void Aglutinado::OnClick(){
             SelectAglutinado();
             showRelations = true;
             DialogBox::GetInstance().Close();
-            circleCenter.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
+            circleCenter.SetAlpha(SDL_ALPHA_OPAQUE);
         }
         if(IsMouseInsideSector()){
             hasSectorSelected = true;
@@ -152,6 +161,7 @@ void Aglutinado::OnClick(){
         if(IsOutside()){
             if(!DialogBox::transfer){//Se clicou fora do aglomerado
                 showCircleCenter = false;
+                DEBUG_PRINT("Entrou aqui 1");
                 UnselectAglutinado();
             }
         }
@@ -167,19 +177,23 @@ void Aglutinado::OnHover(){
             showCircleCenter = true;
         }else{
             if(showRelations){
-                circleCenter.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
+                circleCenter.SetAlpha(SDL_ALPHA_OPAQUE);
             }else{
                 showCircleCenter = false;
             }
         }
         if(IsMouseInsideInternalRadius()){
-            if(!showRelations){
+            //if(!showRelations){
+                circleCenter.SetAlpha(SDL_ALPHA_OPAQUE);
+//            }else{
+//                circleCenter.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
+//            }
+        }else{
+            if(showRelations){
                 circleCenter.SetAlpha(SDL_ALPHA_OPAQUE);
             }else{
                 circleCenter.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
             }
-        }else{
-            circleCenter.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
         }
     }
     //DEBUG_PRINT("Aglutinado::OnHover() - fim");
@@ -190,6 +204,23 @@ void Aglutinado::SelectAglutinado(){
     selected = true;
     circle.SetAlpha(SDL_ALPHA_OPAQUE);
 }
+
+void Aglutinado::SetorSelected(){
+    aglSelected = this;
+    selected = true;
+    hasSectorSelected = true;
+    circle.SetAlpha(SDL_ALPHA_OPAQUE);
+}
+
+void Aglutinado::LightRing(){
+    circle.SetAlpha(SDL_ALPHA_OPAQUE);
+}
+
+void Aglutinado::DarkRing(){
+    circle.SetAlpha(SDL_ALPHA_OPAQUE*0.5);
+}
+
+
 
 void Aglutinado::UnselectAglutinado(){
     DEBUG_PRINT("UnselectAglutinado() - inicio");

@@ -1,6 +1,6 @@
 #include "Relacao.h"
 
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
         //se estiver definido debug, imprime os trecos
         #define DEBUG_PRINT(message) do{std::cout << message << std::endl;}while(0)
@@ -18,7 +18,6 @@ Relacao::Relacao(Aglutinado& aglut1, Aglutinado& aglut2, int forca):
     showDebug(false),
     i(0)
 {
-    DEBUG_PRINT("Relacao " << this << " entre " << &aglut1 << " e " << &aglut2);
     if(forca > 1){
         int dist = aglut1.GetCenter().DistTo(aglut2.GetCenter());
         DEBUG_PRINT("Raio de aglut1 == " << &aglut1 << ": " <<  aglut1.GetRadiusExternal());
@@ -61,6 +60,7 @@ void Relacao::PrintTermos(){
 }
 
 void Relacao::Update(float dt){
+    //DEBUG_PRINT("Relacao::Update() - inicio");
     if(Camera::cameraMove){
         if(forca > 1){
             retangulo->SetPosition(posFixed.x - Camera::position.x, posFixed.y - Camera::position.y);
@@ -68,12 +68,15 @@ void Relacao::Update(float dt){
         auto it = termos.begin();
         (*it)->SetPos((aglut1.GetCenter().x + aglut2.GetCenter().x)/2 + forca*2,
                       (aglut1.GetCenter().y + aglut2.GetCenter().y)/2 + forca*2);
-        for(int i = 0; it != termos.end(); it++, i++){
+        it++;
+
+        for(int i = 1; it != termos.end(); it++, i++){
             (*it)->SetPos((aglut1.GetCenter().x + aglut2.GetCenter().x)/2 + forca*2,
                           (aglut1.GetCenter().y + aglut2.GetCenter().y)/2 + forca*2+
                           i*(termos.back()->GetHeight()));
         }
     }
+    //DEBUG_PRINT("Relacao::Update() - fim");
 
     //DEBUG
     if(InputHandler::GetKey() == SDLK_0){
@@ -130,7 +133,6 @@ void Relacao::RePosition(Aglutinado* agl){
             rotationPoint.x = -aglut1.GetRadiusExternal();
             rotationPoint.y = forca;
             retangulo->SetRotationPoint(rotationPoint);
-            DEBUG_PRINT("rotation angle: " << aglut1.GetCenter().AngleTo( aglut2.GetCenter())*180/PI);
             retangulo->SetRotationAngle( aglut1.GetCenter().AngleTo( aglut2.GetCenter())*180/PI);
         }
     }

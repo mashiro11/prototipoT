@@ -247,7 +247,7 @@ void DialogBox::OnHover(){
 }
 
 void DialogBox::OnMouseRoll(){
-    if(InputHandler::mouseScroll){
+    if(InputHandler::mouseScroll && showPosts){
         if(post != nullptr && post->IsMouseInside()){
             Camera::cameraScroll = false;
             post->SlideClip(0, -InputHandler::GetMouseScrollY()*SCROLL_SPEED);

@@ -52,7 +52,8 @@ Mapa::Mapa():
     aglutinados.back()->Relaciona(ag1, termos1, 2);
 
     //Terceiro
-    aglutinados.push_back(new Aglutinado(WINDOW_WIDTH* 1/4.0, WINDOW_HEIGHT* 3/4.0, RAIO, "fonts/Roboto-Bold.ttf", 20, BLENDED));
+    Aglutinado* agl3 = new Aglutinado(WINDOW_WIDTH* 1/4.0, WINDOW_HEIGHT* 3/4.0, RAIO, "fonts/Roboto-Bold.ttf", 20, BLENDED);
+    aglutinados.push_back(agl3);
     aglutinados.back()->AddTermo("#fogo", "hashtagfeliz");
     aglutinados.back()->AddTermo("chuva", "termofeliz");
     aglutinados.back()->AddTermo("engarrafamento", "termotriste");
@@ -69,6 +70,25 @@ Mapa::Mapa():
     termos2.push_back("correr");
     aglutinados.back()->Relaciona(ag1, termos2, 3);
     aglutinados.back()->Shrink(0.5);
+
+    //Quarto
+    aglutinados.push_back(new Aglutinado(500, 20, RAIO, "fonts/Roboto-Bold.ttf", 20, BLENDED));
+    aglutinados.back()->AddTermo("#fogo", "hashtagfeliz");
+    aglutinados.back()->AddTermo("chuva", "termofeliz");
+    aglutinados.back()->AddTermo("engarrafamento", "termotriste");
+    aglutinados.back()->AddTermo("correr", "termofeliz");
+
+    aglutinados.back()->AddTermo("chuva", 2);
+    aglutinados.back()->AddTermo("#fogo", 8);
+    aglutinados.back()->AddTermo("correr", 9);
+    aglutinados.back()->AddTermo("engarrafamento", 3 );
+
+    vector<string> termos3;
+    termos3.push_back("netflix");
+    termos3.push_back("#fogo");
+    termos3.push_back("correr");
+    aglutinados.back()->Relaciona(agl3, termos3, 2);
+    //aglutinados.back()->Shrink(0.5);
 }
 
 Mapa::~Mapa()
@@ -172,8 +192,13 @@ void Mapa::SetButtons(){
     hoverText->SetPos(button->GetX() - hoverText->GetWidth() - 2, button->GetY());
     botoes.push_back(make_pair(button, hoverText));
 
-    button = new Sprite("img/Botoes/ampliar.png", WINDOW_WIDTH - 22 - 5, WINDOW_HEIGHT - 2*button->GetHeight() - 2*5);
+    button = new Sprite("img/Botoes/buscarme.png", WINDOW_WIDTH - 22 - 5, WINDOW_HEIGHT - 3*button->GetHeight() - 3*5);
     hoverText = new Text("fonts/Roboto-Bold.ttf", 10, BLENDED, "ampliar", 0, 0, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
+    hoverText->SetPos(button->GetX() - hoverText->GetWidth() - 2, button->GetY());
+    botoes.push_back(make_pair(button, hoverText));
+
+    button = new Sprite("img/Botoes/ampliar.png", WINDOW_WIDTH - 22 - 5, button->GetY() + button->GetHeight() + 5);
+    hoverText = new Text("fonts/Roboto-Bold.ttf", 10, BLENDED, "reduzir", 0, 0, 0xE5, 0xE5, 0xE5, SDL_ALPHA_OPAQUE);
     hoverText->SetPos(button->GetX() - hoverText->GetWidth() - 2, button->GetY());
     botoes.push_back(make_pair(button, hoverText));
 
