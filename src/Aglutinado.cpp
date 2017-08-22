@@ -209,6 +209,7 @@ void Aglutinado::SetorSelected(){
     aglSelected = this;
     selected = true;
     hasSectorSelected = true;
+    showRelations = false;
     circle.SetAlpha(SDL_ALPHA_OPAQUE);
 }
 
