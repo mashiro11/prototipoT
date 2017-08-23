@@ -81,7 +81,7 @@ void Sprite::SetRotationPoint(SDL_Point pt){
     this->pt = pt;
 }
 
-void Sprite::SetRotationAngle(int angle){
+void Sprite::SetRotationAngle(double angle){
     this->angle = angle;
 }
 

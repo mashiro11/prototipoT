@@ -6,6 +6,9 @@
 
 #include "WindowSize.h"
 
+#define BG_WIDTH    2048
+#define BG_HEIGHT   1372
+
 #define BOUNDARY 10
 
 class Camera

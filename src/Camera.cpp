@@ -40,6 +40,10 @@ void Camera::Update(float dt){
     if(cameraScroll){
         position.y += -InputHandler::GetMouseScrollY()*speedMouseRoll;
         position.x += InputHandler::GetMouseScrollX()*speedMouseRoll;
+        if(position.y < -(BG_HEIGHT - WINDOW_HEIGHT)/2) position.y = -(BG_HEIGHT - WINDOW_HEIGHT)/2;
+        if(position.x < -(BG_WIDTH - WINDOW_WIDTH)/2) position.x = -(BG_WIDTH - WINDOW_WIDTH)/2;
+        if(position.y > BG_HEIGHT/2 -WINDOW_HEIGHT/2) position.y = BG_HEIGHT/2 -WINDOW_HEIGHT/2;
+        if(position.x > BG_WIDTH/2 -WINDOW_WIDTH/2) position.x = BG_WIDTH/2 -WINDOW_WIDTH/2;
     }
 
     //Movimentação pelas setas

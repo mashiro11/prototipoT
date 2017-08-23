@@ -19,7 +19,7 @@
 #include "Origim.h"
 
 #define SETOR_WIDTH 20
-#define SETOR_DIST 10
+#define SETOR_DIST 5
 #define STOP_ANGLE 315
 
 #define ANIMATION_SPEED 7

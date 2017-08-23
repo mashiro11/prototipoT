@@ -10,7 +10,7 @@
 #include "Window.h"
 #include "DialogBox.h"
 
-#define RAIO 20
+#define RAIO 15
 
 
 using std::vector;

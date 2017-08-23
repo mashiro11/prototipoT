@@ -68,8 +68,8 @@ Setor::~Setor()
 }
 
 void Setor::Render(){
-
-    for (int k = angS; k + sp.GetHeight() < angF + angS; k += sp.GetHeight()){
+    double inc = 180/PI*(sp.GetHeight()/(sp.GetWidth() + agl.GetCenter().DistTo(sp.GetX(), sp.GetY())));
+    for (double k = angS; k + inc < angF + angS; k += inc){
         sp.SetRotationAngle(k);
         sp.Render();
     }

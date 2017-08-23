@@ -10,85 +10,103 @@
 #endif //DEBUG
 
 Mapa::Mapa():
-    bg("img/Mapa/Topogramas_Mapa1.png"),
+    bg("img/Mapa/Topogramas_Mapa12.png"),
     mousePosition("fonts/Roboto-Bold.ttf", 10, BLENDED, "x", 0, 0, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
     cameraFocus("fonts/Roboto-Bold.ttf", 10, BLENDED, "x", 0, 15, 0x69, 0xBA, 0xF7, SDL_ALPHA_OPAQUE),
     showInfo(false)
     //dBox(radius + 20 + 10 + 10,- radius - 20 - 10, fontFile, fontSize, style);
 {
-    bg.Resize(WINDOW_WIDTH*3, WINDOW_HEIGHT*3);
-    bg.SetPosition(-WINDOW_WIDTH, -WINDOW_HEIGHT);
+    //bg.Resize(WINDOW_WIDTH*1.5, WINDOW_HEIGHT*1.5);
+    bg.SetPosition(-(BG_WIDTH - WINDOW_WIDTH)/2, -(BG_HEIGHT - WINDOW_HEIGHT)/2);
     SetButtons();
+
+    /***********
+        termos possiveis:
+
+            hashtagfeliz
+                #Feliz
+                #Ferias
+                #fogo
+
+            hashtagtriste
+                #Chateado1
+                #Chateado2
+
+            termofeliz
+                Animada
+                chuva
+                correr
+                Ferias
+                Frio
+
+            termotriste
+                Acidente
+                Acidente2
+                engarrafamento
+                Frio
+
+    ***********/
 
     //Primeiro
     Aglutinado *ag1 = new Aglutinado(WINDOW_WIDTH/4, WINDOW_HEIGHT/4, RAIO, "fonts/Roboto-Bold.ttf", 20, BLENDED);
     aglutinados.push_back(ag1);
     aglutinados.back()->AddTermo("#fogo", "hashtagfeliz");
-    aglutinados.back()->AddTermo("chuva", "termofeliz");
     aglutinados.back()->AddTermo("engarrafamento", "termotriste");
     aglutinados.back()->AddTermo("correr", "termofeliz");
 
-    aglutinados.back()->AddTermo("chuva", 10);
     aglutinados.back()->AddTermo("#fogo", 5);
     aglutinados.back()->AddTermo("correr", 3);
     aglutinados.back()->AddTermo("engarrafamento", 7 );
+    aglutinados.back()->Shrink(1.2);
+
 
     //Segundo
     //Aglutinado *ag1 = ;
     aglutinados.push_back(new Aglutinado(WINDOW_WIDTH* 3/4.0, WINDOW_HEIGHT* 3/4.0, RAIO, "fonts/Roboto-Bold.ttf", 20, BLENDED));
-    aglutinados.back()->AddTermo("#fogo", "hashtagfeliz");
     aglutinados.back()->AddTermo("chuva", "termofeliz");
     aglutinados.back()->AddTermo("engarrafamento", "termotriste");
-    aglutinados.back()->AddTermo("correr", "termofeliz");
+    aglutinados.back()->AddTermo("Animada", "termofeliz");
 
     aglutinados.back()->AddTermo("chuva", 3);
-    aglutinados.back()->AddTermo("#fogo", 8);
-    aglutinados.back()->AddTermo("correr", 5);
+    aglutinados.back()->AddTermo("Animada", 5);
     aglutinados.back()->AddTermo("engarrafamento", 11 );
     vector<string> termos1;
     termos1.push_back("engarrafamento");
-    termos1.push_back("cigarro");
-    termos1.push_back("correr");
+    termos1.push_back("#tenso");
     aglutinados.back()->Relaciona(ag1, termos1, 2);
+    aglutinados.back()->Shrink(0.8);
 
     //Terceiro
     Aglutinado* agl3 = new Aglutinado(WINDOW_WIDTH* 1/4.0, WINDOW_HEIGHT* 3/4.0, RAIO, "fonts/Roboto-Bold.ttf", 20, BLENDED);
     aglutinados.push_back(agl3);
+    aglutinados.back()->AddTermo("Ferias", "termofeliz");
+    aglutinados.back()->AddTermo("Frio", "termofeliz");
     aglutinados.back()->AddTermo("#fogo", "hashtagfeliz");
-    aglutinados.back()->AddTermo("chuva", "termofeliz");
-    aglutinados.back()->AddTermo("engarrafamento", "termotriste");
-    aglutinados.back()->AddTermo("correr", "termofeliz");
 
-    aglutinados.back()->AddTermo("chuva", 2);
-    aglutinados.back()->AddTermo("#fogo", 8);
-    aglutinados.back()->AddTermo("correr", 9);
-    aglutinados.back()->AddTermo("engarrafamento", 3 );
+    aglutinados.back()->AddTermo("Ferias", 2);
+    aglutinados.back()->AddTermo("Frio", 8);
+    aglutinados.back()->AddTermo("#fogo", 9);
 
     vector<string> termos2;
     termos2.push_back("netflix");
     termos2.push_back("#fogo");
-    termos2.push_back("correr");
+    termos2.push_back("Ferias");
     aglutinados.back()->Relaciona(ag1, termos2, 3);
-    aglutinados.back()->Shrink(0.5);
+    aglutinados.back()->Shrink(0.6);
 
     //Quarto
-    aglutinados.push_back(new Aglutinado(500, 20, RAIO, "fonts/Roboto-Bold.ttf", 20, BLENDED));
-    aglutinados.back()->AddTermo("#fogo", "hashtagfeliz");
-    aglutinados.back()->AddTermo("chuva", "termofeliz");
-    aglutinados.back()->AddTermo("engarrafamento", "termotriste");
-    aglutinados.back()->AddTermo("correr", "termofeliz");
+    aglutinados.push_back(new Aglutinado(500, 60, RAIO, "fonts/Roboto-Bold.ttf", 20, BLENDED));
+    aglutinados.back()->AddTermo("Frio", "termotriste");
+    aglutinados.back()->AddTermo("#Chateado1", "hashtagtriste");
 
-    aglutinados.back()->AddTermo("chuva", 2);
-    aglutinados.back()->AddTermo("#fogo", 8);
-    aglutinados.back()->AddTermo("correr", 9);
-    aglutinados.back()->AddTermo("engarrafamento", 3 );
+    aglutinados.back()->AddTermo("Frio", 9);
+    aglutinados.back()->AddTermo("#Chateado1", 3 );
 
     vector<string> termos3;
-    termos3.push_back("netflix");
-    termos3.push_back("#fogo");
-    termos3.push_back("correr");
+    termos3.push_back("Frio");
+    termos3.push_back("gripe");
     aglutinados.back()->Relaciona(agl3, termos3, 2);
-    //aglutinados.back()->Shrink(0.5);
+    aglutinados.back()->Shrink(0.9);
 }
 
 Mapa::~Mapa()
@@ -98,7 +116,10 @@ Mapa::~Mapa()
 
 void Mapa::Update(float dt){
     if(Camera::cameraMove){
-        bg.SetPosition(-WINDOW_WIDTH-Camera::position.x, -WINDOW_HEIGHT-Camera::position.y);
+        bg.SetPosition(-(BG_WIDTH - WINDOW_WIDTH)/2-Camera::position.x,
+                       -(BG_HEIGHT - WINDOW_HEIGHT)/2-Camera::position.y);
+        //bg.SetPosition(-WINDOW_WIDTH/4-Camera::position.x, -WINDOW_HEIGHT/4-Camera::position.y);
+        //bg.SetPosition(-Camera::position.x, -Camera::position.y);
     }
     //É feito update de todos os aglutinados
     for(auto it = aglutinados.begin(); it != aglutinados.end(); it++){

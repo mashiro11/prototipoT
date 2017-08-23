@@ -31,7 +31,7 @@ class Sprite
         void SetPosition(int x, int y);
         void Resize(int w, int h);
         void Clip(int w, int h, int x = 0, int y = 0);
-        void SetRotationAngle(int angle);
+        void SetRotationAngle(double angle);
         void SetRotationPoint(SDL_Point pt);
         void Transform(int w, int h);
         bool IsMouseInside();
@@ -51,7 +51,7 @@ class Sprite
         SDL_Rect srcRect;
         string path;
         SDL_Point pt;
-        int angle;
+        double angle;
         Uint32 alpha;
         bool lastMouseInside;
         bool newMouseInside;
